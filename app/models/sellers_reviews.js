@@ -20,7 +20,7 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.TEXT,
       },
       timestamp: {
-        type: Sequelize.TIMESTAMP,
+        type: Sequelize.DATE,
       },
     });
   
