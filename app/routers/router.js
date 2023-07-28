@@ -80,7 +80,7 @@ router.delete(
 // request
 // router.post('/request/create',[authJwt.verifyToken], maincontroller.handle_user_request)
 
-// router.get("/nearest-shops", maincontroller.handle_user_request);
-router.get("/address-to-ponit", maincontroller.AddressToPoint);
+// router.get("/NearestShops", maincontroller.NearestShops);
+router.get("/createRequest", authJwt.verifyToken, maincontroller.createRequest);
 
 module.exports = router;

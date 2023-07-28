@@ -1,6 +1,23 @@
 const argon2 = require("argon2");
 const db = require("../config/db.config.js");
 const Seller = db.Seller;
+const Request = db.Request;
+
+// Get a seller by ID
+exports.getRequests = async (req, res) => {
+  try {
+    const requests = await Request.findByPk(req.params.id);
+
+    if (seller) {
+      res.status(200).json(seller);
+    } else {
+      res.status(404).json({ message: "Seller not found" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 // Get a seller by ID
 exports.getSellerById = async (req, res) => {
