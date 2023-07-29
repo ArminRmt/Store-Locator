@@ -4,24 +4,42 @@ const db = require("../config/db.config.js");
 const Shop = db.Shop;
 const Request = db.Request;
 const geolib = require("geolib");
-const { route } = require("../routers/router.js");
-// const Pusher = require('pusher');
+const Pusher = require("pusher");
 
-async function SendReqest(sellerIds) {
+async function SendResponse() {
   try {
     const pusher = new Pusher({
-      appId: "YOUR_APP_ID",
-      key: "YOUR_APP_KEY",
-      secret: "YOUR_APP_SECRET",
-      cluster: "YOUR_APP_CLUSTER", // The cluster where your app is located
+      appId: "1642863",
+      key: "2d1185b2021a81971755",
+      secret: "97baca0c0031c8539ef4",
+      cluster: "ap1", // The cluster where your app is located
       useTLS: true, // Use TLS encryption
     });
 
-    sellerIds.forEach((sellerId) => {
-      pusher.trigger(`private-seller-${sellerId}`, "new_request", {
-        message: "New request from a user!",
-        request: req.body, // Include any relevant request details
-      });
+    // Trigger a notification event to the specific user using a private channel
+    pusher.trigger(`private-seller-${sellerId}`, "new_response", {
+      message: "Seller response",
+      request: request,
+    });
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function SendReqest(sellerId, request) {
+  try {
+    const pusher = new Pusher({
+      appId: "1642863",
+      key: "2d1185b2021a81971755",
+      secret: "97baca0c0031c8539ef4",
+      cluster: "ap1", // The cluster where your app is located
+      useTLS: true, // Use TLS encryption
+    });
+
+    // Trigger a notification event to the specific seller using a private channel
+    pusher.trigger(`private-seller-${sellerId}`, "new_request", {
+      message: "New request from a user!",
+      request: request,
     });
   } catch (error) {
     throw error;
@@ -30,7 +48,7 @@ async function SendReqest(sellerIds) {
 
 async function NearestShops() {
   const address = "مازندران نوشهر هفت تیر هفت تیر ۱۰";
-  YOUR_API_KEY = "service.4f62c5a77e954852924117a7997cd4cc";
+  NESHAN_KEY = "service.4f62c5a77e954852924117a7997cd4cc";
 
   try {
     const response = await axios.get("https://api.neshan.org/v4/geocoding", {
@@ -38,7 +56,7 @@ async function NearestShops() {
         address,
       },
       headers: {
-        "Api-Key": YOUR_API_KEY,
+        "Api-Key": NESHAN_KEY,
       },
     });
 
@@ -73,7 +91,7 @@ exports.createRequest = async (req, res) => {
     const timestamp = new Date().toISOString();
 
     const nearest_shops = await NearestShops();
-    const SellersID = [];
+    // const SellersID = [];
 
     for (const shop of nearest_shops) {
       const newRequest = await Request.create({
@@ -83,11 +101,10 @@ exports.createRequest = async (req, res) => {
         content: content,
         timestamp: timestamp,
       });
-      SellersID.push(shop.seller_id);
+      // send requests to shops
+      SendReqest(shop.seller_id, newRequest);
+      // SellersID.push(shop.seller_id);
     }
-
-    // send requests to shops
-    SendReqest(SellersID);
 
     res.status(200).json(createdRequests);
   } catch (error) {
