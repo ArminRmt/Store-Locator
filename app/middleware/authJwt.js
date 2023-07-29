@@ -35,14 +35,6 @@ isAdmin = async (req, res, next) => {
       return res.status(404).send({ message: "User Not found." });
     }
 
-    const userIdInRequest = req.params.id || req.body.id;
-
-    if (!userIdInRequest || parseInt(userIdInRequest) !== req.userId) {
-      return res
-        .status(403)
-        .send({ message: "Only the owner or admin has this access" });
-    }
-
     if (user.role === "admin") {
       next();
     } else {

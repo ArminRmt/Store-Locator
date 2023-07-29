@@ -3,6 +3,8 @@ const db = require("./app/config/db.config.js");
 const cors = require("cors");
 let router = require("./app/routers/router.js");
 var bodyParser = require("body-parser");
+swaggerJsdoc = require("swagger-jsdoc");
+swaggerUi = require("swagger-ui-express");
 const env = require("./app/config/env.js");
 const argon2 = require("argon2");
 const User = db.User;
@@ -17,7 +19,7 @@ db.sequelize.sync({ force: true }).then(() => {
 });
 
 const corsOptions = {
-  origin: "http://localhost:4200",
+  origin: "http://localhost:5173",
   optionsSuccessStatus: 200,
 };
 
@@ -26,6 +28,39 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use("/", router);
 
+const options = {
+  definition: {
+    openapi: "3.1.0",
+    info: {
+      title: "store-locator api doc",
+      version: "0.1.0",
+      description:
+        "rest api made with sequelize-orm, Express and documented with Swagger",
+      license: {
+        name: "MIT",
+        url: "https://spdx.org/licenses/MIT.html",
+      },
+      contact: {
+        name: "Armin",
+        url: "http://localhost:5173",
+        email: "arminrahmati83@gmail.com",
+      },
+    },
+    servers: [
+      {
+        url: "http://localhost:8080",
+      },
+    ],
+  },
+  apis: ["./app/SwaggerDocs/*.js"],
+};
+
+const specs = swaggerJsdoc(options);
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(specs, { explorer: true })
+);
 // Create a Server
 const server = app.listen(env.port, function () {
   console.log(`App listening on port ${env.port}`);
