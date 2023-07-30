@@ -15,7 +15,6 @@ const Shop = db.Shop;
 db.sequelize.sync({ force: true }).then(() => {
   console.log("Drop and Resync with { force: true }");
   initial();
-  // initial2();
 });
 
 const corsOptions = {
