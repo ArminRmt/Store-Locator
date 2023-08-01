@@ -18,7 +18,7 @@ async function SendResponse() {
 
     // Trigger a notification event to the specific user using a private channel
     pusher.trigger(`private-seller-${sellerId}`, "new_response", {
-      message: "Seller response",
+      message: "پاسخ فروشنده",
       request: request,
     });
   } catch (error) {
@@ -38,7 +38,7 @@ async function SendReqest(sellerId, request) {
 
     // Trigger a notification event to the specific seller using a private channel
     pusher.trigger(`private-seller-${sellerId}`, "new_request", {
-      message: "New request from a user!",
+      message: "درخواست جدید از یک کاربر!",
       request: request,
     });
   } catch (error) {
@@ -108,7 +108,7 @@ exports.createRequest = async (req, res) => {
 
     res.status(200).json(createdRequests);
   } catch (error) {
-    console.error("Error Creating request:", error.message);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("خطا در ایجاد درخواست:", error.message);
+    res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };

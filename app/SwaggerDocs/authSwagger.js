@@ -23,7 +23,7 @@
  *                 type: string
  *     responses:
  *       201:
- *         description: Successful Registration
+ *         description: ثبت نام موفقیت‌آمیز
  *         content:
  *           application/json:
  *             schema:
@@ -31,7 +31,7 @@
  *               properties:
  *                 msg:
  *                   type: string
- *                   example: "Successful Registration"
+ *                   example: "ثبت نام موفقیت‌آمیز"
  *                 newUser:
  *                   type: object
  *                   properties:
@@ -52,7 +52,7 @@
  *                       type: string
  *                       format: date-time
  *             example:
- *               msg: "Successful Registration"
+ *               msg: "ثبت نام موفقیت‌آمیز"
  *               newUser:
  *                 id: 4
  *                 full_name: "mamad"
@@ -149,7 +149,7 @@
  *                 type: string
  *     responses:
  *       201:
- *         description: Successful registration of the seller.
+ *         description: ثبت نام موفقیت‌آمیز of the seller.
  *         content:
  *           application/json:
  *             schema:

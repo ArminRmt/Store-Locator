@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const config = require("../config/auth.config.js");
 const db = require("../config/db.config.js");
 const User = db.User;
-// const Seller = db.Seller;
 
 const secret = config.secret;
 
@@ -11,7 +10,7 @@ verifyToken = (req, res, next) => {
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(403).send({
-      message: "No token provided!",
+      message: "پیام: هیچ توکنی ارائه نشده است!",
     });
   }
 
@@ -20,7 +19,7 @@ verifyToken = (req, res, next) => {
   jwt.verify(token, secret, (err, decoded) => {
     if (err) {
       return res.status(401).send({
-        message: "Unauthorized!",
+        message: "عدم مجوز!",
       });
     }
     req.userId = decoded.id;
@@ -32,16 +31,16 @@ isAdmin = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.userId);
     if (!user) {
-      return res.status(404).send({ message: "User Not found." });
+      return res.status(404).send({ message: "کاربر پیدا نشد." });
     }
 
     if (user.role === "admin") {
       next();
     } else {
-      res.status(403).send({ message: "Require Admin Role!" });
+      res.status(403).send({ message: "نیاز به نقش مدیر دارد!" });
     }
   } catch (err) {
-    res.status(500).send({ message: "Internal Server Error" });
+    res.status(500).send({ message: "خطای سرور" });
   }
 };
 
@@ -49,7 +48,7 @@ isSeller = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.userId);
     if (!user) {
-      return res.status(404).send({ message: "User Not found." });
+      return res.status(404).send({ message: "کاربر پیدا نشد." });
     }
 
     const userIdInRequest = req.params.id || req.body.id;
@@ -57,16 +56,16 @@ isSeller = async (req, res, next) => {
     if (!userIdInRequest || parseInt(userIdInRequest) !== req.userId) {
       return res
         .status(403)
-        .send({ message: "Only the owner or admin has this access" });
+        .send({ message: "تنها صاحب یا مدیر دسترسی به این عملیات دارند." });
     }
 
     if (!user.role) {
       next();
     } else {
-      res.status(403).send({ message: "Require Seller Role!" });
+      res.status(403).send({ message: "نیاز به نقش فروشنده دارد!" });
     }
   } catch (err) {
-    res.status(500).send({ message: "Internal Server Error" });
+    res.status(500).send({ message: "خطای سرور" });
   }
 };
 
@@ -74,7 +73,7 @@ isUserOrAdmin = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.userId);
     if (!user) {
-      return res.status(404).send({ message: "User Not found." });
+      return res.status(404).send({ message: "کاربر پیدا نشد." });
     }
 
     const userIdInRequest = req.params.id || req.body.id;
@@ -82,16 +81,16 @@ isUserOrAdmin = async (req, res, next) => {
     if (!userIdInRequest || parseInt(userIdInRequest) !== req.userId) {
       return res
         .status(403)
-        .send({ message: "Only the owner or admin has this access" });
+        .send({ message: "تنها صاحب یا مدیر دسترسی به این عملیات دارند." });
     }
 
     if (user.role === "admin" || user.role === "buyer") {
       next();
     } else {
-      res.status(403).send({ message: "Require Admin or Buyer Role!" });
+      res.status(403).send({ message: "نیاز به نقش مدیر یا خریدار دارد!" });
     }
   } catch (err) {
-    res.status(500).send({ message: "Internal Server Error" });
+    res.status(500).send({ message: "خطای سرور" });
   }
 };
 
@@ -99,7 +98,7 @@ isSellerOrAdmin = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.userId);
     if (!user) {
-      return res.status(404).send({ message: "User Not found." });
+      return res.status(404).send({ message: "کاربر پیدا نشد." });
     }
 
     const userIdInRequest = req.params.id || req.body.id;
@@ -107,16 +106,16 @@ isSellerOrAdmin = async (req, res, next) => {
     if (!userIdInRequest || parseInt(userIdInRequest) !== req.userId) {
       return res
         .status(403)
-        .send({ message: "Only the owner or admin has this access" });
+        .send({ message: "تنها صاحب یا مدیر دسترسی به این عملیات دارند." });
     }
 
     if (!user.role || user.role === "admin") {
       next();
     } else {
-      res.status(403).send({ message: "Require Admin or Seller Role!" });
+      res.status(403).send({ message: "نیاز به نقش مدیر یا فروشنده دارد!" });
     }
   } catch (err) {
-    res.status(500).send({ message: "Internal Server Error" });
+    res.status(500).send({ message: "خطای سرور" });
   }
 };
 

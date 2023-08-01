@@ -2,13 +2,12 @@ const db = require("../config/db.config.js");
 const config = require("../config/auth.config.js");
 const User = db.User;
 const Seller = db.Seller;
-
 const argon2 = require("argon2");
 var jwt = require("jsonwebtoken");
 
 // crete user or admin
 exports.signup = async (req, res) => {
-  const { full_name, phone, password, confirmPassword, role } = req.body;
+  const { full_name, phone, password, role } = req.body;
 
   try {
     const hashPassword = await argon2.hash(password);
@@ -20,7 +19,7 @@ exports.signup = async (req, res) => {
       role,
     });
 
-    res.status(201).json({ msg: "Successful Registration", newUser });
+    res.status(201).json({ msg: "ثبت نام موفقیت‌آمیز", newUser });
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
@@ -28,20 +27,7 @@ exports.signup = async (req, res) => {
 
 // crete seller
 exports.seller_signup = async (req, res) => {
-  const { full_name, phone, password, confirmPassword } = req.body;
-
-  // Validate the password length before hashing
-  if (password.length < 8 || password.length > 30) {
-    return res
-      .status(400)
-      .json({ msg: "Password must be between 8 and 30 characters long." });
-  }
-
-  if (password !== confirmPassword) {
-    return res
-      .status(400)
-      .json({ msg: "Password and confirm password do not match." });
-  }
+  const { full_name, phone, password } = req.body;
 
   try {
     const hashPassword = await argon2.hash(password);
@@ -49,10 +35,10 @@ exports.seller_signup = async (req, res) => {
     const newSeller = await Seller.create({
       full_name,
       phone,
-      password: hashPassword, // Use the hashed password here, not the 'hashPassword' variable.
+      password: hashPassword,
     });
 
-    res.status(201).json({ msg: "Successful Registration", newSeller });
+    res.status(201).json({ msg: "ثبت نام موفقیت‌آمیز", newSeller });
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
@@ -68,7 +54,7 @@ exports.signin = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).send({ message: "User Not found." });
+      return res.status(404).send({ message: "کاربر پیدا نشد." });
     }
 
     const passwordIsValid = await argon2.verify(
@@ -96,7 +82,7 @@ exports.signin = async (req, res) => {
       accessToken: token,
     });
   } catch (err) {
-    console.error("Error during signin:", err);
-    res.status(500).send({ message: "Internal Server Error" });
+    console.error("خطا در هنگام ورود:", err);
+    res.status(500).send({ message: "خطای سرور داخلی" });
   }
 };

@@ -15,6 +15,9 @@ const {
   ValidateRole,
   validatePhoneNumber,
   validateName,
+  RequireFieldsSeller,
+  RequireFieldsUser,
+  RequireFieldsShop,
 } = require("../middleware/ValidateInputs.js");
 
 // authorization
@@ -26,12 +29,19 @@ router.post(
     ValidateRole,
     validatePhoneNumber,
     validateName,
+    RequireFieldsUser,
   ],
   auth.signup
 );
 router.post(
   "/seller/signup",
-  [validatePassword, validatePasswordMatch, validatePhoneNumber, validateName],
+  [
+    validatePassword,
+    validatePasswordMatch,
+    validatePhoneNumber,
+    validateName,
+    RequireFieldsSeller,
+  ],
   auth.seller_signup
 );
 router.post("/signin", auth.signin);
@@ -45,7 +55,16 @@ router.get(
 );
 router.patch(
   "/user/:id",
-  [authJwt.verifyToken, authJwt.isUserOrAdmin],
+  [
+    authJwt.verifyToken,
+    authJwt.isUserOrAdmin,
+    validatePassword,
+    validatePasswordMatch,
+    ValidateRole,
+    validatePhoneNumber,
+    validateName,
+    RequireFieldsUser,
+  ],
   users.updateUser
 );
 router.delete(
@@ -67,7 +86,15 @@ router.get(
 );
 router.patch(
   "/seller/:id",
-  [authJwt.verifyToken, authJwt.isUserOrAdmin],
+  [
+    authJwt.verifyToken,
+    authJwt.isUserOrAdmin,
+    validatePassword,
+    validatePasswordMatch,
+    validatePhoneNumber,
+    validateName,
+    RequireFieldsSeller,
+  ],
   seller.updateSeller
 );
 router.delete(
@@ -85,12 +112,24 @@ router.get(
 );
 router.post(
   "/shop/:id",
-  [authJwt.verifyToken, authJwt.isSellerOrAdmin],
+  [
+    authJwt.verifyToken,
+    authJwt.isSellerOrAdmin,
+    validatePhoneNumber,
+    validateName,
+    RequireFieldsShop,
+  ],
   shop.createShop
 );
 router.patch(
   "/shop/:id",
-  [authJwt.verifyToken, authJwt.isSellerOrAdmin],
+  [
+    authJwt.verifyToken,
+    authJwt.isSellerOrAdmin,
+    validatePhoneNumber,
+    validateName,
+    RequireFieldsShop,
+  ],
   shop.updateShop
 );
 router.delete(
@@ -102,7 +141,6 @@ router.delete(
 // request
 // router.post('/request/create',[authJwt.verifyToken], maincontroller.handle_user_request)
 
-// router.get("/NearestShops", maincontroller.NearestShops);
 router.get("/createRequest", authJwt.verifyToken, maincontroller.createRequest);
 
 module.exports = router;

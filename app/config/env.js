@@ -2,7 +2,7 @@ const env = {
   database: "storelocatorapi2",
   username: "postgres",
   password: "password",
-  host: "localhost",
+  host: "db",
   dialect: "postgres",
   pool: {
     max: 5,

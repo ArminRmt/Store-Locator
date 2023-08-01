@@ -9,11 +9,11 @@ exports.getShopById = async (req, res) => {
     if (shop) {
       res.status(200).json(shop);
     } else {
-      res.status(404).json({ message: "Shop not found" });
+      res.status(404).json({ message: "فروشگاه پیدا نشد" });
     }
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "خطای سرور" });
   }
 };
 
@@ -40,20 +40,6 @@ exports.createShop = async (req, res) => {
   } = req.body;
 
   try {
-    if (
-      !seller_id ||
-      !name ||
-      !phone ||
-      !address ||
-      !open_time ||
-      !latitude ||
-      !longitude
-    ) {
-      return res
-        .status(400)
-        .json({ msg: "Please provide all required fields." });
-    }
-
     const newShop = await Shop.create({
       seller_id,
       name,
@@ -68,7 +54,7 @@ exports.createShop = async (req, res) => {
 
     res.status(201).json(newShop);
   } catch (error) {
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ msg: "خطای سرور" });
   }
 };
 
@@ -89,22 +75,7 @@ exports.updateShop = async (req, res) => {
     const shop = await Shop.findByPk(req.params.id);
 
     if (!shop) {
-      return res.status(404).json({ msg: "Shop Not Found" });
-    }
-
-    // Validate input data (you may add more validation if needed)
-    if (
-      !name ||
-      !phone ||
-      !address ||
-      !open_time ||
-      !avg_rating ||
-      !latitude ||
-      !longitude
-    ) {
-      return res
-        .status(400)
-        .json({ msg: "Please provide all required fields." });
+      return res.status(404).json({ msg: "فروشگاه پیدا نشد" });
     }
 
     await shop.update({
@@ -118,9 +89,9 @@ exports.updateShop = async (req, res) => {
       longitude,
     });
 
-    res.status(200).json({ msg: "Shop Updated" });
+    res.status(200).json({ msg: "فروشگاه به‌روزرسانی شد" });
   } catch (error) {
-    res.status(500).json({ msg: "Server error" });
+    res.status(500).json({ msg: "خطای سرور" });
   }
 };
 
@@ -130,14 +101,14 @@ exports.deleteShop = async (req, res) => {
     const shop = await Shop.findByPk(req.params.id);
 
     if (!shop) {
-      return res.status(404).json({ message: "Shop not found" });
+      return res.status(404).json({ message: "فروشگاه پیدا نشد" });
     }
 
     await shop.destroy();
 
-    res.status(200).json({ message: "Shop deleted successfully" });
+    res.status(200).json({ message: "فروشگاه با موفقیت حذف شد" });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "خطای سرور" });
   }
 };
