@@ -6,24 +6,9 @@ const Seller = db.Seller;
 const argon2 = require("argon2");
 var jwt = require("jsonwebtoken");
 
-const Op = db.Sequelize.Op;
-
 // crete user or admin
 exports.signup = async (req, res) => {
   const { full_name, phone, password, confirmPassword, role } = req.body;
-
-  // Validate the password length before hashing
-  if (password.length < 8 || password.length > 30) {
-    return res
-      .status(400)
-      .json({ msg: "Password must be between 8 and 30 characters long." });
-  }
-
-  if (password !== confirmPassword) {
-    return res
-      .status(400)
-      .json({ msg: "Password and confirm password do not match." });
-  }
 
   try {
     const hashPassword = await argon2.hash(password);
@@ -31,7 +16,7 @@ exports.signup = async (req, res) => {
     const newUser = await User.create({
       full_name,
       phone,
-      password: hashPassword, // Use the hashed password here, not the 'hashPassword' variable.
+      password: hashPassword,
       role,
     });
 

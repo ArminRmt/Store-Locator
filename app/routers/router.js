@@ -9,9 +9,31 @@ const seller = require("../controllers/seller.js");
 
 const authJwt = require("../middleware/authJwt");
 
+const {
+  validatePassword,
+  validatePasswordMatch,
+  ValidateRole,
+  validatePhoneNumber,
+  validateName,
+} = require("../middleware/ValidateInputs.js");
+
 // authorization
-router.post("/user-admin/signup", auth.signup);
-router.post("/seller/signup", auth.seller_signup);
+router.post(
+  "/user-admin/signup",
+  [
+    validatePassword,
+    validatePasswordMatch,
+    ValidateRole,
+    validatePhoneNumber,
+    validateName,
+  ],
+  auth.signup
+);
+router.post(
+  "/seller/signup",
+  [validatePassword, validatePasswordMatch, validatePhoneNumber, validateName],
+  auth.seller_signup
+);
 router.post("/signin", auth.signin);
 
 // user routes

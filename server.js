@@ -70,14 +70,14 @@ const server = app.listen(env.port, function () {
 async function initial() {
   try {
     User.create({
-      phone: "9876543210",
+      phone: "98765432100",
       full_name: "armin",
       password: await argon2.hash("123456789"),
       role: "buyer",
     });
 
     User.create({
-      phone: "9876543211",
+      phone: "98765432111",
       full_name: "admin",
       password: await argon2.hash("123456789"),
       role: "admin",
@@ -85,7 +85,7 @@ async function initial() {
 
     const seller = await Seller.create({
       full_name: "seller1",
-      phone: "9876543213",
+      phone: "98765432133",
       password: await argon2.hash("123456789"),
     });
 
