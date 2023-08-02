@@ -1,9 +1,7 @@
 const jwt = require("jsonwebtoken");
-const config = require("../config/auth.config.js");
 const db = require("../config/db.config.js");
 const User = db.User;
-
-const secret = config.secret;
+const env = require("../config/env.js");
 
 verifyToken = (req, res, next) => {
   let authHeader = req.headers["authorization"];
@@ -16,13 +14,14 @@ verifyToken = (req, res, next) => {
 
   let token = authHeader.replace("Bearer ", "");
 
-  jwt.verify(token, secret, (err, decoded) => {
+  jwt.verify(token, env.AUTH_SECRET, (err, decoded) => {
     if (err) {
       return res.status(401).send({
         message: "عدم مجوز!",
       });
     }
     req.userId = decoded.id;
+
     next();
   });
 };
@@ -116,6 +115,34 @@ isSellerOrAdmin = async (req, res, next) => {
     }
   } catch (err) {
     res.status(500).send({ message: "خطای سرور" });
+  }
+};
+
+GetUserByToken = async (req, res, next) => {
+  let authHeader = req.headers["authorization"];
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(403).send({
+      message: "پیام: هیچ توکنی ارائه نشده است!",
+    });
+  }
+
+  let token = authHeader.replace("Bearer ", "");
+
+  try {
+    const decoded = await jwt.verify(token, env.AUTH_SECRET);
+    const userId = decoded.id;
+
+    const user = await User.findOne({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).send({ message: "کاربر پیدا نشد." });
+    }
+
+    req.user = user;
+    console.log(req.user);
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "توکن غیر معتبر است" });
   }
 };
 

@@ -10,6 +10,9 @@ COPY package*.json ./
 # Install app dependencies
 RUN npm install
 
+# Install nodemon globally
+# RUN npm install nodemon --save
+
 # Bundle app source code
 COPY . .
 
@@ -17,4 +20,4 @@ COPY . .
 EXPOSE 8080
 
 # Start the Express app
-CMD ["npm", "start"]
+CMD ["nodemon", "server.js"]

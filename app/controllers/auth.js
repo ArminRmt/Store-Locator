@@ -1,9 +1,9 @@
 const db = require("../config/db.config.js");
-const config = require("../config/auth.config.js");
 const User = db.User;
 const Seller = db.Seller;
 const argon2 = require("argon2");
 var jwt = require("jsonwebtoken");
+const env = require("../config/env.js");
 
 // crete user or admin
 exports.signup = async (req, res) => {
@@ -69,18 +69,13 @@ exports.signin = async (req, res) => {
       });
     }
 
-    const token = jwt.sign({ id: user.id }, config.secret, {
+    const token = jwt.sign({ id: user.id }, env.AUTH_SECRET, {
       algorithm: "HS256",
       allowInsecureKeySizes: true,
       expiresIn: "24h", // 86400 SECOND
     });
 
-    res.status(200).send({
-      id: user.id,
-      full_name: user.full_name,
-      phone: user.phone,
-      accessToken: token,
-    });
+    res.status(200).json({ msg: "ورود موفقیت‌آمیز", token });
   } catch (err) {
     console.error("خطا در هنگام ورود:", err);
     res.status(500).send({ message: "خطای سرور داخلی" });

@@ -137,6 +137,55 @@
 
 /**
  * @swagger
+ * /user/getuserbytoken:
+ *   get:
+ *     summary: Get user by Token
+ *     description: Retrieve a user by its Token
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: Bearer <token>
+ *     responses:
+ *       200:
+ *         description: The user with the specified ID
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 full_name:
+ *                   type: string
+ *                 phone:
+ *                   type: string
+ *                 password:
+ *                   type: string
+ *                 role:
+ *                   type: string
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                 updatedAt:
+ *                   type: string
+ *                   format: date-time
+ *             example:
+ *               id: 1
+ *               full_name: "armin"
+ *               phone: "9876543210"
+ *               password: "$argon2id....."
+ *               role: "buyer"
+ *               createdAt: "2023-07-29T17:38:46.185Z"
+ *               updatedAt: "2023-07-29T17:38:46.185Z"
+ */
+
+/**
+ * @swagger
  * /user/{id}:
  *   patch:
  *     summary: Update user

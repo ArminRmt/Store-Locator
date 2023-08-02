@@ -46,7 +46,16 @@ router.post(
 );
 router.post("/signin", auth.signin);
 
+// test get user details after signin
+router.get("/getuserbytoken", users.GetUserByToken);
+
 // user routes
+router.get(
+  "/user/:id",
+  [authJwt.verifyToken, authJwt.isAdmin],
+  users.getUserById
+);
+
 router.get("/users", [authJwt.verifyToken, authJwt.isAdmin], users.getUsers);
 router.get(
   "/user/:id",

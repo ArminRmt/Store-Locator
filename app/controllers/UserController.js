@@ -1,6 +1,31 @@
 const argon2 = require("argon2");
+const jwt = require("jsonwebtoken");
 const db = require("../config/db.config.js");
 const User = db.User;
+const env = require("../config/env.js");
+
+exports.GetUserByToken = async (req, res) => {
+  let authHeader = req.headers["authorization"];
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(403).send({
+      message: "پیام: هیچ توکنی ارائه نشده است!",
+    });
+  }
+
+  let token = authHeader.replace("Bearer ", "");
+
+  try {
+    const decoded = await jwt.verify(token, env.AUTH_SECRET);
+    const userId = decoded.id;
+
+    const user = await User.findOne({ where: { id: userId } });
+
+    res.status(200).json(user);
+  } catch (err) {
+    return res.status(401).json({ message: "توکن غیر معتبر است" });
+  }
+};
 
 // Get a user by ID
 exports.getUserById = async (req, res) => {

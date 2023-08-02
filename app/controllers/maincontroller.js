@@ -5,19 +5,20 @@ const Shop = db.Shop;
 const Request = db.Request;
 const geolib = require("geolib");
 const Pusher = require("pusher");
+const env = require("../config/env.js");
 
-async function SendResponse() {
+async function SendResponse(request) {
   try {
     const pusher = new Pusher({
-      appId: "1642863",
-      key: "2d1185b2021a81971755",
-      secret: "97baca0c0031c8539ef4",
-      cluster: "ap1", // The cluster where your app is located
-      useTLS: true, // Use TLS encryption
+      appId: env.pusher_appId,
+      key: env.pusher_key,
+      secret: env.pusher_secret,
+      cluster: env.pusher_cluster,
+      useTLS: env.pusher_useTLS,
     });
 
     // Trigger a notification event to the specific user using a private channel
-    pusher.trigger(`private-seller-${sellerId}`, "new_response", {
+    pusher.trigger(`private-user-${request.users_id}`, "new_response", {
       message: "پاسخ فروشنده",
       request: request,
     });
@@ -29,17 +30,17 @@ async function SendResponse() {
 async function SendReqest(sellerId, request) {
   try {
     const pusher = new Pusher({
-      appId: "1642863",
-      key: "2d1185b2021a81971755",
-      secret: "97baca0c0031c8539ef4",
-      cluster: "ap1", // The cluster where your app is located
-      useTLS: true, // Use TLS encryption
+      appId: env.pusher_appId,
+      key: env.pusher_key,
+      secret: env.pusher_secret,
+      cluster: env.pusher_cluster,
+      useTLS: env.pusher_useTLS,
     });
 
     // Trigger a notification event to the specific seller using a private channel
     pusher.trigger(`private-seller-${sellerId}`, "new_request", {
       message: "درخواست جدید از یک کاربر!",
-      request: request,
+      request: request, // users_id, seller_id, piece_name, content, timestamp
     });
   } catch (error) {
     throw error;
@@ -48,15 +49,14 @@ async function SendReqest(sellerId, request) {
 
 async function NearestShops() {
   const address = "مازندران نوشهر هفت تیر هفت تیر ۱۰";
-  NESHAN_KEY = "service.4f62c5a77e954852924117a7997cd4cc";
-
+  API_KEY = env.NESHAN_KEY;
   try {
     const response = await axios.get("https://api.neshan.org/v4/geocoding", {
       params: {
         address,
       },
       headers: {
-        "Api-Key": NESHAN_KEY,
+        "Api-Key": API_KEY,
       },
     });
 
