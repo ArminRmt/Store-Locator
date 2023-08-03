@@ -10,6 +10,8 @@ services:
       - DATABASE_URL=postgres://postgres:password@db:5432/storelocatorapi2
     depends_on:
       - db
+    volumes: # Add this 'volumes' section to map your local code to the container's working directory
+      - .:/app # This maps the current directory (where your docker-compose.yml is located) to /app inside the container
 
   db:
     image: "postgres:latest"
