@@ -22,6 +22,7 @@ exports.GetUserByToken = async (req, res) => {
     const user = await User.findOne({ where: { id: userId } });
 
     res.status(200).json(user);
+    console.log(JSON.stringify(user));
   } catch (err) {
     return res.status(401).json({ message: "توکن غیر معتبر است" });
   }
