@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const db = require("../config/db.config.js");
 const User = db.User;
 const env = require("../config/env.js");
+const { json } = require("body-parser");
 
 exports.GetUserByToken = async (req, res) => {
   let authHeader = req.headers["authorization"];
@@ -22,6 +23,7 @@ exports.GetUserByToken = async (req, res) => {
     const user = await User.findOne({ where: { id: userId } });
 
     res.status(200).json(user);
+    console.log(user);
   } catch (err) {
     return res.status(401).json({ message: "توکن غیر معتبر است" });
   }

@@ -1,11 +1,11 @@
 const express = require("express");
-const db = require("./app/config/db.config.js");
+const db = require("./config/db.config.js");
 const cors = require("cors");
-let router = require("./app/routers/router.js");
+let router = require("./routers/router.js");
 var bodyParser = require("body-parser");
 swaggerJsdoc = require("swagger-jsdoc");
 swaggerUi = require("swagger-ui-express");
-const env = require("./app/config/env.js");
+const env = require("./config/env.js");
 const argon2 = require("argon2");
 const User = db.User;
 const Seller = db.Seller;
