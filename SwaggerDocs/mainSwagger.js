@@ -1,7 +1,7 @@
 /**
  * @swagger
  *  /createRequest:
- *   get:
+ *   post:
  *     summary: Create request
  *     description: Create a request and send it to the nearest shops.
  *     security:
@@ -26,19 +26,22 @@
  *                 type: string
  *     responses:
  *       200:
- *         description: Requests created and sent successfully.
+ *         description: درخواست ها به با فرمتی که در مدل رکوعست قابل مشاهده هست فرستاده میشوند
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Request'
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *             example:
+ *              msg: درخواست با موفقیت به نزدیک ترین فروشنده ها ارسال شد
  *       401:
- *         description: Unauthorized
+ *         description: اهراز هویت نشده
  *       404:
- *         description: User Not found.
+ *         description: فرد پیدا نشد
  *       500:
- *         description: Internal Server Error
+ *         description: ارور سرور داخلی
  */
 
 /**

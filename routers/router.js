@@ -150,6 +150,10 @@ router.delete(
 // request
 // router.post('/request/create',[authJwt.verifyToken], maincontroller.handle_user_request)
 
-router.get("/createRequest", authJwt.verifyToken, maincontroller.createRequest);
+router.post(
+  "/createRequest",
+  authJwt.verifyToken,
+  maincontroller.createRequest
+);
 
 module.exports = router;

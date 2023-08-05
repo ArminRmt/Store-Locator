@@ -106,7 +106,9 @@ exports.createRequest = async (req, res) => {
       // SellersID.push(shop.seller_id);
     }
 
-    res.status(200).json(createdRequests);
+    res
+      .status(200)
+      .json({ msg: "درخواست با موفقیت به نزدیک ترین فروشنده ها ارسال شد" });
   } catch (error) {
     console.error("خطا در ایجاد درخواست:", error.message);
     res.status(500).json({ error: "خطای سرور داخلی" });
