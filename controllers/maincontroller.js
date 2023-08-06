@@ -4,48 +4,10 @@ const db = require("../config/db.config.js");
 const Shop = db.Shop;
 const Request = db.Request;
 const geolib = require("geolib");
-const Pusher = require("pusher");
+// const Pusher = require("pusher");
 const env = require("../config/env.js");
 
-async function SendResponse(request) {
-  try {
-    const pusher = new Pusher({
-      appId: env.pusher_appId,
-      key: env.pusher_key,
-      secret: env.pusher_secret,
-      cluster: env.pusher_cluster,
-      useTLS: env.pusher_useTLS,
-    });
-
-    // Trigger a notification event to the specific user using a private channel
-    pusher.trigger(`private-user-${request.users_id}`, "new_response", {
-      message: "پاسخ فروشنده",
-      request: request,
-    });
-  } catch (error) {
-    throw error;
-  }
-}
-
-async function SendReqest(sellerId, request) {
-  try {
-    const pusher = new Pusher({
-      appId: env.pusher_appId,
-      key: env.pusher_key,
-      secret: env.pusher_secret,
-      cluster: env.pusher_cluster,
-      useTLS: env.pusher_useTLS,
-    });
-
-    // Trigger a notification event to the specific seller using a private channel
-    pusher.trigger(`private-seller-${sellerId}`, "new_request", {
-      message: "درخواست جدید از یک کاربر!",
-      request: request, // users_id, seller_id, piece_name, content, timestamp
-    });
-  } catch (error) {
-    throw error;
-  }
-}
+// const { io } = require("../server.js");
 
 async function NearestShops() {
   const address = "مازندران نوشهر هفت تیر هفت تیر ۱۰";
@@ -89,9 +51,9 @@ exports.createRequest = async (req, res) => {
     const userId = req.userId;
     const { piece_name, content } = req.body;
     const timestamp = new Date().toISOString();
+    const AllRequest = [];
 
     const nearest_shops = await NearestShops();
-    // const SellersID = [];
 
     for (const shop of nearest_shops) {
       const newRequest = await Request.create({
@@ -101,16 +63,51 @@ exports.createRequest = async (req, res) => {
         content: content,
         timestamp: timestamp,
       });
-      // send requests to shops
-      SendReqest(shop.seller_id, newRequest);
-      // SellersID.push(shop.seller_id);
+
+      AllRequest.push(newRequest);
+
+      // Emit an event to the specific seller using Socket.IO
+      req.io.to(shop.seller_id).emit("newRequest", newRequest);
     }
 
-    res
-      .status(200)
-      .json({ msg: "درخواست با موفقیت به نزدیک ترین فروشنده ها ارسال شد" });
+    res.status(200).json({
+      msg: "درخواست با موفقیت به نزدیک ترین فروشنده ها ارسال شد",
+      AllRequest,
+    });
   } catch (error) {
     console.error("خطا در ایجاد درخواست:", error.message);
     res.status(500).json({ error: "خطای سرور داخلی" });
+  }
+};
+
+exports.createResponse = async (req, res) => {
+  try {
+    const { request_id, price, type } = req.body;
+    const timestamp = new Date().toISOString();
+
+    const request = await Request.findByPk(request_id, {
+      include: [User], // Include the User associated with the request
+    });
+
+    if (!request) {
+      return res.status(404).json({ msg: "درخواست یافت نشد" });
+    }
+
+    // Save the seller's response in the database
+    const newResponse = await Respond.create({
+      seller_id: req.userId, // Assuming the seller's ID is obtained from authentication
+      request_id: request_id,
+      price: price,
+      type: type,
+      timestamp: timestamp,
+    });
+
+    // Emit an event to the specific seller using Socket.IO
+    req.io.to(request.User.id).emit("newResponse", newResponse);
+
+    res.status(200).json({ msg: "پاسخ با موفقیت ارسال شد" });
+  } catch (error) {
+    console.error("Error creating response:", error.message);
+    res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };

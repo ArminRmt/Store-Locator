@@ -18,9 +18,12 @@ const {
   RequireFieldsSeller,
   RequireFieldsUser,
   RequireFieldsShop,
+  RequireFieldsRequest,
+  RequireFieldsRespond,
 } = require("../middleware/ValidateInputs.js");
 
-// authorization
+////////////////////////////////////      authorization     ////////////////////////////////////
+
 router.post(
   "/user-admin/signup",
   [
@@ -46,10 +49,8 @@ router.post(
 );
 router.post("/signin", auth.signin);
 
-// test get user details after signin
-router.get("/getuserbytoken", users.GetUserByToken);
+////////////////////////////////////      user routes     ////////////////////////////////////
 
-// user routes
 router.get(
   "/user/:id",
   [authJwt.verifyToken, authJwt.isAdmin],
@@ -82,7 +83,8 @@ router.delete(
   users.deleteUser
 );
 
-// seller routes
+////////////////////////////////////      seller routes     ////////////////////////////////////
+
 router.get(
   "/sellers",
   [authJwt.verifyToken, authJwt.isAdmin],
@@ -112,7 +114,8 @@ router.delete(
   seller.deleteSeller
 );
 
-// shop routes
+////////////////////////////////////      shop routes     ////////////////////////////////////
+
 router.get("/shops", [authJwt.verifyToken, authJwt.isAdmin], shop.getShops);
 router.get(
   "/shop/:id",
@@ -147,13 +150,23 @@ router.delete(
   shop.deleteShop
 );
 
-// request
-// router.post('/request/create',[authJwt.verifyToken], maincontroller.handle_user_request)
+////////////////////////////////////      main routes     ////////////////////////////////////
 
+// get user details by token
+router.get("/getuserbytoken", users.GetUserByToken);
+
+// buyer craete request and it will sends to nearest sellers
 router.post(
   "/createRequest",
-  authJwt.verifyToken,
+  [authJwt.verifyToken, RequireFieldsRequest],
   maincontroller.createRequest
+);
+
+// seller respond back to buyer request
+router.post(
+  "/createResponse",
+  [authJwt.verifyToken, RequireFieldsRespond],
+  maincontroller.createResponse
 );
 
 module.exports = router;

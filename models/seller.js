@@ -17,6 +17,14 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false,
     },
+    verificationCode: {
+      type: Sequelize.STRING, // INTEGER
+      allowNull: true,
+    },
+    verificationCodeExpiresAt: {
+      type: Sequelize.DATE,
+      allowNull: true,
+    },
   });
 
   return Seller;

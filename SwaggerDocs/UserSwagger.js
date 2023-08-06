@@ -137,7 +137,7 @@
 
 /**
  * @swagger
- * /user/getuserbytoken:
+ * /getuserbytoken:
  *   get:
  *     summary: Get user by Token
  *     description: Retrieve a user by its Token

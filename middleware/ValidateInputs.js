@@ -113,3 +113,21 @@ exports.RequireFieldsShop = (req, res, next) => {
   }
   next();
 };
+
+exports.RequireFieldsRequest = (req, res, next) => {
+  const { piece_name } = req.body;
+
+  if (!piece_name) {
+    return res.status(400).json({ msg: "نام قطعه الزامی هستند" });
+  }
+  next();
+};
+
+exports.RequireFieldsRespond = (req, res, next) => {
+  const { type } = req.body;
+
+  if (!type) {
+    return res.status(400).json({ msg: "نام قطعه الزامی هستند" });
+  }
+  next();
+};
