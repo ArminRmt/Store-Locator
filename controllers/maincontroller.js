@@ -47,33 +47,11 @@ async function NearestShops() {
   }
 }
 
-// async function GetUserIDByToken() {
-//   let authHeader = req.headers["authorization"];
-
-//   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-//     return res.status(403).send({
-//       message: "پیام: هیچ توکنی ارائه نشده است!",
-//     });
-//   }
-
-//   let token = authHeader.replace("Bearer ", "");
-
-//   try {
-//     const decoded = await jwt.verify(token, env.AUTH_SECRET);
-//     const userId = decoded.id;
-
-//     res.status(200).json(userId);
-//   } catch (err) {
-//     return res.status(401).json({ message: "توکن غیر معتبر است" });
-//   }
-// }
-
 exports.createRequest = async (req, res) => {
   try {
     const userId = req.userId;
     const { piece_name, content } = req.body;
     const timestamp = new Date().toISOString();
-    const AllRequest = [];
 
     const nearest_shops = await NearestShops();
 
@@ -86,15 +64,15 @@ exports.createRequest = async (req, res) => {
         timestamp: timestamp,
       });
 
-      AllRequest.push(newRequest);
-
       // Emit an event to the specific seller using Socket.IO
       req.io.to(shop.seller_id).emit("newRequest", newRequest);
     }
 
     res.status(200).json({
       msg: "درخواست با موفقیت به نزدیک ترین فروشنده ها ارسال شد",
-      AllRequest,
+      piece_name,
+      content,
+      timestamp,
     });
   } catch (error) {
     console.error("خطا در ایجاد درخواست:", error.message);
