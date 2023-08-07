@@ -6,6 +6,7 @@ const Request = db.Request;
 const geolib = require("geolib");
 // const Pusher = require("pusher");
 const env = require("../config/env.js");
+var jwt = require("jsonwebtoken");
 
 // const { io } = require("../server.js");
 
@@ -45,6 +46,27 @@ async function NearestShops() {
     throw error;
   }
 }
+
+// async function GetUserIDByToken() {
+//   let authHeader = req.headers["authorization"];
+
+//   if (!authHeader || !authHeader.startsWith("Bearer ")) {
+//     return res.status(403).send({
+//       message: "پیام: هیچ توکنی ارائه نشده است!",
+//     });
+//   }
+
+//   let token = authHeader.replace("Bearer ", "");
+
+//   try {
+//     const decoded = await jwt.verify(token, env.AUTH_SECRET);
+//     const userId = decoded.id;
+
+//     res.status(200).json(userId);
+//   } catch (err) {
+//     return res.status(401).json({ message: "توکن غیر معتبر است" });
+//   }
+// }
 
 exports.createRequest = async (req, res) => {
   try {

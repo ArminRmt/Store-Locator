@@ -21,10 +21,6 @@ const corsOptions = {
 };
 
 const app = express();
-app.use(cors(corsOptions));
-app.use(bodyParser.json());
-app.use("/", router);
-
 const server = http.createServer(app);
 const io = socketIO(server);
 // module.exports = { io };
@@ -34,13 +30,16 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
+app.use("/", router);
+
 app.use(
   "/api-docs",
   swaggerUi.serve,
   swaggerUi.setup(specs, { explorer: true })
 );
 
-// Create a Server
 // app.listen(env.port, function () {
 server.listen(env.port, function () {
   console.log(`App listening on port ${env.port}`);

@@ -118,34 +118,6 @@ isSellerOrAdmin = async (req, res, next) => {
   }
 };
 
-GetUserByToken = async (req, res, next) => {
-  let authHeader = req.headers["authorization"];
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(403).send({
-      message: "پیام: هیچ توکنی ارائه نشده است!",
-    });
-  }
-
-  let token = authHeader.replace("Bearer ", "");
-
-  try {
-    const decoded = await jwt.verify(token, env.AUTH_SECRET);
-    const userId = decoded.id;
-
-    const user = await User.findOne({ where: { id: userId } });
-    if (!user) {
-      return res.status(404).send({ message: "کاربر پیدا نشد." });
-    }
-
-    req.user = user;
-    console.log(req.user);
-    next();
-  } catch (err) {
-    return res.status(401).json({ message: "توکن غیر معتبر است" });
-  }
-};
-
 const authJwt = {
   verifyToken: verifyToken,
   isAdmin: isAdmin,
