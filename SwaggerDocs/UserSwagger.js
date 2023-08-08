@@ -168,6 +168,10 @@
  *                   type: string
  *                 role:
  *                   type: string
+ *                 verificationCode:
+ *                   type: string
+ *                 verificationCodeExpiresAt:
+ *                   type: string
  *                 createdAt:
  *                   type: string
  *                   format: date-time
@@ -180,6 +184,8 @@
  *               phone: "9876543210"
  *               password: "$argon2id....."
  *               role: "buyer"
+ *               verificationCode: "null"
+ *               verificationCodeExpiresAt: "null"
  *               createdAt: "2023-07-29T17:38:46.185Z"
  *               updatedAt: "2023-07-29T17:38:46.185Z"
  */
@@ -298,4 +304,72 @@
  *         description: User Not found.
  *       500:
  *         description: Internal Server Error
+ */
+
+/**
+ * @swagger
+ * /UserRequests:
+ *   get:
+ *     summary: Get user requests
+ *     description: Retrieve requests made by the authenticated user.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: Bearer <token>
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Request'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "عدم مجوز! توکن نامعتبر است یا منقضی شده است."
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "خطای سرور داخلی"
+ *
+ * components:
+ *   schemas:
+ *     Request:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *         users_id:
+ *           type: integer
+ *         seller_id:
+ *           type: integer
+ *         piece_name:
+ *           type: string
+ *         content:
+ *           type: string
+ *         timestamp:
+ *           type: string
+ *         createdAt:
+ *           type: string
+ *         updatedAt:
+ *           type: string
  */

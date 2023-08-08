@@ -51,7 +51,7 @@ db.Request.hasOne(db.Respond, { foreignKey: "request_id", sourceKey: "id" });
 db.Respond.belongsTo(db.Request, { foreignKey: "request_id", targetKey: "id" });
 
 // Request has many Seller
-db.Request.hasMany(db.Seller, { foreignKey: "seller_id", sourceKey: "id" });
+// db.Request.hasMany(db.Seller, { foreignKey: "seller_id", sourceKey: "id" });
 // Seller belongs to Request
 // db.Seller.belongsTo(db.Request, { foreignKey: "seller_id", targetKey: "id" });
 

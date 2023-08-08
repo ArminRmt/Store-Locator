@@ -48,6 +48,7 @@ router.post(
   auth.seller_signup
 );
 router.post("/signin", auth.signin);
+router.post("/signinSeller", auth.signinSeller);
 
 ////////////////////////////////////      user routes     ////////////////////////////////////
 
@@ -83,6 +84,11 @@ router.delete(
   users.deleteUser
 );
 
+// get user details by token
+router.get("/getuserbytoken", users.GetUserByToken);
+// get user all requests
+router.get("/UserRequests", authJwt.verifyToken, users.GetUserRequest);
+
 ////////////////////////////////////      seller routes     ////////////////////////////////////
 
 router.get(
@@ -113,6 +119,11 @@ router.delete(
   [authJwt.verifyToken, authJwt.isUserOrAdmin],
   seller.deleteSeller
 );
+
+// get seller details by token
+router.get("/GetSellerByToken", authJwt.verifyToken, seller.GetSellerByToken);
+// get sellers all responds
+router.get("/GetSellerResponds", authJwt.verifyToken, seller.GetSellerResponds);
 
 ////////////////////////////////////      shop routes     ////////////////////////////////////
 
@@ -151,9 +162,6 @@ router.delete(
 );
 
 ////////////////////////////////////      main routes     ////////////////////////////////////
-
-// get user details by token
-router.get("/getuserbytoken", users.GetUserByToken);
 
 // buyer craete request and it will sends to nearest sellers
 router.post(

@@ -1,6 +1,36 @@
 const argon2 = require("argon2");
 const db = require("../config/db.config.js");
 const Seller = db.Seller;
+const Respond = db.Respond;
+
+// get seller reponds
+exports.GetSellerResponds = async (req, res) => {
+  const userId = req.userId;
+  try {
+    const sellerResponds = await Respond.findAll({
+      where: {
+        seller_id: userId,
+      },
+    });
+
+    res.status(200).json(sellerResponds);
+  } catch (err) {
+    console.error("Error fetching seller responds:", err);
+    res.status(500).json({ error: "خطای داخلی سرور" });
+  }
+};
+
+// get seller by token
+exports.GetSellerByToken = async (req, res) => {
+  try {
+    const seller_id = req.userId;
+    const seller = await Seller.findOne({ where: { id: seller_id } });
+
+    res.status(200).json(seller);
+  } catch (err) {
+    return res.status(401).json({ message: "توکن غیر معتبر است" });
+  }
+};
 
 // Get a seller by ID
 exports.getSellerById = async (req, res) => {

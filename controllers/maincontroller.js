@@ -105,7 +105,9 @@ exports.createResponse = async (req, res) => {
     // Emit an event to the specific seller using Socket.IO
     req.io.to(request.User.id).emit("newResponse", newResponse);
 
-    res.status(200).json({ msg: "پاسخ با موفقیت ارسال شد" });
+    res
+      .status(200)
+      .json({ msg: "پاسخ با موفقیت ارسال شد", price, type, timestamp });
   } catch (error) {
     console.error("Error creating response:", error.message);
     res.status(500).json({ error: "خطای داخلی سرور" });

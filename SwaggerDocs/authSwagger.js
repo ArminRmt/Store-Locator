@@ -95,8 +95,8 @@
  * @swagger
  * /signin:
  *   post:
- *     summary: User sign in
- *     description: Sign in a user.
+ *     summary: Sign in user
+ *     description: Sign in a user using their phone number and password.
  *     requestBody:
  *       required: true
  *       content:
@@ -110,20 +110,113 @@
  *                 type: string
  *     responses:
  *       200:
- *         description: User signed in successfully with a token
+ *         description: Successful sign in
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 id:
- *                   type: integer
- *                 full_name:
+ *                 msg:
  *                   type: string
- *                 phone:
+ *                   example: "ورود موفقیت‌آمیز"
+ *                 token:
  *                   type: string
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
  *                 accessToken:
+ *                   type: null
+ *                 message:
  *                   type: string
+ *                   example: "رمز عبور نامعتبر است!"
+ *       404:
+ *         description: Seller not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "کاربر پیدا نشد."
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "خطای سرور داخلی"
+ */
+
+/**
+ * @swagger
+ * /signinSeller:
+ *   post:
+ *     summary: Sign in seller
+ *     description: Sign in a seller using their phone number and password.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               phone:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successful sign in
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   example: "ورود موفقیت‌آمیز"
+ *                 token:
+ *                   type: string
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: null
+ *                 message:
+ *                   type: string
+ *                   example: "رمز عبور نامعتبر است!"
+ *       404:
+ *         description: Seller not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "فروشنده پیدا نشد."
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "خطای سرور داخلی"
  */
 
 /**
