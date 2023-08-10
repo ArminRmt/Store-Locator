@@ -25,25 +25,6 @@ exports.signup = async (req, res) => {
   }
 };
 
-// crete seller
-exports.seller_signup = async (req, res) => {
-  const { full_name, phone, password } = req.body;
-
-  try {
-    const hashPassword = await argon2.hash(password);
-
-    const newSeller = await Seller.create({
-      full_name,
-      phone,
-      password: hashPassword,
-    });
-
-    res.status(201).json({ msg: "ثبت نام موفقیت‌آمیز", newSeller });
-  } catch (error) {
-    res.status(500).json({ msg: error.message });
-  }
-};
-
 // sign in user
 exports.signin = async (req, res) => {
   try {
@@ -73,6 +54,25 @@ exports.signin = async (req, res) => {
     res.status(200).json({ msg: "ورود موفقیت‌آمیز", token });
   } catch (err) {
     res.status(500).send({ message: "خطای سرور داخلی" });
+  }
+};
+
+// crete seller
+exports.seller_signup = async (req, res) => {
+  const { full_name, phone, password } = req.body;
+
+  try {
+    const hashPassword = await argon2.hash(password);
+
+    const newSeller = await Seller.create({
+      full_name,
+      phone,
+      password: hashPassword,
+    });
+
+    res.status(201).json({ msg: "ثبت نام موفقیت‌آمیز", newSeller });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
   }
 };
 

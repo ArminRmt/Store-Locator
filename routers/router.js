@@ -120,6 +120,8 @@ router.delete(
   seller.deleteSeller
 );
 
+router.get("/SellerRequests", authJwt.verifyToken, seller.SellerRequests);
+
 // get seller details by token
 router.get("/GetSellerByToken", authJwt.verifyToken, seller.GetSellerByToken);
 // get sellers all responds

@@ -3,6 +3,7 @@ const axios = require("axios");
 const db = require("../config/db.config.js");
 const Shop = db.Shop;
 const Request = db.Request;
+const Respond = db.Respond;
 const geolib = require("geolib");
 // const Pusher = require("pusher");
 const env = require("../config/env.js");
@@ -64,7 +65,7 @@ exports.createRequest = async (req, res) => {
         timestamp: timestamp,
       });
 
-      // Emit an event to the specific seller using Socket.IO
+      // Emit an event to the specific seller
       req.io.to(shop.seller_id).emit("newRequest", newRequest);
     }
 
@@ -83,31 +84,23 @@ exports.createRequest = async (req, res) => {
 exports.createResponse = async (req, res) => {
   try {
     const { request_id, price, type } = req.body;
+    const buyerID = req.body.user_id;
+    const SellerId = req.userId;
+
     const timestamp = new Date().toISOString();
 
-    const request = await Request.findByPk(request_id, {
-      include: [User], // Include the User associated with the request
-    });
-
-    if (!request) {
-      return res.status(404).json({ msg: "درخواست یافت نشد" });
-    }
-
-    // Save the seller's response in the database
     const newResponse = await Respond.create({
-      seller_id: req.userId, // Assuming the seller's ID is obtained from authentication
+      seller_id: SellerId,
       request_id: request_id,
       price: price,
       type: type,
       timestamp: timestamp,
     });
 
-    // Emit an event to the specific seller using Socket.IO
-    req.io.to(request.User.id).emit("newResponse", newResponse);
+    // Emit an event to the specific user
+    req.io.to(buyerID).emit("newResponse", newResponse);
 
-    res
-      .status(200)
-      .json({ msg: "پاسخ با موفقیت ارسال شد", price, type, timestamp });
+    res.status(200).json({ msg: "پاسخ با موفقیت ارسال شد" });
   } catch (error) {
     console.error("Error creating response:", error.message);
     res.status(500).json({ error: "خطای داخلی سرور" });

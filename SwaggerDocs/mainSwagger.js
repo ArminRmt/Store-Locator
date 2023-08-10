@@ -12,7 +12,7 @@
  *         required: true
  *         schema:
  *           type: string
- *           format: Bearer <token>
+ *           format: Bearer token
  *     requestBody:
  *       required: true
  *       content:
@@ -104,7 +104,7 @@
  *  /createResponse:
  *   post:
  *     summary: Create response
- *     description: Create a response to a request and send it to the requester.
+ *     description: Create a response to a request and send it to the buyer.
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -113,7 +113,7 @@
  *         required: true
  *         schema:
  *           type: string
- *           format: Bearer <token>
+ *           format: Bearer token
  *     requestBody:
  *       required: true
  *       content:
@@ -127,6 +127,8 @@
  *                 type: number
  *               type:
  *                 type: string
+ *               user_id:
+ *                 type: integer
  *     responses:
  *       200:
  *         description: Success

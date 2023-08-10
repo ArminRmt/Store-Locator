@@ -373,3 +373,65 @@
  *           type: string
  *           format: date-time
  */
+/**
+ * @swagger
+ * /SellerRequests:
+ *   get:
+ *     summary: Get seller requests
+ *     description: Retrieve requests related to the authenticated seller.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: Bearer token
+ *     responses:
+ *       200:
+ *         description: Successful retrieval
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Request'
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "خطای سرور داخلی"
+ *
+ * components:
+ *   schemas:
+ *     Request:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *         users_id:
+ *           type: integer
+ *         seller_id:
+ *           type: integer
+ *         piece_name:
+ *           type: string
+ *         content:
+ *           type: string
+ *         timestamp:
+ *           type: string
+ *           format: date-time
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ */
