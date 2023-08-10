@@ -22,7 +22,12 @@ const corsOptions = {
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIO(server);
+const io = socketIO(server, {
+  cors: {
+    origin: "http://localhost:5173", // Allow the frontend to connect
+    methods: ["GET", "POST"],
+  },
+});
 // module.exports = { io };
 // Attach Socket.IO middleware to your Express app
 app.use((req, res, next) => {
