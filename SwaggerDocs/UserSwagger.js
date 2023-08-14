@@ -329,7 +329,7 @@
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Request'
+ *                 $ref: '#/components/schemas/request'
  *       401:
  *         description: Unauthorized
  *         content:
@@ -351,25 +351,4 @@
  *                   type: string
  *                   example: "خطای سرور داخلی"
  *
- * components:
- *   schemas:
- *     Request:
- *       type: object
- *       properties:
- *         id:
- *           type: integer
- *         users_id:
- *           type: integer
- *         seller_id:
- *           type: integer
- *         piece_name:
- *           type: string
- *         content:
- *           type: string
- *         timestamp:
- *           type: string
- *         createdAt:
- *           type: string
- *         updatedAt:
- *           type: string
  */

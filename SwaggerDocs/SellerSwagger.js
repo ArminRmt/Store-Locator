@@ -318,7 +318,7 @@
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Respond'
+ *                 $ref: '#/components/schemas/respond'
  *       401:
  *         description: Unauthorized
  *       500:
@@ -331,47 +331,6 @@
  *                 error:
  *                   type: string
  *                   example: "خطای سرور داخلی"
- *
- * components:
- *   schemas:
- *     SellerResponse:
- *       type: object
- *       properties:
- *         id:
- *           type: integer
- *         seller_id:
- *           type: integer
- *         request_id:
- *           type: string
- *         price:
- *           type: string
- *         type:
- *           type: string
- *         timestamp:
- *           type: string
- *     Respond:
- *       type: object
- *       properties:
- *         id:
- *           type: integer
- *         seller_id:
- *           type: integer
- *         request_id:
- *           type: integer
- *         price:
- *           type: string
- *           format: float
- *         type:
- *           type: string
- *         timestamp:
- *           type: string
- *           format: date-time
- *         createdAt:
- *           type: string
- *           format: date-time
- *         updatedAt:
- *           type: string
- *           format: date-time
  */
 /**
  * @swagger
@@ -396,7 +355,7 @@
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Request'
+ *                 $ref: '#/components/schemas/request'
  *       401:
  *         description: Unauthorized
  *       500:
@@ -410,28 +369,4 @@
  *                   type: string
  *                   example: "خطای سرور داخلی"
  *
- * components:
- *   schemas:
- *     Request:
- *       type: object
- *       properties:
- *         id:
- *           type: integer
- *         users_id:
- *           type: integer
- *         seller_id:
- *           type: integer
- *         piece_name:
- *           type: string
- *         content:
- *           type: string
- *         timestamp:
- *           type: string
- *           format: date-time
- *         createdAt:
- *           type: string
- *           format: date-time
- *         updatedAt:
- *           type: string
- *           format: date-time
  */

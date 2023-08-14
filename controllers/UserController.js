@@ -73,7 +73,7 @@ exports.getUsers = async (req, res) => {
 
 // Update a user by ID
 exports.updateUser = async (req, res) => {
-  const { full_name, phone, password, confirmPassword, role } = req.body;
+  const { full_name, phone, password, role } = req.body;
 
   try {
     const user = await User.findByPk(req.params.id);

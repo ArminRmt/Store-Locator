@@ -37,7 +37,7 @@
  *                 AllRequest:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/Request'
+ *                     $ref: '#/components/schemas/request'
  *             example:
  *               msg: درخواست با موفقیت به نزدیک ترین فروشنده ها ارسال شد
  *               AllRequest:
@@ -79,26 +79,7 @@
  *                 error:
  *                   type: string
  *                   example: "خطای سرور داخلی"
- *
- * components:
- *   schemas:
- *     Request:
- *       type: object
- *       properties:
- *         id:
- *           type: integer
- *         users_id:
- *           type: integer
- *         seller_id:
- *           type: integer
- *         piece_name:
- *           type: string
- *         content:
- *           type: string
- *         timestamp:
- *           type: string
  */
-
 /**
  * @swagger
  *  /createResponse:
@@ -142,7 +123,7 @@
  *                 newResponse:
  *                   type: object
  *                   items:
- *                     $ref: '#/components/schemas/Respond'
+ *                     $ref: '#/components/schemas/respond'
  *             example:
  *               msg: پاسخ با موفقیت ارسال شد
  *               newResponse:
@@ -182,22 +163,4 @@
  *                 error:
  *                   type: string
  *                   example: "خطای داخلی سرور"
- *
- * components:
- *   schemas:
- *     Request:
- *       type: object
- *       properties:
- *         id:
- *           type: integer
- *         users_id:
- *           type: integer
- *         seller_id:
- *           type: integer
- *         piece_name:
- *           type: string
- *         content:
- *           type: string
- *         timestamp:
- *           type: string
  */
