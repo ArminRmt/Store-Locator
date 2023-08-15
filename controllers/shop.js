@@ -1,5 +1,45 @@
 const db = require("../config/db.config.js");
 const Shop = db.Shop;
+const axios = require("axios");
+const geolib = require("geolib");
+const env = require("../config/env.js");
+
+async function NearestShops() {
+  const address = "مازندران نوشهر هفت تیر هفت تیر ۱۰";
+  API_KEY = env.NESHAN_KEY;
+  try {
+    const response = await axios.get("https://api.neshan.org/v4/geocoding", {
+      params: {
+        address,
+      },
+      headers: {
+        "Api-Key": API_KEY,
+      },
+    });
+
+    userLongitude = parseFloat(response.data.location.x);
+    userLatitude = parseFloat(response.data.location.y);
+
+    const shops = await Shop.findAll();
+
+    const distances = shops.map((shop) => {
+      return {
+        ...shop,
+        distance: geolib.getDistance(
+          { latitude: userLatitude, longitude: userLongitude },
+          { latitude: shop.latitude, longitude: shop.longitude }
+        ),
+      };
+    });
+
+    distances.sort((a, b) => a.distance - b.distance);
+    const dataValuesOnly = distances.map((item) => item.dataValues);
+
+    return dataValuesOnly;
+  } catch (error) {
+    throw error;
+  }
+}
 
 // Get a shop by ID
 exports.getShopById = async (req, res) => {

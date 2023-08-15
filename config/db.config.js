@@ -25,6 +25,10 @@ db.Seller = require("../models/seller.js")(sequelize, Sequelize);
 db.Shop = require("../models/shop.js")(sequelize, Sequelize);
 db.Request = require("../models/request.js")(sequelize, Sequelize);
 db.Respond = require("../models/respond.js")(sequelize, Sequelize);
+db.RequestSellerLinks = require("../models/request_seller_links.js")(
+  sequelize,
+  Sequelize
+);
 db.SellersReview = require("../models/sellers_reviews.js")(
   sequelize,
   Sequelize

@@ -9,10 +9,6 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER,
       allowNull: false,
     },
-    seller_id: {
-      type: Sequelize.INTEGER,
-      allowNull: false,
-    },
     piece_name: {
       type: Sequelize.STRING,
     },

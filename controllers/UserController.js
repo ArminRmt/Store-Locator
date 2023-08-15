@@ -2,25 +2,8 @@ const argon2 = require("argon2");
 const jwt = require("jsonwebtoken");
 const db = require("../config/db.config.js");
 const User = db.User;
-const Request = db.Request;
 const env = require("../config/env.js");
 const { json } = require("body-parser");
-
-exports.GetUserRequest = async (req, res) => {
-  const userId = req.userId;
-  try {
-    const userRequests = await Request.findAll({
-      where: {
-        users_id: userId,
-      },
-    });
-
-    res.status(200).json(userRequests);
-  } catch (err) {
-    console.error("Error fetching user requests:", err);
-    res.status(500).json({ error: "خطای داخلی سرور" });
-  }
-};
 
 exports.GetUserByToken = async (req, res) => {
   let authHeader = req.headers["authorization"];

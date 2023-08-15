@@ -3,9 +3,10 @@ let router = express.Router();
 
 const users = require("../controllers/UserController.js");
 const auth = require("../controllers/auth.js");
-const maincontroller = require("../controllers/maincontroller.js");
 const shop = require("../controllers/shop.js");
 const seller = require("../controllers/seller.js");
+const request = require("../controllers/request.js");
+const respond = require("../controllers/respond.js");
 
 const authJwt = require("../middleware/authJwt");
 
@@ -86,8 +87,6 @@ router.delete(
 
 // get user details by token
 router.get("/getuserbytoken", users.GetUserByToken);
-// get user all requests
-router.get("/UserRequests", authJwt.verifyToken, users.GetUserRequest);
 
 ////////////////////////////////////      seller routes     ////////////////////////////////////
 
@@ -163,20 +162,48 @@ router.delete(
   shop.deleteShop
 );
 
-////////////////////////////////////      main routes     ////////////////////////////////////
+////////////////////////////////////    request routes   ////////////////////////////////////
+
+// get user all requests
+router.get("/UserRequests", authJwt.verifyToken, request.GetUserRequest);
 
 // buyer craete request and it will sends to nearest sellers
 router.post(
   "/createRequest",
   [authJwt.verifyToken, RequireFieldsRequest],
-  maincontroller.createRequest
+  request.createRequest
 );
+
+// buyer update his request
+router.patch(
+  "/UpdateRequest",
+  [authJwt.verifyToken, RequireFieldsRequest],
+  request.UpdateRequest
+);
+
+// buyer delete his request
+router.delete("/DeleteRequest", [authJwt.verifyToken], request.DeleteRequest);
+
+////////////////////////////////////    respond routes   ////////////////////////////////////
+
+// get user all responds
+router.get("/SellerResponds", authJwt.verifyToken, respond.GetSellerResponds);
 
 // seller respond back to buyer request
 router.post(
   "/createResponse",
   [authJwt.verifyToken, RequireFieldsRespond],
-  maincontroller.createResponse
+  respond.createResponse
 );
+
+// seller update his respond
+router.patch(
+  "/UpdateResponse",
+  [authJwt.verifyToken, RequireFieldsRespond],
+  respond.UpdateResponse
+);
+
+// seller delete his respond
+router.delete("/DeleteResponse", [authJwt.verifyToken], respond.DeleteResponse);
 
 module.exports = router;

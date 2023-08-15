@@ -6,6 +6,7 @@ const Seller = db.Seller;
 const Shop = db.Shop;
 const Request = db.Request;
 const Respond = db.Respond;
+const RequestSellerLinks = db.RequestSellerLinks;
 
 async function initial() {
   try {
@@ -67,10 +68,14 @@ async function initial() {
 
     await Request.create({
       users_id: 1,
-      seller_id: 1,
       piece_name: "lent tormoz",
       content: "ye lent mikahm",
       timestamp: new Date().toISOString(),
+    });
+
+    await RequestSellerLinks.create({
+      request_id: 1,
+      seller_id: 1,
     });
 
     await Respond.create({
