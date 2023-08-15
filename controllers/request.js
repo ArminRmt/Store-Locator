@@ -3,6 +3,28 @@ const Request = db.Request;
 const RequestSellerLinks = db.RequestSellerLinks;
 const shop = require("./shop.js");
 
+// get seller requests
+exports.SellerRequests = async (req, res) => {
+  const sellerID = req.userId;
+  try {
+    // join requests and request_seller_links tables
+    const requests = await Request.findAll({
+      include: [
+        {
+          model: RequestSellerLinks,
+          where: { seller_id: sellerID },
+          attributes: [], // Exclude attributes from RequestSellerLinks
+        },
+      ],
+    });
+
+    res.status(200).json(requests);
+  } catch (err) {
+    console.error("Error fetching seller requests:", err);
+    res.status(500).json({ error: "خطای داخلی سرور" });
+  }
+};
+
 exports.GetUserRequest = async (req, res) => {
   const userId = req.userId;
   try {
@@ -76,7 +98,10 @@ exports.UpdateRequest = async (req, res) => {
       content,
       timestamp: timestamp,
     });
-    res.status(200).json({ msg: "درخواست به‌روزرسانی شد" });
+
+    res
+      .status(200)
+      .json({ msg: "درخواست به‌روزرسانی شد", piece_name, content, timestamp });
   } catch (error) {
     res.status(500).json({ msg: "خطای سرور" });
   }

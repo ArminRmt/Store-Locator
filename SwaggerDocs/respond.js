@@ -60,12 +60,12 @@
  *             properties:
  *               request_id:
  *                 type: integer
+ *               buyerID:
+ *                 type: integer
  *               price:
- *                 type: number
+ *                 type: integer
  *               type:
  *                 type: string
- *               user_id:
- *                 type: integer
  *     responses:
  *       200:
  *         description: Success
@@ -81,14 +81,10 @@
  *                   items:
  *                     $ref: '#/components/schemas/respond'
  *             example:
- *               msg: پاسخ با موفقیت ارسال شد
- *               newResponse:
- *                 - id: 1
- *                   users_id: 123
- *                   seller_id: 456
- *                   piece_name: "Example Piece 1"
- *                   content: "Example content for Piece 1"
- *                   timestamp: "2023-07-29T18:00:00Z"
+ *               msg: پاسخ به‌روزرسانی شد
+ *               price: 10
+ *               type: "ok/no/mojod mikonam"
+ *               timestamp: "2023-07-29T18:00:00Z"
  *       401:
  *         description: Unauthorized
  *         content:
@@ -145,7 +141,7 @@
  *               response_id:
  *                 type: integer
  *               price:
- *                 type: string
+ *                 type: integer
  *               type:
  *                 type: string
  *     responses:
@@ -158,7 +154,17 @@
  *               properties:
  *                 msg:
  *                   type: string
- *                   example: "پاسخ به‌روزرسانی شد"
+ *                 price:
+ *                   type: integer
+ *                 type:
+ *                   type: string
+ *                 timestamp:
+ *                   type: string
+ *             example:
+ *               msg: پاسخ به‌روزرسانی شد
+ *               price: 10
+ *               type: "ok/no/mojod mikonam"
+ *               timestamp: "2023-07-29T18:00:00Z"
  *       403:
  *         description: Forbidden - Access not allowed
  *         content:

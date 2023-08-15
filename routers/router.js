@@ -119,12 +119,15 @@ router.delete(
   seller.deleteSeller
 );
 
-router.get("/SellerRequests", authJwt.verifyToken, seller.SellerRequests);
-
 // get seller details by token
 router.get("/GetSellerByToken", authJwt.verifyToken, seller.GetSellerByToken);
+
 // get sellers all responds
-router.get("/GetSellerResponds", authJwt.verifyToken, seller.GetSellerResponds);
+router.get(
+  "/GetSellerResponds",
+  authJwt.verifyToken,
+  respond.GetSellerResponds
+);
 
 ////////////////////////////////////      shop routes     ////////////////////////////////////
 
@@ -166,6 +169,9 @@ router.delete(
 
 // get user all requests
 router.get("/UserRequests", authJwt.verifyToken, request.GetUserRequest);
+
+// get seller request
+router.get("/SellerRequests", authJwt.verifyToken, request.SellerRequests);
 
 // buyer craete request and it will sends to nearest sellers
 router.post(

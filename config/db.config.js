@@ -54,10 +54,27 @@ db.Request.hasOne(db.Respond, { foreignKey: "request_id", sourceKey: "id" });
 // Respond belongs to Request
 db.Respond.belongsTo(db.Request, { foreignKey: "request_id", targetKey: "id" });
 
-// Request has many Seller
-// db.Request.hasMany(db.Seller, { foreignKey: "seller_id", sourceKey: "id" });
-// Seller belongs to Request
-// db.Seller.belongsTo(db.Request, { foreignKey: "seller_id", targetKey: "id" });
+// Request has many RequestSellerLinks
+db.Request.hasMany(db.RequestSellerLinks, {
+  foreignKey: "request_id",
+  sourceKey: "id",
+});
+// RequestSellerLinks belongs to Request
+db.RequestSellerLinks.belongsTo(db.Request, {
+  foreignKey: "request_id",
+  targetKey: "id",
+});
+
+// Request has many RequestSellerLinks
+db.RequestSellerLinks.hasOne(db.Seller, {
+  foreignKey: "seller_id",
+  sourceKey: "id",
+});
+// RequestSellerLinks belongs to Request
+db.Seller.belongsTo(db.RequestSellerLinks, {
+  foreignKey: "seller_id",
+  targetKey: "id",
+});
 
 // Seller has many Respond
 db.Seller.hasMany(db.Respond, { foreignKey: "seller_id", sourceKey: "id" });

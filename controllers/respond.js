@@ -3,6 +3,7 @@
 const db = require("../config/db.config.js");
 const Respond = db.Respond;
 
+// get seller reponds
 exports.GetSellerResponds = async (req, res) => {
   const userId = req.userId;
   try {
@@ -21,8 +22,8 @@ exports.GetSellerResponds = async (req, res) => {
 
 exports.createResponse = async (req, res) => {
   try {
-    const { request_id, price, type } = req.body;
-    const buyerID = req.body.user_id;
+    const { request_id, buyerID, price, type } = req.body;
+    // const buyerID = req.body.user_id;
     const SellerId = req.userId;
 
     const timestamp = new Date().toISOString();
@@ -38,7 +39,9 @@ exports.createResponse = async (req, res) => {
     // Emit an event to the specific user
     req.io.to(buyerID).emit("newResponse", newResponse);
 
-    res.status(200).json({ msg: "پاسخ با موفقیت ارسال شد" });
+    res
+      .status(200)
+      .json({ msg: "پاسخ با موفقیت ارسال شد", price, type, timestamp });
   } catch (error) {
     console.error("Error creating response:", error.message);
     res.status(500).json({ error: "خطای داخلی سرور" });
@@ -66,7 +69,9 @@ exports.UpdateResponse = async (req, res) => {
       timestamp: timestamp,
     });
 
-    res.status(200).json({ msg: "پاسخ به‌روزرسانی شد" });
+    res
+      .status(200)
+      .json({ msg: "پاسخ به‌روزرسانی شد", price, type, timestamp });
   } catch (error) {
     console.error("Error updating response:", error.message);
     res.status(500).json({ error: "خطای داخلی سرور" });
