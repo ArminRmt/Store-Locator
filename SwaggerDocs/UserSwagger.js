@@ -274,7 +274,7 @@
  *         required: true
  *         schema:
  *           type: string
- *           format: Bearer <token>
+ *           format: Bearer token
  *       - in: path
  *         name: id
  *         required: true

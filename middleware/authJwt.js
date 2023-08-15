@@ -3,7 +3,7 @@ const db = require("../config/db.config.js");
 const User = db.User;
 const env = require("../config/env.js");
 
-verifyToken = (req, res, next) => {
+const verifyToken = (req, res, next) => {
   let authHeader = req.headers["authorization"];
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -16,12 +16,17 @@ verifyToken = (req, res, next) => {
 
   jwt.verify(token, env.AUTH_SECRET, (err, decoded) => {
     if (err) {
-      return res.status(401).send({
-        message: "عدم مجوز!",
-      });
+      if (err.name === "TokenExpiredError") {
+        return res.status(401).send({
+          message: "توکن منقضی شده است.",
+        });
+      } else {
+        return res.status(401).send({
+          message: "عدم مجوز!",
+        });
+      }
     }
     req.userId = decoded.id;
-
     next();
   });
 };

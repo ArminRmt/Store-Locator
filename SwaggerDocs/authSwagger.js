@@ -280,3 +280,52 @@
  *                   - field: "phone"
  *                     message: "Phone number must be a 10-digit number."
  */
+/**
+ * @swagger
+ *  /verify-token:
+ *   get:
+ *     summary: Verify Token
+ *     description: Verify the validity of the token provided in the Authorization header.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: Bearer token
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "توکن معتبر است."
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "توکن منقضی شده است."
+ *               example:
+ *                 message: "توکن منقضی شده است."
+ *       403:
+ *         description: Forbidden
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "هیچ توکنی ارائه نشده است!"
+ */
