@@ -33,6 +33,7 @@ exports.createRequest = async (req, res) => {
     });
 
     const nearest_shops = await shop.NearestShops();
+
     for (const shop of nearest_shops) {
       await RequestSellerLinks.create({
         request_id: newRequest.id,
@@ -50,7 +51,7 @@ exports.createRequest = async (req, res) => {
       timestamp,
     });
   } catch (error) {
-    console.error("خطا در ایجاد درخواست:", error.message);
+    console.error("error is: ", error.message);
     res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };

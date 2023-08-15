@@ -4,7 +4,8 @@ const axios = require("axios");
 const geolib = require("geolib");
 const env = require("../config/env.js");
 
-async function NearestShops() {
+exports.NearestShops = async () => {
+  // async function NearestShops() {
   const address = "مازندران نوشهر هفت تیر هفت تیر ۱۰";
   API_KEY = env.NESHAN_KEY;
   try {
@@ -39,7 +40,7 @@ async function NearestShops() {
   } catch (error) {
     throw error;
   }
-}
+};
 
 // Get a shop by ID
 exports.getShopById = async (req, res) => {
