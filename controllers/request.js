@@ -48,7 +48,7 @@ exports.createRequest = async (req, res) => {
     const { piece_name, content } = req.body;
     const timestamp = new Date().toISOString();
 
-    const newRequest = await Request.create({
+    const newRequest = Request.create({
       users_id: userId,
       piece_name: piece_name,
       content: content,
