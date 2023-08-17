@@ -64,7 +64,7 @@
  *                 type: integer
  *               price:
  *                 type: integer
- *               seller_resopond:
+ *               seller_respond:
  *                 type: string
  *     responses:
  *       200:
@@ -83,7 +83,7 @@
  *             example:
  *               msg: پاسخ به‌روزرسانی شد
  *               price: 10
- *               seller_resopond: "ok/no/mojod mikonam"
+ *               seller_respond: "ok/no/mojod mikonam"
  *               timestamp: "2023-07-29T18:00:00Z"
  *       401:
  *         description: Unauthorized
@@ -142,7 +142,7 @@
  *                 type: integer
  *               price:
  *                 type: integer
- *               seller_resopond:
+ *               seller_respond:
  *                 type: string
  *     responses:
  *       200:
@@ -156,14 +156,14 @@
  *                   type: string
  *                 price:
  *                   type: integer
- *                 seller_resopond:
+ *                 seller_respond:
  *                   type: string
  *                 timestamp:
  *                   type: string
  *             example:
  *               msg: پاسخ به‌روزرسانی شد
  *               price: 10
- *               seller_resopond: "ok/no/mojod mikonam"
+ *               seller_respond: "ok/no/mojod mikonam"
  *               timestamp: "2023-07-29T18:00:00Z"
  *       403:
  *         description: Forbidden - Access not allowed

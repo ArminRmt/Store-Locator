@@ -22,7 +22,7 @@ exports.GetSellerResponds = async (req, res) => {
 
 exports.createResponse = async (req, res) => {
   try {
-    const { request_id, buyerID, price, seller_resopond } = req.body;
+    const { request_id, buyerID, price, seller_respond } = req.body;
     // const buyerID = req.body.user_id;
     const SellerId = req.userId;
 
@@ -32,7 +32,7 @@ exports.createResponse = async (req, res) => {
       seller_id: SellerId,
       request_id: request_id,
       price: price,
-      type: seller_resopond,
+      type: seller_respond,
       timestamp: timestamp,
     });
 
@@ -42,7 +42,7 @@ exports.createResponse = async (req, res) => {
     res.status(200).json({
       msg: "پاسخ با موفقیت ارسال شد",
       price,
-      seller_resopond,
+      seller_respond,
       timestamp,
     });
   } catch (error) {
@@ -52,7 +52,7 @@ exports.createResponse = async (req, res) => {
 };
 
 exports.UpdateResponse = async (req, res) => {
-  const { response_id, price, seller_resopond } = req.body;
+  const { response_id, price, seller_respond } = req.body;
   const timestamp = new Date().toISOString();
 
   try {
@@ -68,13 +68,13 @@ exports.UpdateResponse = async (req, res) => {
 
     await response.update({
       price,
-      seller_resopond,
+      seller_respond,
       timestamp: timestamp,
     });
 
     res
       .status(200)
-      .json({ msg: "پاسخ به‌روزرسانی شد", price, seller_resopond, timestamp });
+      .json({ msg: "پاسخ به‌روزرسانی شد", price, seller_respond, timestamp });
   } catch (error) {
     console.error("Error updating response:", error.message);
     res.status(500).json({ error: "خطای داخلی سرور" });

@@ -28,12 +28,43 @@ const io = socketIO(server, {
     methods: ["GET", "POST"],
   },
 });
+
+const sellerSockets = {}; // Mapping of seller IDs to socket IDs
+
+io.on("connection", (socket) => {
+  console.log("Client connected:", socket.id);
+
+  // Handle seller identification
+  socket.on("identifySeller", (sellerId) => {
+    sellerSockets[sellerId] = socket.id;
+    console.log(`Seller ${sellerId} identified with socket ${socket.id}`);
+  });
+
+  // ... Other socket event handling ...
+
+  socket.on("disconnect", () => {
+    // Clean up the mapping when a seller disconnects
+    const disconnectedSeller = Object.keys(sellerSockets).find(
+      (key) => sellerSockets[key] === socket.id
+    );
+    if (disconnectedSeller) {
+      delete sellerSockets[disconnectedSeller];
+      console.log(`Seller ${disconnectedSeller} disconnected`);
+    }
+  });
+});
+
+module.exports = {
+  io,
+  sellerSockets, // Export the sellerSockets object
+};
+
 // module.exports = { io };
 // Attach Socket.IO middleware to your Express app
-app.use((req, res, next) => {
-  req.io = io; // Attach the io object to the request object for use in your routes
-  next();
-});
+// app.use((req, res, next) => {
+//   req.io = io; // Attach the io object to the request object for use in your routes
+//   next();
+// });
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());

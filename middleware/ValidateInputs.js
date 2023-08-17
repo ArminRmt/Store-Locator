@@ -124,10 +124,10 @@ exports.RequireFieldsRequest = (req, res, next) => {
 };
 
 exports.RequireFieldsRespond = (req, res, next) => {
-  const { type } = req.body;
+  const seller_respond = req.body.seller_respond;
 
-  if (!type) {
-    return res.status(400).json({ msg: "نام قطعه الزامی هستند" });
+  if (!seller_respond) {
+    return res.status(400).json({ msg: "پاسخ الزامی هست" });
   }
   next();
 };

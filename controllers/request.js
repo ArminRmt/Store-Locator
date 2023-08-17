@@ -2,6 +2,7 @@ const db = require("../config/db.config.js");
 const Request = db.Request;
 const RequestSellerLinks = db.RequestSellerLinks;
 const shop = require("./shop.js");
+const { sellerSockets, io } = require("../server.js");
 
 // get seller requests
 exports.SellerRequests = async (req, res) => {
@@ -63,22 +64,12 @@ exports.createRequest = async (req, res) => {
       });
 
       // Emit an event to the specific seller
-      req.io.to(shop.seller_id).emit("newRequest", newRequest);
+      // req.io.to(shop.seller_id).emit("newRequest", newRequest);
+      const sellerSocketId = sellerSockets[shop.seller_id]; // Use the stored socket ID
+      if (sellerSocketId) {
+        io.to(sellerSocketId).emit("newRequest", newRequest);
+      }
     }
-
-    req.io.on("connection", (socket) => {
-      console.log("buyer connected: ", socket.id);
-
-      socket.join(userId);
-
-      socket.on("disconnect", (reason) => {
-        console.log(reason);
-      });
-    });
-
-    setInterval(() => {
-      req.io.to(userId).emit("time", new Date());
-    }, 1000);
 
     res.status(200).json({
       msg: "درخواست با موفقیت به نزدیک ترین فروشنده ها ارسال شد",
