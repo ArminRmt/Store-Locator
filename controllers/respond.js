@@ -37,7 +37,7 @@ exports.createResponse = async (req, res) => {
     });
 
     // Emit an event to the specific user
-    req.io.to(buyerID).emit("newResponse", newResponse);
+    io.to(buyerID).emit("newResponse", newResponse);
 
     res.status(200).json({
       msg: "پاسخ با موفقیت ارسال شد",

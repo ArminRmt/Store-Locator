@@ -57,15 +57,15 @@ exports.createRequest = async (req, res) => {
 
     const nearest_shops = await shop.NearestShops();
 
-    for (const shop of nearest_shops) {
+    for (const nearshop of nearest_shops) {
       await RequestSellerLinks.create({
         request_id: newRequest.id,
-        seller_id: shop.seller_id,
+        seller_id: nearshop.seller_id,
       });
 
       // Emit an event to the specific seller
       // req.io.to(shop.seller_id).emit("newRequest", newRequest);
-      const sellerSocketId = sellerSockets[shop.seller_id]; // Use the stored socket ID
+      const sellerSocketId = sellerSockets[nearshop.seller_id]; // Use the stored socket ID
       if (sellerSocketId) {
         io.to(sellerSocketId).emit("newRequest", newRequest);
       }
