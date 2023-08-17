@@ -54,17 +54,18 @@ io.on("connection", (socket) => {
   });
 });
 
-module.exports = {
-  io,
-  sellerSockets, // Export the sellerSockets object
-};
+// module.exports = {
+//   io,
+//   sellerSockets, // Export the sellerSockets object
+// };
 
 // module.exports = { io };
 // Attach Socket.IO middleware to your Express app
-// app.use((req, res, next) => {
-//   req.io = io; // Attach the io object to the request object for use in your routes
-//   next();
-// });
+app.use((req, res, next) => {
+  req.io = io; // Attach the io object to the request object for use in your routes
+  req.sellerSockets = sellerSockets;
+  next();
+});
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
