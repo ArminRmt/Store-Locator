@@ -1,4 +1,3 @@
-// const express = require("express");
 const db = require("./config/db.config.js");
 const cors = require("cors");
 let router = require("./routers/router.js");
@@ -6,9 +5,7 @@ var bodyParser = require("body-parser");
 const env = require("./config/env.js");
 const { initial } = require("./factory.js");
 const { swaggerUi, specs } = require("./config/swaggerConfig.js");
-// const socketIO = require("socket.io");
-const http = require("http");
-const { io, sellerSockets, app, server } = require("./socketManager");
+const { app, server } = require("./socketManager");
 
 // force: true will drop the table if it already exists
 db.sequelize.sync({ force: true }).then(() => {
@@ -20,8 +17,6 @@ const corsOptions = {
   origin: "http://localhost:5173",
   optionsSuccessStatus: 200,
 };
-
-// const app = express();
 
 // Attach Socket.IO middleware to your Express app
 // app.use((req, res, next) => {
