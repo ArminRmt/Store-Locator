@@ -2,7 +2,7 @@ const db = require("../config/db.config.js");
 const Request = db.Request;
 const RequestSellerLinks = db.RequestSellerLinks;
 const shop = require("./shop.js");
-// const { sellerSockets, io } = require("../server.js");
+const { io, sellerSockets } = require("../socketManager.js");
 
 // get seller requests
 exports.SellerRequests = async (req, res) => {
@@ -57,19 +57,30 @@ exports.createRequest = async (req, res) => {
 
     const nearest_shops = await shop.NearestShops();
 
-    for (const nearshop of nearest_shops) {
-      console.log("bbinam che field hai dare shop:", nearshop);
-      await RequestSellerLinks.create({
+    // Use a Set to ensure unique seller_ids
+    const uniqueSellerIds = new Set(
+      nearest_shops.map((shop) => shop.seller_id)
+    );
+
+    // Convert the Set back to an array
+    const sellerIdsArray = Array.from(uniqueSellerIds);
+
+    for (const seller_id of sellerIdsArray) {
+      // Create a link between the newRequest and the seller
+      RequestSellerLinks.create({
         request_id: newRequest.id,
-        seller_id: nearshop.seller_id,
+        seller_id: seller_id,
       });
 
       // Emit an event to the specific seller
-      // req.io.to(shop.seller_id).emit("newRequest", newRequest);
-      const sellerSocketId = req.sellerSockets[nearshop.seller_id]; // Use the stored socket ID
+      const sellerSocketId = sellerSockets[seller_id]; // Use the stored socket ID
       if (sellerSocketId) {
-        req.io.to(sellerSocketId).emit("newRequest", newRequest);
+        io.to(sellerSocketId).emit("newRequest", newRequest);
       }
+      // const sellerSocketId = req.sellerSockets[SellerId];
+      // if (sellerSocketId && req.io.sockets.connected[sellerSocketId]) {
+      //   req.io.to(sellerSocketId).emit("newRequest", newRequest);
+      // }
     }
 
     res.status(200).json({
