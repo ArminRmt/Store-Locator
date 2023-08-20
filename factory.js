@@ -66,25 +66,25 @@ async function initial() {
       longitude: 36.9,
     });
 
-    await Request.create({
-      users_id: 1,
-      piece_name: "lent tormoz",
-      content: "ye lent mikahm",
-      timestamp: new Date().toISOString(),
-    });
+    // await Request.create({
+    //   users_id: 1,
+    //   piece_name: "lent tormoz",
+    //   content: "ye lent mikahm",
+    //   timestamp: new Date().toISOString(),
+    // });
 
-    await RequestSellerLinks.create({
-      request_id: 1,
-      seller_id: 1,
-    });
+    // await RequestSellerLinks.create({
+    //   request_id: 1,
+    //   seller_id: 1,
+    // });
 
-    await Respond.create({
-      seller_id: 1,
-      request_id: 1,
-      price: 10,
-      type: "daram",
-      timestamp: new Date().toISOString(),
-    });
+    // await Respond.create({
+    //   seller_id: 1,
+    //   request_id: 1,
+    //   price: 10,
+    //   type: "daram",
+    //   timestamp: new Date().toISOString(),
+    // });
 
     console.log("Data initialization completed successfully!");
   } catch (error) {

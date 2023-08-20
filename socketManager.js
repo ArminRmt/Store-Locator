@@ -13,14 +13,21 @@ const io = socketIO(server, {
 });
 
 const sellerSockets = {}; // Mapping of seller IDs to socket IDs
+const userSockets = {}; // Mapping of user IDs to socket IDs
 
 io.on("connection", (socket) => {
-  console.log("Client want to login with:", socket.id);
+  console.log("Client Enterd with id: ", socket.id);
 
   // Handle seller identification
   socket.on("identifySeller", (sellerId) => {
     sellerSockets[sellerId] = socket.id;
     console.log(`Seller ${sellerId} identified with socket ${socket.id}`);
+  });
+
+  // Handle response from seller to user
+  socket.on("identifyBuyer", (userId) => {
+    userSockets[userId] = socket.id;
+    console.log(`Buyer ${userId} identified with socket ${socket.id}`);
   });
 
   socket.on("disconnect", () => {
@@ -35,4 +42,4 @@ io.on("connection", (socket) => {
   });
 });
 
-module.exports = { io, sellerSockets, app, server };
+module.exports = { io, sellerSockets, userSockets, app, server };

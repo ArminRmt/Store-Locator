@@ -1,7 +1,6 @@
-// const { Sequelize, QueryTypes } = require("sequelize");
-// const { io } = require("../server.js");
 const db = require("../config/db.config.js");
 const Respond = db.Respond;
+const { io, userSockets } = require("../socketManager.js");
 
 // get seller reponds
 exports.GetSellerResponds = async (req, res) => {
@@ -25,7 +24,6 @@ exports.createResponse = async (req, res) => {
     const { request_id, buyerID, price, seller_respond } = req.body;
     // const buyerID = req.body.user_id;
     const SellerId = req.userId;
-
     const timestamp = new Date().toISOString();
 
     const newResponse = await Respond.create({
@@ -37,7 +35,10 @@ exports.createResponse = async (req, res) => {
     });
 
     // Emit an event to the specific user
-    io.to(buyerID).emit("newResponse", newResponse);
+    const userSocketId = userSockets[buyerID];
+    if (userSocketId) {
+      io.to(userSocketId).emit("newResponse", newResponse);
+    }
 
     res.status(200).json({
       msg: "پاسخ با موفقیت ارسال شد",

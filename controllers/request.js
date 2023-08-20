@@ -61,12 +61,9 @@ exports.createRequest = async (req, res) => {
     const uniqueSellerIds = new Set(
       nearest_shops.map((shop) => shop.seller_id)
     );
-
-    // Convert the Set back to an array
     const sellerIdsArray = Array.from(uniqueSellerIds);
 
     for (const seller_id of sellerIdsArray) {
-      // Create a link between the newRequest and the seller
       RequestSellerLinks.create({
         request_id: newRequest.id,
         seller_id: seller_id,
