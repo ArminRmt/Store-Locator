@@ -8,7 +8,7 @@ const server = http.createServer(app);
 const io = socketIO(server, {
   cors: {
     origin: "http://localhost:5173",
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "PATH", "DELETE"],
   },
 });
 
@@ -30,7 +30,7 @@ io.on("connection", (socket) => {
     console.log(`Buyer ${userId} identified with socket ${socket.id}`);
   });
 
-  socket.on("disconnect", () => {
+  socket.on("DisconnectSeller", () => {
     // Clean up the mapping when a seller disconnects
     const disconnectedSeller = Object.keys(sellerSockets).find(
       (key) => sellerSockets[key] === socket.id
@@ -38,6 +38,17 @@ io.on("connection", (socket) => {
     if (disconnectedSeller) {
       delete sellerSockets[disconnectedSeller];
       console.log(`Seller ${disconnectedSeller} disconnected`);
+    }
+  });
+
+  socket.on("DisconnectBuyer", () => {
+    // Clean up the mapping when a seller disconnects
+    const disconnectedBuyer = Object.keys(userSockets).find(
+      (key) => userSockets[key] === socket.id
+    );
+    if (disconnectedBuyer) {
+      delete userSockets[disconnectedBuyer];
+      console.log(`Buyer ${disconnectedBuyer} disconnected`);
     }
   });
 });
