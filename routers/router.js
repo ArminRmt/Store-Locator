@@ -195,6 +195,9 @@ router.delete("/DeleteRequest", [authJwt.verifyToken], request.DeleteRequest);
 // get user all responds
 router.get("/SellerResponds", authJwt.verifyToken, respond.GetSellerResponds);
 
+// get user responds
+router.get("/UserResponses", authJwt.verifyToken, respond.getUserResponses);
+
 // seller respond back to buyer request
 router.post(
   "/createResponse",

@@ -1,20 +1,52 @@
 const db = require("../config/db.config.js");
 const Respond = db.Respond;
+const Shop = db.Shop;
+const Request = db.Request;
 const { io, userSockets } = require("../socketManager.js");
 
 // get seller reponds
 exports.GetSellerResponds = async (req, res) => {
-  const userId = req.userId;
+  const SellerId = req.userId;
   try {
     const responds = await Respond.findAll({
       where: {
-        seller_id: userId,
+        seller_id: SellerId,
       },
     });
 
     res.status(200).json(responds);
   } catch (err) {
     console.error("Error fetching user requests:", err);
+    res.status(500).json({ error: "خطای داخلی سرور" });
+  }
+};
+
+// get user responds
+exports.getUserResponses = async (req, res) => {
+  const userId = req.userId;
+
+  try {
+    const userResponses = await Respond.findAll({
+      include: [
+        {
+          model: Request,
+          where: { users_id: userId },
+          attributes: [],
+        },
+      ],
+      attributes: [
+        "id",
+        "seller_id",
+        "request_id",
+        "price",
+        "type",
+        "timestamp",
+      ],
+    });
+
+    res.status(200).json(userResponses);
+  } catch (error) {
+    console.error("Error fetching user responses:", error.message);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
@@ -34,6 +66,14 @@ exports.createResponse = async (req, res) => {
       timestamp: timestamp,
     });
 
+    // get Seller shop location
+    const shop = await Shop.findOne({ where: { seller_id: SellerId } });
+    if (!shop) {
+      res.status(400).json({ error: "فروشگاهی به نام این فروشنده پیدا نشد" });
+    }
+    const shopLatitude = shop.latitude;
+    const shopLongitude = shop.longitude;
+
     // Emit an event to the specific user
     const userSocketId = userSockets[buyerID];
     if (userSocketId) {
@@ -45,6 +85,8 @@ exports.createResponse = async (req, res) => {
       price,
       seller_respond,
       timestamp,
+      shopLatitude,
+      shopLongitude,
     });
   } catch (error) {
     console.error("Error creating response:", error.message);

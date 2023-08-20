@@ -263,3 +263,61 @@
  *                   type: string
  *                   example: "خطای داخلی سرور"
  */
+/**
+ * @swagger
+ *  /UserResponses:
+ *   get:
+ *     summary: Get User Responses
+ *     description: Get responses associated with the authenticated user's requests.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: Bearer token
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/respond'
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 expired:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "توکن منقضی شده است."
+ *       403:
+ *         description: Forbidden
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "هیچ توکنی ارائه نشده است!"
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "خطای داخلی سرور"
+ */
