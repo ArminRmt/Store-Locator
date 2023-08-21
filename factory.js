@@ -82,7 +82,7 @@ async function initial() {
     //   seller_id: 1,
     //   request_id: 1,
     //   price: 10,
-    //   type: "daram",
+    //   seller_respond: "daram",
     //   timestamp: new Date().toISOString(),
     // });
 

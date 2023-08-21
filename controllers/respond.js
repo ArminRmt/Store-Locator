@@ -7,6 +7,7 @@ const { io, userSockets } = require("../socketManager.js");
 // get seller reponds
 exports.GetSellerResponds = async (req, res) => {
   const SellerId = req.userId;
+
   try {
     const responds = await Respond.findAll({
       where: {
@@ -39,7 +40,7 @@ exports.getUserResponses = async (req, res) => {
         "seller_id",
         "request_id",
         "price",
-        "type",
+        "seller_respond",
         "timestamp",
       ],
     });
@@ -62,7 +63,7 @@ exports.createResponse = async (req, res) => {
       seller_id: SellerId,
       request_id: request_id,
       price: price,
-      type: seller_respond,
+      seller_respond: seller_respond,
       timestamp: timestamp,
     });
 
@@ -80,14 +81,18 @@ exports.createResponse = async (req, res) => {
       io.to(userSocketId).emit("newResponse", newResponse);
     }
 
-    res.status(200).json({
+    const result = {
       msg: "پاسخ با موفقیت ارسال شد",
-      price,
-      seller_respond,
-      timestamp,
+      id: newResponse.id,
+      request_id: newResponse.request_id,
+      price: newResponse.price,
+      seller_respond: newResponse.seller_respond,
+      timestamp: newResponse.timestamp,
       shopLatitude,
       shopLongitude,
-    });
+    };
+
+    res.status(200).json(result);
   } catch (error) {
     console.error("Error creating response:", error.message);
     res.status(500).json({ error: "خطای داخلی سرور" });

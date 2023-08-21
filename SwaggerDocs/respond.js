@@ -1,47 +1,9 @@
 /**
  * @swagger
- * /SellerResponds:
- *   get:
- *     summary: Get seller responds
- *     description: Retrieve all responds for the authenticated seller.
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Successfully retrieved seller responds
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/respond'
- *       401:
- *         description: Unauthorized
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "عدم مجوز! توکن نامعتبر است یا منقضی شده است."
- *       500:
- *         description: Internal Server Error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "خطای داخلی سرور"
- */
-/**
- * @swagger
- *  /createResponse:
+ * /createResponse:
  *   post:
- *     summary: Create response
- *     description: Create a response to a request and send it to the buyer.
+ *     summary: Create Response
+ *     description: Create a response from a seller to a user's request.
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -63,7 +25,7 @@
  *               buyerID:
  *                 type: integer
  *               price:
- *                 type: integer
+ *                 type: string
  *               seller_respond:
  *                 type: string
  *     responses:
@@ -76,15 +38,28 @@
  *               properties:
  *                 msg:
  *                   type: string
- *                 newResponse:
- *                   type: object
- *                   items:
- *                     $ref: '#/components/schemas/respond'
- *             example:
- *               msg: پاسخ به‌روزرسانی شد
- *               price: 10
- *               seller_respond: "ok/no/mojod mikonam"
- *               timestamp: "2023-07-29T18:00:00Z"
+ *                   example: "پاسخ با موفقیت ارسال شد"
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 request_id:
+ *                   type: integer
+ *                   example: 1
+ *                 price:
+ *                   type: string
+ *                   example: "10.00"
+ *                 seller_respond:
+ *                   type: string
+ *                   example: "ok"
+ *                 timestamp:
+ *                   type: string
+ *                   example: "2023-07-29T18:00:00Z"
+ *                 shopLatitude:
+ *                   type: NUMERIC
+ *                   example: 51.7
+ *                 shopLongitude:
+ *                   type: NUMERIC
+ *                   example: 36.7
  *       401:
  *         description: Unauthorized
  *         content:
@@ -265,10 +240,10 @@
  */
 /**
  * @swagger
- *  /UserResponses:
+ * /getUserResponses:
  *   get:
  *     summary: Get User Responses
- *     description: Get responses associated with the authenticated user's requests.
+ *     description: Retrieve responses from sellers for requests made by the user.
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -283,10 +258,19 @@
  *         description: Success
  *         content:
  *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/respond'
+ *             example:
+ *               - id: 1
+ *                 seller_id: 123
+ *                 request_id: 456
+ *                 price: "10.00"
+ *                 seller_respond: "daram"
+ *                 timestamp: "2023-07-29T18:00:00Z"
+ *               - id: 2
+ *                 seller_id: 456
+ *                 request_id: 789
+ *                 price: "15.00"
+ *                 seller_respond: "nahar"
+ *                 timestamp: "2023-07-30T12:30:00Z"
  *       401:
  *         description: Unauthorized
  *         content:
@@ -294,9 +278,6 @@
  *             schema:
  *               type: object
  *               properties:
- *                 expired:
- *                   type: boolean
- *                   example: true
  *                 message:
  *                   type: string
  *                   example: "توکن منقضی شده است."

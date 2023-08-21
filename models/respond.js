@@ -16,7 +16,7 @@ module.exports = (sequelize, Sequelize) => {
     price: {
       type: Sequelize.NUMERIC(10, 2),
     },
-    type: {
+    seller_respond: {
       type: Sequelize.STRING,
     },
     timestamp: {

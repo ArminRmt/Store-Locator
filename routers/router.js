@@ -195,7 +195,7 @@ router.delete("/DeleteRequest", [authJwt.verifyToken], request.DeleteRequest);
 ////////////////////////////////////    respond routes   ////////////////////////////////////
 
 // get user all responds
-router.get("/SellerResponds", authJwt.verifyToken, respond.GetSellerResponds);
+router.get("/getUserResponses", authJwt.verifyToken, respond.getUserResponses);
 
 // get user responds
 router.get("/UserResponses", authJwt.verifyToken, respond.getUserResponses);

@@ -80,12 +80,13 @@ exports.createRequest = async (req, res) => {
       // }
     }
 
-    res.status(200).json({
+    const result = {
       msg: "درخواست با موفقیت به نزدیک ترین فروشنده ها ارسال شد",
-      piece_name,
-      content,
-      timestamp,
-    });
+      ...newRequest.get(),
+    };
+    delete result.users_id;
+
+    res.status(200).json(result);
   } catch (error) {
     console.error("error is: ", error.message);
     res.status(500).json({ error: "خطای سرور داخلی" });
