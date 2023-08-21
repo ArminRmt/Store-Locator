@@ -29,10 +29,7 @@ db.RequestSellerLinks = require("../models/request_seller_links.js")(
   sequelize,
   Sequelize
 );
-db.SellersReview = require("../models/sellers_reviews.js")(
-  sequelize,
-  Sequelize
-);
+db.ShopReviews = require("../models/shop_reviews.js")(sequelize, Sequelize);
 
 // ----------  Define the relationships/associations   ------------
 
@@ -41,10 +38,10 @@ db.User.hasMany(db.Request, { foreignKey: "users_id", sourceKey: "id" });
 // Request belongs to User
 db.Request.belongsTo(db.User, { foreignKey: "users_id", targetKey: "id" });
 
-// user has one SellersReview
-db.User.hasOne(db.SellersReview, { foreignKey: "buyer_id", sourceKey: "id" });
-// SellersReview has one user
-db.SellersReview.belongsTo(db.User, {
+// user has one ShopReviews
+db.User.hasOne(db.ShopReviews, { foreignKey: "buyer_id", sourceKey: "id" });
+// ShopReviews has one user
+db.ShopReviews.belongsTo(db.User, {
   foreignKey: "buyer_id",
   targetKey: "id",
 });
@@ -86,9 +83,9 @@ db.Seller.hasMany(db.Shop, { foreignKey: "seller_id", sourceKey: "id" });
 // Shop belongs to Seller
 db.Shop.belongsTo(db.Seller, { foreignKey: "seller_id", targetKey: "id" });
 
-// Shop has many SellersReview
-db.Shop.hasMany(db.SellersReview, { foreignKey: "shop_id", sourceKey: "id" });
-// SellersReview belongs to Shop
-db.SellersReview.belongsTo(db.Shop, { foreignKey: "shop_id", targetKey: "id" });
+// Shop has many ShopReviews
+db.Shop.hasMany(db.ShopReviews, { foreignKey: "shop_id", sourceKey: "id" });
+// ShopReviews belongs to Shop
+db.ShopReviews.belongsTo(db.Shop, { foreignKey: "shop_id", targetKey: "id" });
 
 module.exports = db;

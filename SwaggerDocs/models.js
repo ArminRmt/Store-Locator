@@ -97,7 +97,7 @@
  * @swagger
  * components:
  *   schemas:
- *     sellers_reviews:
+ *     shop_reviews:
  *       type: object
  *       properties:
  *         id:

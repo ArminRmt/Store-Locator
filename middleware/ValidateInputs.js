@@ -131,3 +131,12 @@ exports.RequireFieldsRespond = (req, res, next) => {
   }
   next();
 };
+
+exports.RequireFieldsRating = (req, res, next) => {
+  const { rating, feedback_text } = req.body;
+
+  if (!feedback_text && !rating) {
+    return res.status(400).json({ msg: "حداقل یک از فیلد ها باید پر شود" });
+  }
+  next();
+};

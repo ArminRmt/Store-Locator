@@ -18,13 +18,6 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
-// Attach Socket.IO middleware to your Express app
-// app.use((req, res, next) => {
-//   req.io = io; // Attach the io object to the request object for use in your routes
-//   req.sellerSockets = sellerSockets;
-//   next();
-// });
-
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use("/", router);
@@ -35,7 +28,6 @@ app.use(
   swaggerUi.setup(specs, { explorer: true })
 );
 
-// app.listen(env.port, function () {
 server.listen(env.port, function () {
   console.log(`App listening on port ${env.port}`);
 });

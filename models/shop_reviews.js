@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const SellersReview = sequelize.define("sellers_review", {
+  const ShopReviews = sequelize.define("shop_reviews", {
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
@@ -15,14 +15,16 @@ module.exports = (sequelize, Sequelize) => {
     },
     rating: {
       type: Sequelize.INTEGER,
+      allowNull: true,
     },
     feedback_text: {
       type: Sequelize.TEXT,
+      allowNull: true,
     },
     timestamp: {
       type: Sequelize.DATE,
     },
   });
 
-  return SellersReview;
+  return ShopReviews;
 };

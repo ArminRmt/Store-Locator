@@ -7,6 +7,7 @@ const shop = require("../controllers/shop.js");
 const seller = require("../controllers/seller.js");
 const request = require("../controllers/request.js");
 const respond = require("../controllers/respond.js");
+const RatingReview = require("../controllers/RatingReview.js");
 
 const authJwt = require("../middleware/authJwt");
 
@@ -21,6 +22,7 @@ const {
   RequireFieldsShop,
   RequireFieldsRequest,
   RequireFieldsRespond,
+  RequireFieldsRating,
 } = require("../middleware/ValidateInputs.js");
 
 ////////////////////////////////////      authorization     ////////////////////////////////////
@@ -104,7 +106,7 @@ router.patch(
   "/seller/:id",
   [
     authJwt.verifyToken,
-    authJwt.isUserOrAdmin,
+    authJwt.isSellerOrAdmin,
     validatePassword,
     validatePasswordMatch,
     validatePhoneNumber,
@@ -115,7 +117,7 @@ router.patch(
 );
 router.delete(
   "/seller/:id",
-  [authJwt.verifyToken, authJwt.isUserOrAdmin],
+  [authJwt.verifyToken, authJwt.isSellerOrAdmin],
   seller.deleteSeller
 );
 
@@ -214,6 +216,39 @@ router.patch(
 
 // seller delete his respond
 router.delete("/DeleteResponse", [authJwt.verifyToken], respond.DeleteResponse);
+
+////////////////////////////////////    RatingReview routes   ////////////////////////////////////
+
+// get all reviews on this shop
+router.get(
+  "/getShopFeedbackTexts",
+  [authJwt.verifyToken, authJwt.isSellerOrAdmin],
+  RatingReview.getShopFeedbackTexts
+);
+
+// get all user feedback on this shop
+router.get(
+  "/getUserFeedbackTexts",
+  [authJwt.verifyToken, authJwt.isUserOrAdmin],
+  RatingReview.getShopFeedbackTexts
+);
+
+router.post(
+  "/submitShopRating",
+  [authJwt.verifyToken, authJwt.isUserOrAdmin, RequireFieldsRating],
+  RatingReview.submitShopRating
+);
+
+router.patch(
+  "/updateShopReview",
+  [authJwt.verifyToken, authJwt.isUserOrAdmin, RequireFieldsRating],
+  RatingReview.updateShopReview
+);
+router.delete(
+  "/deleteShopReview",
+  [authJwt.verifyToken, authJwt.isUserOrAdmin],
+  RatingReview.deleteShopReview
+);
 
 ////////////////////////////////////    other routes   ////////////////////////////////////
 

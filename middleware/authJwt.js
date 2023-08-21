@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const db = require("../config/db.config.js");
 const User = db.User;
+const Seller = db.Seller;
 const env = require("../config/env.js");
 
 const verifyToken = (req, res, next) => {
@@ -31,7 +32,7 @@ const verifyToken = (req, res, next) => {
   });
 };
 
-isAdmin = async (req, res, next) => {
+const isAdmin = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.userId);
     if (!user) {
@@ -48,7 +49,7 @@ isAdmin = async (req, res, next) => {
   }
 };
 
-isSeller = async (req, res, next) => {
+const isSeller = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.userId);
     if (!user) {
@@ -100,9 +101,17 @@ isUserOrAdmin = async (req, res, next) => {
 
 isSellerOrAdmin = async (req, res, next) => {
   try {
-    const user = await User.findByPk(req.userId);
+    // Check if the user is a seller
+    let user = await Seller.findByPk(req.userId);
+
+    // If the user is not a seller, check if they are an admin
     if (!user) {
-      return res.status(404).send({ message: "کاربر پیدا نشد." });
+      user = await User.findByPk(req.userId);
+      if (!user) {
+        return res
+          .status(404)
+          .send({ message: "شما ادمین یا فروشنده نمی باشید" });
+      }
     }
 
     const userIdInRequest = req.params.id || req.body.id;
