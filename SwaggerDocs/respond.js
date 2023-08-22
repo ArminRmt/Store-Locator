@@ -207,6 +207,9 @@
  *                 msg:
  *                   type: string
  *                   example: "پاسخ حذف شد"
+ *                 request_id:
+ *                   type: integer
+ *                   example: 1
  *       403:
  *         description: Forbidden - Access not allowed
  *         content:
@@ -265,12 +268,16 @@
  *                 price: "10.00"
  *                 seller_respond: "daram"
  *                 timestamp: "2023-07-29T18:00:00Z"
+ *                 shopLatitude: 51.7
+ *                 shopLongitude: 36.7
  *               - id: 2
  *                 seller_id: 456
  *                 request_id: 789
  *                 price: "15.00"
  *                 seller_respond: "nahar"
  *                 timestamp: "2023-07-30T12:30:00Z"
+ *                 shopLatitude: 51.7
+ *                 shopLongitude: 36.7
  *       401:
  *         description: Unauthorized
  *         content:

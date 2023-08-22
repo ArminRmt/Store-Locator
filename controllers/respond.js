@@ -3,6 +3,10 @@ const Respond = db.Respond;
 const Shop = db.Shop;
 const Request = db.Request;
 const { io, userSockets } = require("../socketManager.js");
+const shop = require("./shop.js");
+const { getSellerShopLocation } = require("./shop.js");
+
+// Now you can use getSellerShopLocation() directly
 
 // get seller reponds
 exports.GetSellerResponds = async (req, res) => {
@@ -15,7 +19,9 @@ exports.GetSellerResponds = async (req, res) => {
       },
     });
 
-    res.status(200).json(responds);
+    res.status(200).json({
+      responds: responds,
+    });
   } catch (err) {
     console.error("Error fetching user requests:", err);
     res.status(500).json({ error: "خطای داخلی سرور" });
@@ -45,7 +51,28 @@ exports.getUserResponses = async (req, res) => {
       ],
     });
 
-    res.status(200).json(userResponses);
+    const sellerIds = userResponses.map((response) => response.seller_id);
+
+    const shopLocations = {};
+    try {
+      for (const sellerId of sellerIds) {
+        const { shopLatitude, shopLongitude } = await getSellerShopLocation(
+          sellerId
+        );
+        shopLocations[sellerId] = { shopLatitude, shopLongitude };
+      }
+    } catch (error) {
+      console.error("Error fetching shop locations:", error.message);
+      return res.status(400).json({ error: error.message });
+    }
+
+    const combinedData = userResponses.map((response) => ({
+      ...response.dataValues,
+      shopLatitude: shopLocations[response.seller_id].shopLatitude,
+      shopLongitude: shopLocations[response.seller_id].shopLongitude,
+    }));
+
+    res.status(200).json(combinedData);
   } catch (error) {
     console.error("Error fetching user responses:", error.message);
     res.status(500).json({ error: "خطای داخلی سرور" });
@@ -77,8 +104,19 @@ exports.createResponse = async (req, res) => {
 
     // Emit an event to the specific user
     const userSocketId = userSockets[buyerID];
+
+    socketRes = {
+      seller_id: SellerId,
+      request_id: request_id,
+      price: price,
+      seller_respond: seller_respond,
+      timestamp: timestamp,
+      shopLatitude: shopLatitude,
+      shopLongitude: shopLongitude,
+    };
+
     if (userSocketId) {
-      io.to(userSocketId).emit("newResponse", newResponse);
+      io.to(userSocketId).emit("newResponse", socketRes);
     }
 
     const result = {
@@ -120,6 +158,21 @@ exports.UpdateResponse = async (req, res) => {
       timestamp: timestamp,
     });
 
+    const request = await Request.findOne({
+      where: { id: response.request_id },
+    });
+
+    // Emit an event to the specific user
+    const userSocketId = userSockets[request.users_id];
+    if (userSocketId) {
+      io.to(userSocketId).emit("responseUpdated", {
+        response_id,
+        price,
+        seller_respond,
+        timestamp,
+      });
+    }
+
     res
       .status(200)
       .json({ msg: "پاسخ به‌روزرسانی شد", price, seller_respond, timestamp });
@@ -143,9 +196,20 @@ exports.DeleteResponse = async (req, res) => {
       return res.status(403).send({ message: "عدم دسترسی مجاز" });
     }
 
+    const request = await Request.findOne({
+      where: { id: response.request_id },
+    });
+
+    const userSocketId = userSockets[request.users_id];
+    if (userSocketId) {
+      io.to(userSocketId).emit("responseDeleted", {
+        response_id,
+      });
+    }
+
     await response.destroy();
 
-    res.status(200).json({ msg: "پاسخ حذف شد" });
+    res.status(200).json({ msg: "پاسخ حذف شد", response_id });
   } catch (error) {
     console.error("Error deleting response:", error.message);
     res.status(500).json({ error: "خطای داخلی سرور" });

@@ -229,6 +229,9 @@
  *                 msg:
  *                   type: string
  *                   example: "درخواست حذف شد"
+ *                 request_id:
+ *                   type: integer
+ *                   example: 1
  *       403:
  *         description: Forbidden - Access not allowed
  *         content:

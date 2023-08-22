@@ -79,7 +79,7 @@ db.Seller.hasMany(db.Respond, { foreignKey: "seller_id", sourceKey: "id" });
 db.Respond.belongsTo(db.Seller, { foreignKey: "seller_id", targetKey: "id" });
 
 // Seller has many Shop
-db.Seller.hasMany(db.Shop, { foreignKey: "seller_id", sourceKey: "id" });
+db.Seller.hasOne(db.Shop, { foreignKey: "seller_id", sourceKey: "id" });
 // Shop belongs to Seller
 db.Shop.belongsTo(db.Seller, { foreignKey: "seller_id", targetKey: "id" });
 

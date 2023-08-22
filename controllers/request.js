@@ -1,6 +1,7 @@
 const db = require("../config/db.config.js");
 const Request = db.Request;
 const RequestSellerLinks = db.RequestSellerLinks;
+const Respond = db.Respond;
 const shop = require("./shop.js");
 const { io, sellerSockets } = require("../socketManager.js");
 
@@ -114,6 +115,23 @@ exports.UpdateRequest = async (req, res) => {
       timestamp: timestamp,
     });
 
+    // Get all seller_ids associated with the request from request_seller_links
+    const links = await RequestSellerLinks.findAll({
+      where: { request_id: request_id },
+    });
+
+    for (const link of links) {
+      const sellerSocketId = sellerSockets[link.seller_id];
+      if (sellerSocketId) {
+        io.to(sellerSocketId).emit("requestUpdated", {
+          request_id,
+          piece_name,
+          content,
+          timestamp,
+        });
+      }
+    }
+
     res
       .status(200)
       .json({ msg: "درخواست به‌روزرسانی شد", piece_name, content, timestamp });
@@ -136,8 +154,21 @@ exports.DeleteRequest = async (req, res) => {
       return res.status(403).send({ message: "عدم دسترسی مجاز" });
     }
 
+    // Get all seller_ids associated with the request from request_seller_links
+    const links = await RequestSellerLinks.findAll({
+      where: { request_id: request_id },
+    });
+
+    for (const link of links) {
+      const sellerSocketId = sellerSockets[link.seller_id]; // Replace with your logic to get the seller's socket ID
+      if (sellerSocketId) {
+        io.to(sellerSocketId).emit("requestDeleted", { request_id });
+      }
+    }
+
     await request.destroy();
-    res.status(200).json({ msg: "درخواست حذف شد" });
+
+    res.status(200).json({ msg: "درخواست حذف شد", request_id });
   } catch (error) {
     res.status(500).json({ msg: "خطای سرور" });
   }
