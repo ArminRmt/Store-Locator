@@ -27,16 +27,16 @@ exports.updateNavigationItem = async (req, res) => {
     );
 
     if (rowsAffected === 0) {
-      return res.status(404).json({ message: "Navigation item not found." });
+      return res.status(404).json({ message: "مورد ناوبری یافت نشد." });
     }
 
     res.status(200).json({
-      message: "Navigation item updated successfully.",
+      message: "مورد ناوبری با موفقیت به‌روزرسانی شد.",
       updatedNavigationItem,
     });
   } catch (error) {
     console.error("Error updating navigation item:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 
@@ -72,16 +72,16 @@ exports.updateFooterItem = async (req, res) => {
     );
 
     if (rowsAffected === 0) {
-      return res.status(404).json({ message: "Footer item not found." });
+      return res.status(404).json({ message: "ایتم فوتر یافت نشد." });
     }
 
     res.status(200).json({
-      message: "Footer item updated successfully.",
+      message: "ایتم فوتر با موفقیت به‌روزرسانی شد.",
       updatedFooterItem,
     });
   } catch (error) {
     console.error("Error updating footer item:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 
@@ -100,15 +100,15 @@ exports.updateSection1 = async (req, res) => {
     );
 
     if (rowsAffected === 0) {
-      return res.status(404).json({ message: "Section 1 not found." });
+      return res.status(404).json({ message: "بخش 1 یافت نشد." });
     }
 
     res
       .status(200)
-      .json({ message: "Section 1 updated successfully.", updatedSection });
+      .json({ message: "بخش 1 با موفقیت به‌روزرسانی شد.", updatedSection });
   } catch (error) {
     console.error("Error updating Section 1:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 
@@ -126,15 +126,15 @@ exports.updateSection2 = async (req, res) => {
     );
 
     if (rowsAffected === 0) {
-      return res.status(404).json({ message: "Section 2 not found." });
+      return res.status(404).json({ message: "بخش 2 یافت نشد." });
     }
 
     res
       .status(200)
-      .json({ message: "Section 2 updated successfully.", updatedSection });
+      .json({ message: "بخش 2 با موفقیت به‌روزرسانی شد.", updatedSection });
   } catch (error) {
     console.error("Error updating Section 2:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 
@@ -153,14 +153,14 @@ exports.updateSection3 = async (req, res) => {
     );
 
     if (rowsAffected === 0) {
-      return res.status(404).json({ message: "Section 3 not found." });
+      return res.status(404).json({ message: "بخش 3 یافت نشد." });
     }
 
     res
       .status(200)
-      .json({ message: "Section 3 updated successfully.", updatedSection });
+      .json({ message: "بخش 3 با موفقیت به‌روزرسانی شد.", updatedSection });
   } catch (error) {
     console.error("Error updating Section 3:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };

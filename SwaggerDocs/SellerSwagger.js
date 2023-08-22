@@ -309,7 +309,7 @@
  *         required: true
  *         schema:
  *           type: string
- *           format: Bearer <token>
+ *           format: Bearer token
  *     responses:
  *       200:
  *         description: Successful retrieval

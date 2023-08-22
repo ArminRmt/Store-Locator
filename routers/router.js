@@ -8,6 +8,7 @@ const seller = require("../controllers/seller.js");
 const request = require("../controllers/request.js");
 const respond = require("../controllers/respond.js");
 const RatingReview = require("../controllers/RatingReview.js");
+const admin = require("../controllers/admin.js");
 
 const authJwt = require("../middleware/authJwt");
 
@@ -245,6 +246,38 @@ router.delete(
   "/deleteShopReview",
   [authJwt.verifyToken, authJwt.isUserOrAdmin],
   RatingReview.deleteShopReview
+);
+
+////////////////////////////////////    siteSettings routes   ////////////////////////////////////
+
+router.post(
+  "/updateNavigationItem",
+  [authJwt.verifyToken, authJwt.isAdmin],
+  admin.updateNavigationItem
+);
+
+router.post(
+  "/updateFooterItem",
+  [authJwt.verifyToken, authJwt.isAdmin],
+  admin.updateFooterItem
+);
+
+router.post(
+  "/updateSection1",
+  [authJwt.verifyToken, authJwt.isAdmin],
+  admin.updateSection1
+);
+
+router.post(
+  "/updateSection2",
+  [authJwt.verifyToken, authJwt.isAdmin],
+  admin.updateSection2
+);
+
+router.post(
+  "/updateSection3",
+  [authJwt.verifyToken, authJwt.isAdmin],
+  admin.updateSection3
 );
 
 ////////////////////////////////////    other routes   ////////////////////////////////////
