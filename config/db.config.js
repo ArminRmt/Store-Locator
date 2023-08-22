@@ -31,6 +31,8 @@ db.RequestSellerLinks = require("../models/request_seller_links.js")(
 );
 db.ShopReviews = require("../models/shop_reviews.js")(sequelize, Sequelize);
 
+db.SiteSettings = require("../models/seitSettings.js")(sequelize, Sequelize);
+
 // ----------  Define the relationships/associations   ------------
 
 // User has many Requests
