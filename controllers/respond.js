@@ -175,7 +175,13 @@ exports.UpdateResponse = async (req, res) => {
 
     res
       .status(200)
-      .json({ msg: "پاسخ به‌روزرسانی شد", price, seller_respond, timestamp });
+      .json({
+        msg: "پاسخ به‌روزرسانی شد",
+        response_id,
+        price,
+        seller_respond,
+        timestamp,
+      });
   } catch (error) {
     console.error("Error updating response:", error.message);
     res.status(500).json({ error: "خطای داخلی سرور" });

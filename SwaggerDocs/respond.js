@@ -129,6 +129,8 @@
  *               properties:
  *                 msg:
  *                   type: string
+ *                 response_id:
+ *                   type: integer
  *                 price:
  *                   type: integer
  *                 seller_respond:
@@ -137,6 +139,7 @@
  *                   type: string
  *             example:
  *               msg: پاسخ به‌روزرسانی شد
+ *               response_id: 1
  *               price: 10
  *               seller_respond: "ok/no/mojod mikonam"
  *               timestamp: "2023-07-29T18:00:00Z"
