@@ -1,9 +1,10 @@
+const isDocker = process.env.DOCKER === "true";
+
 const env = {
   database: "storelocatorapi2",
   username: "postgres",
   password: "password",
-  host: "db",
-  // host: "localhost",
+  host: isDocker ? "db" : "localhost",
   dialect: "postgres",
   pool: {
     max: 5,
