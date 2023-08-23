@@ -132,9 +132,13 @@ exports.UpdateRequest = async (req, res) => {
       }
     }
 
-    res
-      .status(200)
-      .json({ msg: "درخواست به‌روزرسانی شد", piece_name, content, timestamp });
+    res.status(200).json({
+      msg: "درخواست به‌روزرسانی شد",
+      request_id,
+      piece_name,
+      content,
+      timestamp,
+    });
   } catch (error) {
     res.status(500).json({ msg: "خطای سرور" });
   }

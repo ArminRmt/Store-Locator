@@ -114,12 +114,15 @@
  *                   type: string
  *                 piece_name:
  *                   type: string
+ *                 request_id:
+ *                   type: integer
  *                 content:
  *                   type: string
  *                 timestamp:
  *                   type: string
  *             example:
  *               msg: درخواست به‌روزرسانی شد
+ *               request_id: 1
  *               piece_name: "Example Piece 1"
  *               content: "Example content for Piece 1"
  *               timestamp: "2023-07-29T18:00:00Z"
