@@ -15,8 +15,8 @@ services:
     #   - app-network
 
     # mounting your local directory into the container
-    volumes:
-      - .:/app
+    # volumes:
+    #   - .:/app
 
   db:
     image: "postgres:latest"
