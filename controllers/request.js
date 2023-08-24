@@ -43,6 +43,30 @@ exports.GetUserRequest = async (req, res) => {
   }
 };
 
+// exports.GetUserRequest = async (req, res) => {
+//   const userId = req.userId;
+//   const page = req.query.page || 1;
+//   const pageSize = req.query.pageSize || 10;
+
+//   try {
+//     const offset = (page - 1) * pageSize;
+
+//     const userRequests = await Request.findAll({
+//       where: {
+//         users_id: userId,
+//       },
+//       attributes: ["id", "title", "created_at"],
+//       limit: pageSize,
+//       offset: offset,
+//     });
+
+//     res.status(200).json(userRequests);
+//   } catch (err) {
+//     console.error("Error fetching user requests:", err);
+//     res.status(500).json({ error: "خطای داخلی سرور" });
+//   }
+// };
+
 exports.createRequest = async (req, res) => {
   try {
     const userId = req.userId;

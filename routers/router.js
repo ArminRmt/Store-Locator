@@ -250,34 +250,34 @@ router.delete(
 
 ////////////////////////////////////    siteSettings routes   ////////////////////////////////////
 
-router.post(
-  "/updateNavigationItem",
+router.get(
+  "/settings",
   [authJwt.verifyToken, authJwt.isAdmin],
-  admin.updateNavigationItem
+  admin.allSettings
+);
+
+router.get(
+  "/getSetting/:key",
+  [authJwt.verifyToken, authJwt.isAdmin],
+  admin.getSettingByKey
 );
 
 router.post(
-  "/updateFooterItem",
+  "/createSetting",
   [authJwt.verifyToken, authJwt.isAdmin],
-  admin.updateFooterItem
+  admin.createSetting
 );
 
-router.post(
-  "/updateSection1",
+router.patch(
+  "/updateSetting",
   [authJwt.verifyToken, authJwt.isAdmin],
-  admin.updateSection1
+  admin.updateSetting
 );
 
-router.post(
-  "/updateSection2",
+router.delete(
+  "/deleteSetting/:key",
   [authJwt.verifyToken, authJwt.isAdmin],
-  admin.updateSection2
-);
-
-router.post(
-  "/updateSection3",
-  [authJwt.verifyToken, authJwt.isAdmin],
-  admin.updateSection3
+  admin.deleteSetting
 );
 
 ////////////////////////////////////    other routes   ////////////////////////////////////

@@ -224,3 +224,26 @@
  *         content: "Looking for an elegant ring for a special occasion."
  *         timestamp: "2023-07-29T19:30:00.000Z"
  */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     SiteSettings:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           format: int32
+ *           description: The unique identifier for the site setting.
+ *         key:
+ *           type: string
+ *           description: The key or name of the site setting.
+ *         value:
+ *           type: string
+ *           description: The value associated with the site setting.
+ *       example:
+ *         id: 1
+ *         key: "navigation_logo"
+ *         value: "/new/logo/path.png"
+ */
