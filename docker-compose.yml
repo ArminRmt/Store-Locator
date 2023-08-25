@@ -1,9 +1,10 @@
 version: "3.8"
 services:
-  app:
+  storelocator-api:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: storelocator-apiname
     ports:
       - "8080:8080"
     environment:
@@ -11,15 +12,12 @@ services:
       - DOCKER=true
     depends_on:
       - db
-    # networks:
-    #   - app-network
+    networks:
+      - storelocator-network
 
-    # mounting your local directory into the container
-    # volumes:
-    #   - .:/app
-
-  db:
+  storelocator-db:
     image: "postgres:latest"
+    container_name: storelocator-db
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -29,10 +27,12 @@ services:
       - "5433:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
+    networks:
+      - storelocator-network
 
-# networks:
-#   app-network:
-#     driver: bridge
+networks:
+  storelocator-network:
+    driver: bridge
 
 volumes:
   pg_data:
