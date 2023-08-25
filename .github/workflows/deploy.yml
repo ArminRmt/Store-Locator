@@ -3,7 +3,7 @@ run-name: Updated by ${{ github.actor }}.
 on: 
   push:
     branches:    
-      - new
+      - master
 jobs:
   update-docker-container:
     runs-on: self-hosted
