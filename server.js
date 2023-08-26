@@ -14,7 +14,7 @@ db.sequelize.sync({ force: true }).then(() => {
 });
 
 const corsOptions = {
-  origin: "https://storelocatorapp.dummy.monster",
+  origin: "https://storelocatorapp.dummy.monster/",
   optionsSuccessStatus: 200,
 };
 
