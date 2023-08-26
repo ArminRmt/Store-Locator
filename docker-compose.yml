@@ -12,6 +12,7 @@ services:
       - storelocator-db
     networks:
       - storelocator-network
+      - main_network
 
   storelocator-db:
     image: "postgres:latest"
@@ -27,7 +28,6 @@ services:
       - pg_data:/var/lib/postgresql/data
     networks:
       - storelocator-network
-      - main_network
 
 networks:
   storelocator-network:
