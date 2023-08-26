@@ -7,7 +7,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIO(server, {
   cors: {
-    origin: "https://storelocatorapp.dummy.monster/",
+    origin: "https://storelocatorapp.dummy.monster",
     methods: ["GET", "POST", "PATH", "DELETE"],
   },
 });
