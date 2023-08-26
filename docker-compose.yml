@@ -1,38 +1,41 @@
 version: "3.8"
 services:
-  app:
+  storelocator-api:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
+    container_name: storelocator-api
     environment:
       - DATABASE_URL=postgres://postgres:password@db:5432/storelocatorapi2
       - DOCKER=true
+    ports:
+      - "127.0.0.1:8081:8080"
     depends_on:
-      - db
-    # networks:
-    #   - app-network
+      - storelocator-db
+    networks:
+      - storelocator-network
+      - main_network
 
-    # mounting your local directory into the container
-    # volumes:
-    #   - .:/app
-
-  db:
+  storelocator-db:
     image: "postgres:latest"
+    container_name: storelocator-db
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: storelocatorapi2
     ports:
-      - "5433:5432"
+      - "127.0.0.1:5433:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
+    networks:
+      - storelocator-network
 
-# networks:
-#   app-network:
-#     driver: bridge
+networks:
+  storelocator-network:
+    driver: bridge 
+  main_network:
+    name: main_network
 
 volumes:
   pg_data:
