@@ -27,10 +27,13 @@ services:
       - pg_data:/var/lib/postgresql/data
     networks:
       - storelocator-network
+      - main_network
 
 networks:
   storelocator-network:
-    driver: bridge
+    driver: bridge 
+  main_network:
+    name: main_network
 
 volumes:
   pg_data:
