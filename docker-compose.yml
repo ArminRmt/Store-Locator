@@ -8,6 +8,8 @@ services:
     environment:
       - DATABASE_URL=postgres://postgres:password@db:5432/storelocatorapi2
       - DOCKER=true
+    ports:
+      - "127.0.0.1:8081:8080"
     depends_on:
       - storelocator-db
     networks:
