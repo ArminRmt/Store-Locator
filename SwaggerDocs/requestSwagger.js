@@ -153,7 +153,7 @@
  */
 /**
  * @swagger
- * /UserRequests:
+ * /userRequests:
  *   get:
  *     summary: Get user requests
  *     description: Retrieve requests made by the authenticated user.
@@ -166,6 +166,18 @@
  *         schema:
  *           type: string
  *           format: Bearer token
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: pageSize
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 10
  *     responses:
  *       200:
  *         description: Success

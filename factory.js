@@ -66,16 +66,19 @@ async function initial() {
       longitude: 36.9,
     });
 
-    // await Request.create({
-    //   users_id: 1,
-    //   piece_name: "lent tormoz",
-    //   content: "ye lent mikahm",
-    //   timestamp: new Date().toISOString(),
-    // });
+    for (let i = 0; i < 10; i++) {
+      await Request.create({
+        users_id: 1, // Math.floor(Math.random() * 100)
+        piece_name: `Fake piece ${i}`,
+        content: `Fake content ${i}`,
+        timestamp: new Date().toISOString(),
+      });
+    }
 
     // await RequestSellerLinks.create({
     //   request_id: 1,
     //   seller_id: 1,
+    //   status: 0,
     // });
 
     // await Respond.create({

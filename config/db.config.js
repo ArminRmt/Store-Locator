@@ -36,12 +36,20 @@ db.SiteSettings = require("../models/seitSettings.js")(sequelize, Sequelize);
 // ----------  Define the relationships/associations   ------------
 
 // User has many Requests
-db.User.hasMany(db.Request, { foreignKey: "users_id", sourceKey: "id" });
+db.User.hasMany(db.Request, {
+  foreignKey: "users_id",
+  sourceKey: "id",
+  onDelete: "CASCADE",
+});
 // Request belongs to User
 db.Request.belongsTo(db.User, { foreignKey: "users_id", targetKey: "id" });
 
 // user has one ShopReviews
-db.User.hasOne(db.ShopReviews, { foreignKey: "buyer_id", sourceKey: "id" });
+db.User.hasOne(db.ShopReviews, {
+  foreignKey: "buyer_id",
+  sourceKey: "id",
+  onDelete: "CASCADE",
+});
 // ShopReviews has one user
 db.ShopReviews.belongsTo(db.User, {
   foreignKey: "buyer_id",
@@ -49,7 +57,11 @@ db.ShopReviews.belongsTo(db.User, {
 });
 
 // Request has one Respond
-db.Request.hasOne(db.Respond, { foreignKey: "request_id", sourceKey: "id" });
+db.Request.hasOne(db.Respond, {
+  foreignKey: "request_id",
+  sourceKey: "id",
+  onDelete: "CASCADE",
+});
 // Respond belongs to Request
 db.Respond.belongsTo(db.Request, { foreignKey: "request_id", targetKey: "id" });
 
@@ -57,6 +69,7 @@ db.Respond.belongsTo(db.Request, { foreignKey: "request_id", targetKey: "id" });
 db.Request.hasMany(db.RequestSellerLinks, {
   foreignKey: "request_id",
   sourceKey: "id",
+  onDelete: "CASCADE",
 });
 // RequestSellerLinks belongs to Request
 db.RequestSellerLinks.belongsTo(db.Request, {
@@ -68,6 +81,7 @@ db.RequestSellerLinks.belongsTo(db.Request, {
 db.RequestSellerLinks.hasOne(db.Seller, {
   foreignKey: "seller_id",
   sourceKey: "id",
+  onDelete: "CASCADE",
 });
 // RequestSellerLinks belongs to Request
 db.Seller.belongsTo(db.RequestSellerLinks, {
@@ -76,17 +90,29 @@ db.Seller.belongsTo(db.RequestSellerLinks, {
 });
 
 // Seller has many Respond
-db.Seller.hasMany(db.Respond, { foreignKey: "seller_id", sourceKey: "id" });
+db.Seller.hasMany(db.Respond, {
+  foreignKey: "seller_id",
+  sourceKey: "id",
+  onDelete: "CASCADE",
+});
 // Respond belongs to Seller
 db.Respond.belongsTo(db.Seller, { foreignKey: "seller_id", targetKey: "id" });
 
 // Seller has many Shop
-db.Seller.hasOne(db.Shop, { foreignKey: "seller_id", sourceKey: "id" });
+db.Seller.hasOne(db.Shop, {
+  foreignKey: "seller_id",
+  sourceKey: "id",
+  onDelete: "SET NULL",
+});
 // Shop belongs to Seller
 db.Shop.belongsTo(db.Seller, { foreignKey: "seller_id", targetKey: "id" });
 
 // Shop has many ShopReviews
-db.Shop.hasMany(db.ShopReviews, { foreignKey: "shop_id", sourceKey: "id" });
+db.Shop.hasMany(db.ShopReviews, {
+  foreignKey: "shop_id",
+  sourceKey: "id",
+  onDelete: "CASCADE",
+});
 // ShopReviews belongs to Shop
 db.ShopReviews.belongsTo(db.Shop, { foreignKey: "shop_id", targetKey: "id" });
 

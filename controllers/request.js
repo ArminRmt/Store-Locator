@@ -8,6 +8,11 @@ const { io, sellerSockets } = require("../socketManager.js");
 // get seller requests
 exports.SellerRequests = async (req, res) => {
   const sellerID = req.userId;
+  const page = req.query.page || 1;
+  const pageSize = req.query.pageSize || 10;
+
+  const offset = (page - 1) * pageSize;
+
   try {
     // join requests and request_seller_links tables
     const requests = await Request.findAll({
@@ -15,9 +20,12 @@ exports.SellerRequests = async (req, res) => {
         {
           model: RequestSellerLinks,
           where: { seller_id: sellerID },
-          attributes: [], // Exclude attributes from RequestSellerLinks
+          attributes: [],
         },
       ],
+      limit: pageSize,
+      offset: offset,
+      order: [["timestamp", "DESC"]],
     });
 
     res.status(200).json(requests);
@@ -29,11 +37,20 @@ exports.SellerRequests = async (req, res) => {
 
 exports.GetUserRequest = async (req, res) => {
   const userId = req.userId;
+  const page = req.query.page || 1;
+  const pageSize = req.query.pageSize || 10;
+
+  const offset = (page - 1) * pageSize;
+
   try {
     const userRequests = await Request.findAll({
+      attributes: ["id", "piece_name", "content", "timestamp"],
       where: {
         users_id: userId,
       },
+      limit: pageSize,
+      offset: offset,
+      order: [["timestamp", "DESC"]],
     });
 
     res.status(200).json(userRequests);
@@ -42,30 +59,6 @@ exports.GetUserRequest = async (req, res) => {
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
-
-// exports.GetUserRequest = async (req, res) => {
-//   const userId = req.userId;
-//   const page = req.query.page || 1;
-//   const pageSize = req.query.pageSize || 10;
-
-//   try {
-//     const offset = (page - 1) * pageSize;
-
-//     const userRequests = await Request.findAll({
-//       where: {
-//         users_id: userId,
-//       },
-//       attributes: ["id", "title", "created_at"],
-//       limit: pageSize,
-//       offset: offset,
-//     });
-
-//     res.status(200).json(userRequests);
-//   } catch (err) {
-//     console.error("Error fetching user requests:", err);
-//     res.status(500).json({ error: "خطای داخلی سرور" });
-//   }
-// };
 
 exports.createRequest = async (req, res) => {
   try {
@@ -92,24 +85,23 @@ exports.createRequest = async (req, res) => {
       RequestSellerLinks.create({
         request_id: newRequest.id,
         seller_id: seller_id,
+        status: 0,
       });
 
       // Emit an event to the specific seller
-      const sellerSocketId = sellerSockets[seller_id]; // Use the stored socket ID
+      // if (sellerSocketId && req.io.sockets.connected[sellerSocketId]) {
+      const sellerSocketId = sellerSockets[seller_id];
       if (sellerSocketId) {
         io.to(sellerSocketId).emit("newRequest", newRequest);
       }
-      // const sellerSocketId = req.sellerSockets[SellerId];
-      // if (sellerSocketId && req.io.sockets.connected[sellerSocketId]) {
-      //   req.io.to(sellerSocketId).emit("newRequest", newRequest);
-      // }
     }
 
     const result = {
       msg: "درخواست با موفقیت به نزدیک ترین فروشنده ها ارسال شد",
-      ...newRequest.get(),
+      piece_name,
+      content,
+      timestamp: timestamp,
     };
-    delete result.users_id;
 
     res.status(200).json(result);
   } catch (error) {
@@ -123,21 +115,26 @@ exports.UpdateRequest = async (req, res) => {
   const timestamp = new Date().toISOString();
 
   try {
-    const request = await Request.findByPk(request_id);
+    const [rowsAffected, [updatedRequest]] = await Request.update(
+      {
+        piece_name,
+        content,
+        timestamp: timestamp,
+      },
+      {
+        returning: true,
+        where: {
+          id: request_id,
+          users_id: req.userId,
+        },
+      }
+    );
 
-    if (!request) {
-      return res.status(404).json({ msg: "درخواست پیدا نشد" });
+    if (rowsAffected === 0) {
+      return res
+        .status(404)
+        .json({ msg: "درخواست پیدا نشد یا شما مجوز به‌روزرسانی ندارید" });
     }
-
-    if (request.users_id !== req.userId) {
-      return res.status(403).send({ message: "عدم دسترسی مجاز" });
-    }
-
-    await request.update({
-      piece_name,
-      content,
-      timestamp: timestamp,
-    });
 
     // Get all seller_ids associated with the request from request_seller_links
     const links = await RequestSellerLinks.findAll({
@@ -172,14 +169,17 @@ exports.DeleteRequest = async (req, res) => {
   const { request_id } = req.body;
 
   try {
-    const request = await Request.findByPk(request_id);
+    const request = await Request.findOne({
+      where: {
+        id: request_id,
+        users_id: req.userId,
+      },
+    });
 
     if (!request) {
-      return res.status(404).json({ msg: "درخواست پیدا نشد" });
-    }
-
-    if (request.users_id !== req.userId) {
-      return res.status(403).send({ message: "عدم دسترسی مجاز" });
+      return res
+        .status(404)
+        .json({ message: "درخواست یافت نشد یا شما مجوز حذف آن را ندارید." });
     }
 
     // Get all seller_ids associated with the request from request_seller_links
@@ -188,7 +188,7 @@ exports.DeleteRequest = async (req, res) => {
     });
 
     for (const link of links) {
-      const sellerSocketId = sellerSockets[link.seller_id]; // Replace with your logic to get the seller's socket ID
+      const sellerSocketId = sellerSockets[link.seller_id];
       if (sellerSocketId) {
         io.to(sellerSocketId).emit("requestDeleted", { request_id });
       }

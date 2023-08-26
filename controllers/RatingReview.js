@@ -6,8 +6,15 @@ exports.getShopFeedbackTexts = async (req, res) => {
   try {
     const { shop_id } = req.body;
     const logedinSeller = req.userId;
+    const page = req.query.page || 1;
+    const pageSize = req.query.pageSize || 10;
 
-    const shop = await Shop.findOne({ where: { seller_id: logedinSeller } });
+    const offset = (page - 1) * pageSize;
+
+    const shop = await Shop.findOne({
+      where: { seller_id: logedinSeller },
+      attributes: ["seller_id"],
+    });
 
     if (shop.seller_id !== logedinSeller) {
       return res
@@ -16,8 +23,10 @@ exports.getShopFeedbackTexts = async (req, res) => {
     }
 
     const feedbackTexts = await ShopReviews.findAll({
-      attributes: ["feedback_text"],
       where: { shop_id },
+      attributes: ["feedback_text"],
+      limit: pageSize,
+      offset: offset,
     });
 
     res.status(200).json(feedbackTexts);
@@ -30,18 +39,16 @@ exports.getShopFeedbackTexts = async (req, res) => {
 exports.getUserFeedbackTexts = async (req, res) => {
   try {
     const userId = req.userId;
+    const page = req.query.page || 1;
+    const pageSize = req.query.pageSize || 10;
 
-    const shop = await Shop.findOne({ where: { buyer_id: userId } });
-
-    if (shop.buyer_id !== userId) {
-      return res
-        .status(403)
-        .json({ message: "شما صاحب این نقد ها نمی باشید." });
-    }
+    const offset = (page - 1) * pageSize;
 
     const feedbackTexts = await ShopReviews.findAll({
-      attributes: ["feedback_text"],
       where: { buyer_id: userId },
+      attributes: ["feedback_text"],
+      limit: pageSize,
+      offset: offset,
     });
 
     res.status(200).json(feedbackTexts);
@@ -104,26 +111,24 @@ exports.updateShopReview = async (req, res) => {
   try {
     const { review_id, rating, feedback_text } = req.body;
 
-    const reviewToUpdate = await ShopReviews.findByPk(review_id);
+    const [rowsAffected, [updatedReview]] = await ShopReviews.update(
+      {
+        rating: rating,
+        feedback_text: feedback_text,
+      },
+      {
+        returning: true,
+        where: { id: review_id, buyer_id: req.userId },
+      }
+    );
 
-    if (!reviewToUpdate) {
-      res.status(200).json({ message: "نقد با موفقیت به‌روزرسانی شد." });
+    if (rowsAffected === 0) {
+      return res.status(404).json({ message: "نقد یافت نشد." });
     }
 
-    const oldRating = reviewToUpdate.rating;
-
-    if (rating !== null) {
-      reviewToUpdate.rating = rating;
-    }
-    if (feedback_text !== null) {
-      reviewToUpdate.feedback_text = feedback_text;
-    }
-
-    await reviewToUpdate.save();
-
-    // Recalculate average rating only if the rating has changed
-    if (rating !== null && oldRating !== rating) {
-      await calculateAverageRating(reviewToUpdate.shop_id);
+    // Check if rating has changed and recalculate average if necessary
+    if (rating !== null && updatedReview.rating !== rating) {
+      await calculateAverageRating(updatedReview.shop_id);
     }
 
     res.status(200).json({ message: "نقد با موفقیت به‌روزرسانی شد." });
@@ -137,10 +142,17 @@ exports.deleteShopReview = async (req, res) => {
   try {
     const { review_id } = req.body;
 
-    const reviewToDelete = await SellerReview.findByPk(review_id);
+    const reviewToDelete = await ShopReviews.findOne({
+      where: {
+        id: review_id,
+        buyer_id: req.userId,
+      },
+    });
 
     if (!reviewToDelete) {
-      return res.status(404).json({ message: "Review not found." });
+      return res
+        .status(404)
+        .json({ message: "نقد یافت نشد یا شما مجوز حذف آن را ندارید." });
     }
 
     const shopId = reviewToDelete.shop_id;

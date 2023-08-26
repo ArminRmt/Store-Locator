@@ -11,17 +11,23 @@ const { getSellerShopLocation } = require("./shop.js");
 // get seller reponds
 exports.GetSellerResponds = async (req, res) => {
   const SellerId = req.userId;
+  const page = req.query.page || 1;
+  const pageSize = req.query.pageSize || 10;
+
+  const offset = (page - 1) * pageSize;
 
   try {
     const responds = await Respond.findAll({
+      attributes: ["id", "request_id", "price", "seller_respond", "timestamp"],
       where: {
         seller_id: SellerId,
       },
+      limit: pageSize,
+      offset: offset,
+      order: [["timestamp", "DESC"]],
     });
 
-    res.status(200).json({
-      responds: responds,
-    });
+    res.status(200).json(responds);
   } catch (err) {
     console.error("Error fetching user requests:", err);
     res.status(500).json({ error: "خطای داخلی سرور" });
@@ -31,6 +37,10 @@ exports.GetSellerResponds = async (req, res) => {
 // get user responds
 exports.getUserResponses = async (req, res) => {
   const userId = req.userId;
+  const page = req.query.page || 1;
+  const pageSize = req.query.pageSize || 10;
+
+  const offset = (page - 1) * pageSize;
 
   try {
     const userResponses = await Respond.findAll({
@@ -49,6 +59,9 @@ exports.getUserResponses = async (req, res) => {
         "seller_respond",
         "timestamp",
       ],
+      limit: pageSize,
+      offset: offset,
+      order: [["timestamp", "DESC"]],
     });
 
     const sellerIds = userResponses.map((response) => response.seller_id);
@@ -142,24 +155,29 @@ exports.UpdateResponse = async (req, res) => {
   const timestamp = new Date().toISOString();
 
   try {
-    const response = await Respond.findByPk(response_id);
+    const [rowsAffected, [updatedResponse]] = await Respond.update(
+      {
+        price,
+        seller_respond,
+        timestamp: timestamp,
+      },
+      {
+        returning: true,
+        where: {
+          id: response_id,
+          users_id: req.userId,
+        },
+      }
+    );
 
-    if (!response) {
-      return res.status(404).json({ msg: "پاسخ پیدا نشد" });
+    if (rowsAffected === 0) {
+      return res
+        .status(404)
+        .json({ msg: "پاسخ پیدا نشد یا شما مجوز به‌روزرسانی ندارید" });
     }
-
-    if (response.seller_id !== req.userId) {
-      return res.status(403).send({ message: "عدم دسترسی مجاز" });
-    }
-
-    await response.update({
-      price,
-      seller_respond,
-      timestamp: timestamp,
-    });
 
     const request = await Request.findOne({
-      where: { id: response.request_id },
+      where: { id: updatedResponse.request_id },
     });
 
     // Emit an event to the specific user
@@ -173,15 +191,13 @@ exports.UpdateResponse = async (req, res) => {
       });
     }
 
-    res
-      .status(200)
-      .json({
-        msg: "پاسخ به‌روزرسانی شد",
-        response_id,
-        price,
-        seller_respond,
-        timestamp,
-      });
+    res.status(200).json({
+      msg: "پاسخ به‌روزرسانی شد",
+      response_id,
+      price,
+      seller_respond,
+      timestamp,
+    });
   } catch (error) {
     console.error("Error updating response:", error.message);
     res.status(500).json({ error: "خطای داخلی سرور" });
@@ -192,14 +208,17 @@ exports.DeleteResponse = async (req, res) => {
   const { response_id } = req.body;
 
   try {
-    const response = await Respond.findByPk(response_id);
+    const response = await Respond.findOne({
+      where: {
+        id: response_id,
+        users_id: req.userId,
+      },
+    });
 
-    if (!response) {
-      return res.status(404).json({ msg: "پاسخ پیدا نشد" });
-    }
-
-    if (response.seller_id !== req.userId) {
-      return res.status(403).send({ message: "عدم دسترسی مجاز" });
+    if (!request) {
+      return res
+        .status(404)
+        .json({ message: "پاسخ یافت نشد یا شما مجوز حذف آن را ندارید." });
     }
 
     const request = await Request.findOne({

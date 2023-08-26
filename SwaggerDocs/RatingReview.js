@@ -72,6 +72,18 @@
  *         schema:
  *           type: string
  *           format: Bearer token
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: pageSize
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 10
  *     requestBody:
  *       required: true
  *       content:
@@ -192,6 +204,11 @@
  *         schema:
  *           type: string
  *           format: Bearer token
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
  *     requestBody:
  *       required: true
  *       content:
@@ -252,6 +269,18 @@
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: pageSize
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 10
  *       - in: header
  *         name: Authorization
  *         required: true

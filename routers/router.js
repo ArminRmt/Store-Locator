@@ -56,20 +56,8 @@ router.post("/signinSeller", auth.signinSeller);
 
 ////////////////////////////////////      user routes     ////////////////////////////////////
 
-router.get(
-  "/user/:id",
-  [authJwt.verifyToken, authJwt.isAdmin],
-  users.getUserById
-);
-
-router.get("/users", [authJwt.verifyToken, authJwt.isAdmin], users.getUsers);
-router.get(
-  "/user/:id",
-  [authJwt.verifyToken, authJwt.isAdmin],
-  users.getUserById
-);
 router.patch(
-  "/user/:id",
+  "/updateUser",
   [
     authJwt.verifyToken,
     authJwt.isUserOrAdmin,
@@ -82,32 +70,17 @@ router.patch(
   ],
   users.updateUser
 );
-router.delete(
-  "/user/:id",
-  [authJwt.verifyToken, authJwt.isUserOrAdmin],
-  users.deleteUser
-);
 
 // get user details by token
 router.get("/getuserbytoken", users.GetUserByToken);
 
 ////////////////////////////////////      seller routes     ////////////////////////////////////
 
-router.get(
-  "/sellers",
-  [authJwt.verifyToken, authJwt.isAdmin],
-  seller.getSellers
-);
-router.get(
-  "/seller/:id",
-  [authJwt.verifyToken, authJwt.isAdmin],
-  seller.getSellerById
-);
 router.patch(
-  "/seller/:id",
+  "/updateSeller",
   [
     authJwt.verifyToken,
-    authJwt.isSellerOrAdmin,
+    authJwt.isSeller,
     validatePassword,
     validatePasswordMatch,
     validatePhoneNumber,
@@ -116,32 +89,18 @@ router.patch(
   ],
   seller.updateSeller
 );
-router.delete(
-  "/seller/:id",
-  [authJwt.verifyToken, authJwt.isSellerOrAdmin],
-  seller.deleteSeller
-);
 
 // get seller details by token
 router.get("/GetSellerByToken", authJwt.verifyToken, seller.GetSellerByToken);
 
-// get sellers all responds
-router.get(
-  "/GetSellerResponds",
-  authJwt.verifyToken,
-  respond.GetSellerResponds
-);
-
 ////////////////////////////////////      shop routes     ////////////////////////////////////
 
-router.get("/shops", [authJwt.verifyToken, authJwt.isAdmin], shop.getShops);
-router.get(
-  "/shop/:id",
-  [authJwt.verifyToken, authJwt.isAdmin],
-  shop.getShopById
-);
+// get all logged in seller shops
+router.get("/getShops", [authJwt.verifyToken, authJwt.isAdmin], shop.getShops);
+
+// create shop
 router.post(
-  "/shop/:id",
+  "/createShop",
   [
     authJwt.verifyToken,
     authJwt.isSellerOrAdmin,
@@ -151,19 +110,23 @@ router.post(
   ],
   shop.createShop
 );
+
+// seller update his shop
 router.patch(
-  "/shop/:id",
+  "/updateShop",
   [
     authJwt.verifyToken,
-    authJwt.isSellerOrAdmin,
+    authJwt.isSeller,
     validatePhoneNumber,
     validateName,
     RequireFieldsShop,
   ],
   shop.updateShop
 );
+
+// serller or admin delete shop
 router.delete(
-  "/shop/:id",
+  "/shopDelete",
   [authJwt.verifyToken, authJwt.isSellerOrAdmin],
   shop.deleteShop
 );
@@ -171,77 +134,106 @@ router.delete(
 ////////////////////////////////////    request routes   ////////////////////////////////////
 
 // get user all requests
-router.get("/UserRequests", authJwt.verifyToken, request.GetUserRequest);
+router.get(
+  "/userRequests",
+  [authJwt.verifyToken, authJwt.isUserOrAdmin],
+  request.GetUserRequest
+);
 
 // get seller request
-router.get("/SellerRequests", authJwt.verifyToken, request.SellerRequests);
+router.get(
+  "/sellerRequests",
+  [authJwt.verifyToken, authJwt.isSellerOrAdmin],
+  request.SellerRequests
+);
 
 // buyer craete request and it will sends to nearest sellers
 router.post(
-  "/createRequest",
-  [authJwt.verifyToken, RequireFieldsRequest],
+  "createRequest",
+  [authJwt.verifyToken, authJwt.isUserOrAdmin, RequireFieldsRequest],
   request.createRequest
 );
 
 // buyer update his request
 router.patch(
   "/UpdateRequest",
-  [authJwt.verifyToken, RequireFieldsRequest],
+  [authJwt.verifyToken, authJwt.isBuyer, RequireFieldsRequest],
   request.UpdateRequest
 );
 
 // buyer delete his request
-router.delete("/DeleteRequest", [authJwt.verifyToken], request.DeleteRequest);
+router.delete(
+  "/DeleteRequest",
+  [authJwt.verifyToken, authJwt.isUserOrAdmin],
+  request.DeleteRequest
+);
 
 ////////////////////////////////////    respond routes   ////////////////////////////////////
 
 // get user all responds
-router.get("/getUserResponses", authJwt.verifyToken, respond.getUserResponses);
+router.get(
+  "/getUserResponses",
+  [authJwt.verifyToken, authJwt.isUserOrAdmin],
+  respond.getUserResponses
+);
+
+// get sellers all responds
+router.get(
+  "/GetSellerResponds",
+  authJwt.verifyToken,
+  respond.GetSellerResponds
+);
 
 // seller respond back to buyer request
 router.post(
   "/createResponse",
-  [authJwt.verifyToken, RequireFieldsRespond],
+  [authJwt.verifyToken, authJwt.isSeller, RequireFieldsRespond],
   respond.createResponse
 );
 
 // seller update his respond
 router.patch(
   "/UpdateResponse",
-  [authJwt.verifyToken, RequireFieldsRespond],
+  [authJwt.verifyToken, authJwt.isSeller, RequireFieldsRespond],
   respond.UpdateResponse
 );
 
 // seller delete his respond
-router.delete("/DeleteResponse", [authJwt.verifyToken], respond.DeleteResponse);
+router.delete(
+  "/DeleteResponse",
+  [authJwt.verifyToken, authJwt.isSellerOrAdmin],
+  respond.DeleteResponse
+);
 
 ////////////////////////////////////    RatingReview routes   ////////////////////////////////////
 
 // get all reviews on this shop
 router.get(
-  "/getShopFeedbackTexts",
+  "getShopFeedbackTexts",
   [authJwt.verifyToken, authJwt.isSellerOrAdmin],
   RatingReview.getShopFeedbackTexts
 );
 
-// get all user feedback on this shop
+// get all user feedbacks
 router.get(
-  "/getUserFeedbackTexts",
+  "getUserFeedbackTexts",
   [authJwt.verifyToken, authJwt.isUserOrAdmin],
-  RatingReview.getShopFeedbackTexts
+  RatingReview.getUserFeedbackTexts
 );
 
 router.post(
   "/submitShopRating",
-  [authJwt.verifyToken, authJwt.isUserOrAdmin, RequireFieldsRating],
+  [authJwt.verifyToken, authJwt.isBuyer, RequireFieldsRating],
   RatingReview.submitShopRating
 );
 
+// user update his review
 router.patch(
   "/updateShopReview",
-  [authJwt.verifyToken, authJwt.isUserOrAdmin, RequireFieldsRating],
+  [authJwt.verifyToken, authJwt.isBuyer, RequireFieldsRating],
   RatingReview.updateShopReview
 );
+
 router.delete(
   "/deleteShopReview",
   [authJwt.verifyToken, authJwt.isUserOrAdmin],
@@ -282,11 +274,13 @@ router.delete(
 
 ////////////////////////////////////    other routes   ////////////////////////////////////
 
-router.get("/verify-token", authJwt.verifyToken, (req, res) => {
-  // If the token is valid, the middleware will have added userId to the request
-  res.status(200).send({
-    message: "توکن معتبر است.",
-  });
-});
+router.get("/verify-token", authJwt.verifyToken);
+
+// router.get("/verify-token", authJwt.verifyToken, (req, res) => {
+//   // If the token is valid, the middleware will have added userId to the request
+//   res.status(200).send({
+//     message: "توکن معتبر است.",
+//   });
+// });
 
 module.exports = router;
