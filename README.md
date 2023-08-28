@@ -29,7 +29,7 @@
 change db to localhost in db.config.js          
 ```
 npm install
-npm start
+npm run dev
 ```
 ### docker
 ```
