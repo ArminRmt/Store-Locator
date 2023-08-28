@@ -274,13 +274,13 @@ router.delete(
 
 ////////////////////////////////////    other routes   ////////////////////////////////////
 
-router.get("/verify-token", authJwt.verifyToken);
+// router.get("/verify-token", authJwt.verifyToken);
 
-// router.get("/verify-token", authJwt.verifyToken, (req, res) => {
-//   // If the token is valid, the middleware will have added userId to the request
-//   res.status(200).send({
-//     message: "توکن معتبر است.",
-//   });
-// });
+router.get("/verify-token", authJwt.verifyToken, (req, res) => {
+  // If the token is valid, the middleware will have added userId to the request
+  res.status(200).send({
+    message: "توکن معتبر است.",
+  });
+});
 
 module.exports = router;
