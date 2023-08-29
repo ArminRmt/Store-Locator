@@ -14,8 +14,8 @@ db.sequelize.sync({ force: true }).then(() => {
 });
 
 const corsOptions = {
-  origin: "https://storelocatorapp.dummy.monster",
-  // origin: "http://localhost:5173",
+  // origin: "https://storelocatorapp.dummy.monster",
+  origin: "http://localhost:5173",
   optionsSuccessStatus: 200,
 };
 
