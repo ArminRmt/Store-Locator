@@ -52,6 +52,7 @@ exports.GetUserRequest = async (req, res) => {
       offset: offset,
       order: [["timestamp", "DESC"]],
     });
+    console.log(userRequests);
 
     res.status(200).json(userRequests);
   } catch (err) {
