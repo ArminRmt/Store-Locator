@@ -149,7 +149,7 @@ router.get(
 
 // buyer craete request and it will sends to nearest sellers
 router.post(
-  "createRequest",
+  "/createRequest",
   [authJwt.verifyToken, authJwt.isUserOrAdmin, RequireFieldsRequest],
   request.createRequest
 );
@@ -216,7 +216,7 @@ router.get(
 
 // get all user feedbacks
 router.get(
-  "getUserFeedbackTexts",
+  "/getUserFeedbackTexts",
   [authJwt.verifyToken, authJwt.isUserOrAdmin],
   RatingReview.getUserFeedbackTexts
 );

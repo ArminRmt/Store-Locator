@@ -64,6 +64,8 @@ exports.GetUserRequest = async (req, res) => {
 exports.createRequest = async (req, res) => {
   try {
     const userId = req.userId;
+    console.log(userId);
+
     const { piece_name, content } = req.body;
     const timestamp = new Date().toISOString();
 
@@ -76,6 +78,7 @@ exports.createRequest = async (req, res) => {
 
     const nearest_shops = await shop.NearestShops();
 
+    console.log(nearest_shops);
     // Use a Set to ensure unique seller_ids
     const uniqueSellerIds = new Set(
       nearest_shops.map((shop) => shop.seller_id)
