@@ -5,6 +5,7 @@ const Request = db.Request;
 const { io, userSockets } = require("../socketManager.js");
 const shop = require("./shop.js");
 const { getSellerShopLocation } = require("./shop.js");
+const { getSellerShopLocationAndName } = require("./shop.js");
 
 // Now you can use getSellerShopLocation() directly
 
@@ -88,6 +89,62 @@ exports.getUserResponses = async (req, res) => {
     res.status(200).json(combinedData);
   } catch (error) {
     console.error("Error fetching user responses:", error.message);
+    res.status(500).json({ error: "خطای داخلی سرور" });
+  }
+};
+
+// get user responds for specific request
+exports.UserRequestResponses = async (req, res) => {
+  const requestId = req.body;
+  const userId = req.userId;
+
+  const page = req.query.page || 1;
+  const pageSize = req.query.pageSize || 10;
+  const offset = (page - 1) * pageSize;
+
+  try {
+    const userResponses = await Respond.findAll({
+      where: {
+        users_id: userId,
+        request_id: requestId,
+      },
+      attributes: [
+        "id",
+        "seller_id",
+        "request_id",
+        "price",
+        "seller_respond",
+        "timestamp",
+      ],
+      limit: pageSize,
+      offset: offset,
+      order: [["timestamp", "DESC"]],
+    });
+
+    const sellerIds = userResponses.map((response) => response.seller_id);
+
+    const shopLocations = {};
+    try {
+      for (const sellerId of sellerIds) {
+        const { shopLatitude, shopLongitude } =
+          await getSellerShopLocationAndName(sellerId);
+        shopLocations[sellerId] = { shopLatitude, shopLongitude, shopName };
+      }
+    } catch (error) {
+      console.error("Error fetching shop locations:", error.message);
+      return res.status(400).json({ error: error.message });
+    }
+
+    const combinedData = userResponses.map((response) => ({
+      ...response.dataValues,
+      shopLatitude: shopLocations[response.seller_id].shopLatitude,
+      shopLongitude: shopLocations[response.seller_id].shopLongitude,
+      shopName: shopLocations[response.seller_id].shopName,
+    }));
+
+    res.status(200).json(combinedData);
+  } catch (error) {
+    console.error("Error fetching user and request responses:", error.message);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };

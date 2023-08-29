@@ -326,6 +326,94 @@
  */
 /**
  * @swagger
+ * /UserRequestResponses:
+ *   get:
+ *     summary: Get User's Responses for a Specific Request
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *       - in: query
+ *         name: pageSize
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               requestId:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   seller_id:
+ *                     type: integer
+ *                   request_id:
+ *                     type: integer
+ *                   price:
+ *                     type: number
+ *                   seller_respond:
+ *                     type: string
+ *                   timestamp:
+ *                     type: string
+ *                   shopLatitude:
+ *                     type: number
+ *                   shopLongitude:
+ *                     type: number
+ *                   shopName:
+ *                     type: string
+ *             example:
+ *               - id: 1
+ *                 seller_id: 123
+ *                 request_id: 456
+ *                 price: 50.0
+ *                 seller_respond: "Ready to deliver!"
+ *                 timestamp: "2023-08-25T12:34:56Z"
+ *                 shopLatitude: 12.3456
+ *                 shopLongitude: 78.9012
+ *                 shopName: "ایران خودرو"
+ *       400:
+ *         description: Bad Request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Error fetching shop locations"
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "خطای داخلی سرور"
+ */
+/**
+ * @swagger
  * /GetSellerResponds:
  *   get:
  *     summary: Get seller responds

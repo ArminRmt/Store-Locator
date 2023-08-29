@@ -177,6 +177,13 @@ router.get(
   respond.getUserResponses
 );
 
+// get user responds for specific request
+router.get(
+  "/UserRequestResponses",
+  [authJwt.verifyToken, authJwt.isUserOrAdmin],
+  respond.UserRequestResponses
+);
+
 // get sellers all responds
 router.get(
   "/GetSellerResponds",
