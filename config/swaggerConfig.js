@@ -16,13 +16,13 @@ const options = {
       },
       contact: {
         name: "Armin",
-        url: "http://localhost:5173",
+        url: "https://storelocatorapi.dummy.monster",
         email: "arminrahmati83@gmail.com",
       },
     },
     servers: [
       {
-        url: "http://localhost:8080",
+        url: "https://storelocatorapi.dummy.monster",
       },
     ],
   },
