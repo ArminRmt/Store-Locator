@@ -179,6 +179,7 @@ exports.createResponse = async (req, res) => {
     const userSocketId = userSockets[buyerID];
 
     socketRes = {
+      newResponseId: newResponse.id,
       seller_id: SellerId,
       request_id: request_id,
       price: price,
