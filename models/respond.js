@@ -24,6 +24,10 @@ module.exports = (sequelize, Sequelize) => {
       timestamp: {
         type: Sequelize.DATE,
       },
+      is_deleted: {
+        type: Sequelize.BOOLEAN,
+        default: false,
+      },
     },
     {
       // Disable timestamps

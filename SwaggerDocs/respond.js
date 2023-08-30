@@ -285,6 +285,7 @@
  *                 timestamp: "2023-07-29T18:00:00Z"
  *                 shopLatitude: 51.7
  *                 shopLongitude: 36.7
+ *                 shopName: "ایران خودرو"
  *               - id: 2
  *                 seller_id: 456
  *                 request_id: 789
@@ -293,6 +294,7 @@
  *                 timestamp: "2023-07-30T12:30:00Z"
  *                 shopLatitude: 51.7
  *                 shopLongitude: 36.7
+ *                 shopName: "ایران خودرو"
  *       401:
  *         description: Unauthorized
  *         content:
@@ -460,4 +462,44 @@
  *                 error:
  *                   type: string
  *                   example: "خطای سرور داخلی"
+ */
+/**
+ * @swagger
+ * /deleteUserResponse:
+ *   patch:
+ *     summary: Delete a User Response
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               response_id:
+ *                 type: integer
+ *             required:
+ *               - response_id
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "nothing just 204 staus code"
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Internal server error"
  */

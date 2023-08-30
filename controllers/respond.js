@@ -4,10 +4,7 @@ const Shop = db.Shop;
 const Request = db.Request;
 const { io, userSockets } = require("../socketManager.js");
 const shop = require("./shop.js");
-const { getSellerShopLocation } = require("./shop.js");
 const { getSellerShopLocationAndName } = require("./shop.js");
-
-// Now you can use getSellerShopLocation() directly
 
 // get seller reponds
 exports.GetSellerResponds = async (req, res) => {
@@ -23,9 +20,9 @@ exports.GetSellerResponds = async (req, res) => {
       where: {
         seller_id: SellerId,
       },
+      order: [["timestamp", "DESC"]],
       limit: pageSize,
       offset: offset,
-      order: [["timestamp", "DESC"]],
     });
 
     res.status(200).json(responds);
@@ -45,6 +42,9 @@ exports.getUserResponses = async (req, res) => {
 
   try {
     const userResponses = await Respond.findAll({
+      where: {
+        is_deleted: false,
+      },
       include: [
         {
           model: Request,
@@ -60,9 +60,9 @@ exports.getUserResponses = async (req, res) => {
         "seller_respond",
         "timestamp",
       ],
+      order: [["timestamp", "DESC"]],
       limit: pageSize,
       offset: offset,
-      order: [["timestamp", "DESC"]],
     });
 
     const sellerIds = userResponses.map((response) => response.seller_id);
@@ -70,10 +70,9 @@ exports.getUserResponses = async (req, res) => {
     const shopLocations = {};
     try {
       for (const sellerId of sellerIds) {
-        const { shopLatitude, shopLongitude } = await getSellerShopLocation(
-          sellerId
-        );
-        shopLocations[sellerId] = { shopLatitude, shopLongitude };
+        const { shopLatitude, shopLongitude } =
+          await getSellerShopLocationAndName(sellerId);
+        shopLocations[sellerId] = { shopLatitude, shopLongitude, shopName };
       }
     } catch (error) {
       console.error("Error fetching shop locations:", error.message);
@@ -84,6 +83,7 @@ exports.getUserResponses = async (req, res) => {
       ...response.dataValues,
       shopLatitude: shopLocations[response.seller_id].shopLatitude,
       shopLongitude: shopLocations[response.seller_id].shopLongitude,
+      shopName: shopLocations[response.seller_id].shopName,
     }));
 
     res.status(200).json(combinedData);
@@ -107,6 +107,7 @@ exports.UserRequestResponses = async (req, res) => {
       where: {
         users_id: userId,
         request_id: requestId,
+        is_deleted: false,
       },
       attributes: [
         "id",
@@ -116,9 +117,9 @@ exports.UserRequestResponses = async (req, res) => {
         "seller_respond",
         "timestamp",
       ],
+      order: [["timestamp", "DESC"]],
       limit: pageSize,
       offset: offset,
-      order: [["timestamp", "DESC"]],
     });
 
     const sellerIds = userResponses.map((response) => response.seller_id);
@@ -171,6 +172,7 @@ exports.createResponse = async (req, res) => {
     }
     const shopLatitude = shop.latitude;
     const shopLongitude = shop.longitude;
+    const shopName = shop.name;
 
     // Emit an event to the specific user
     const userSocketId = userSockets[buyerID];
@@ -183,6 +185,7 @@ exports.createResponse = async (req, res) => {
       timestamp: timestamp,
       shopLatitude: shopLatitude,
       shopLongitude: shopLongitude,
+      shopName: shopName,
     };
 
     if (userSocketId) {
@@ -237,6 +240,16 @@ exports.UpdateResponse = async (req, res) => {
       where: { id: updatedResponse.request_id },
     });
 
+    const shop = await Shop.findOne({
+      attributes: ["name"],
+      where: { seller_id: updatedResponse.seller_id },
+    });
+
+    if (!shop) {
+      return res.status(404).json({ msg: "فروشنده مرتبط یافت نشد" });
+    }
+    const shopName = shop.name;
+
     // Emit an event to the specific user
     const userSocketId = userSockets[request.users_id];
     if (userSocketId) {
@@ -245,6 +258,7 @@ exports.UpdateResponse = async (req, res) => {
         price,
         seller_respond,
         timestamp,
+        shopName,
       });
     }
 
@@ -292,6 +306,21 @@ exports.DeleteResponse = async (req, res) => {
     await response.destroy();
 
     res.status(200).json({ msg: "پاسخ حذف شد", response_id });
+  } catch (error) {
+    console.error("Error deleting response:", error.message);
+    res.status(500).json({ error: "خطای داخلی سرور" });
+  }
+};
+
+// Buyer panel - Delete a response
+exports.deleteUserResponse = async (req, res) => {
+  try {
+    const { response_id } = req.body;
+
+    await Respond.update({ is_deleted: true }, { where: { id: response_id } });
+
+    // res.status(200).json({ message: "پاسخ با موفقیت حذف شد." });
+    res.sendStatus(204); // Send a 'No Content' status code
   } catch (error) {
     console.error("Error deleting response:", error.message);
     res.status(500).json({ error: "خطای داخلی سرور" });

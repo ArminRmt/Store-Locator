@@ -4,24 +4,6 @@ const axios = require("axios");
 const geolib = require("geolib");
 const env = require("../config/env.js");
 
-// .js
-exports.getSellerShopLocation = async (sellerId) => {
-  try {
-    const shop = await Shop.findOne({ where: { seller_id: sellerId } });
-
-    if (!shop) {
-      throw new Error("فروشگاهی به نام این فروشنده پیدا نشد");
-    }
-
-    const shopLatitude = shop.latitude;
-    const shopLongitude = shop.longitude;
-
-    return { shopLatitude, shopLongitude };
-  } catch (error) {
-    throw error;
-  }
-};
-
 exports.getSellerShopLocationAndName = async (sellerId) => {
   try {
     const shop = await Shop.findOne({ where: { seller_id: sellerId } });

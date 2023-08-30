@@ -212,6 +212,13 @@ router.delete(
   respond.DeleteResponse
 );
 
+// Buyer panel - Delete a response
+router.patch(
+  "/deleteUserResponse",
+  [authJwt.verifyToken, authJwt.isBuyer],
+  respond.deleteUserResponse
+);
+
 ////////////////////////////////////    RatingReview routes   ////////////////////////////////////
 
 // get all reviews on this shop

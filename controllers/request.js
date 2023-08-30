@@ -1,7 +1,6 @@
 const db = require("../config/db.config.js");
 const Request = db.Request;
 const RequestSellerLinks = db.RequestSellerLinks;
-const Respond = db.Respond;
 const shop = require("./shop.js");
 const { io, sellerSockets } = require("../socketManager.js");
 
@@ -48,9 +47,9 @@ exports.GetUserRequest = async (req, res) => {
       where: {
         users_id: userId,
       },
+      order: [["timestamp", "DESC"]],
       limit: pageSize,
       offset: offset,
-      order: [["timestamp", "DESC"]],
     });
     console.log(userRequests);
 
