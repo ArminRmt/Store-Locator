@@ -70,7 +70,7 @@ exports.getUserResponses = async (req, res) => {
     const shopLocations = {};
     try {
       for (const sellerId of sellerIds) {
-        const { shopLatitude, shopLongitude } =
+        const { shopLatitude, shopLongitude, shopName } =
           await getSellerShopLocationAndName(sellerId);
         shopLocations[sellerId] = { shopLatitude, shopLongitude, shopName };
       }
