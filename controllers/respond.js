@@ -320,8 +320,8 @@ exports.deleteUserResponse = async (req, res) => {
 
     await Respond.update({ is_deleted: true }, { where: { id: response_id } });
 
-    // res.status(200).json({ message: "پاسخ با موفقیت حذف شد." });
-    res.sendStatus(204); // Send a 'No Content' status code
+    res.status(200).json(response_id);
+    // res.sendStatus(204); // Send a 'No Content' status code
   } catch (error) {
     console.error("Error deleting response:", error.message);
     res.status(500).json({ error: "خطای داخلی سرور" });
