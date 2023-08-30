@@ -315,9 +315,9 @@ exports.DeleteResponse = async (req, res) => {
 
 // Buyer panel - Delete a response
 exports.deleteUserResponse = async (req, res) => {
-  try {
-    const { response_id } = req.body;
+  const { response_id } = req.body;
 
+  try {
     await Respond.update({ is_deleted: true }, { where: { id: response_id } });
 
     res.status(200).json(response_id);
