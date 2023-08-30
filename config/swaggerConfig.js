@@ -16,13 +16,13 @@ const options = {
       },
       contact: {
         name: "Armin",
-        url: "https://storelocatorapp.dummy.monster",
+        url: "https://storelocatorapi.dummy.monster",
         email: "arminrahmati83@gmail.com",
       },
     },
     servers: [
       {
-        url: "https://storelocatorapp.dummy.monster",
+        url: "https://storelocatorapi.dummy.monster",
       },
     ],
   },
