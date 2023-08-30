@@ -258,13 +258,13 @@ router.delete(
 
 router.get(
   "/settings",
-  [authJwt.verifyToken, authJwt.isAdmin],
+  // [authJwt.verifyToken, authJwt.isAdmin],
   admin.allSettings
 );
 
 router.get(
   "/getSetting/:key",
-  [authJwt.verifyToken, authJwt.isAdmin],
+  // [authJwt.verifyToken, authJwt.isAdmin],
   admin.getSettingByKey
 );
 

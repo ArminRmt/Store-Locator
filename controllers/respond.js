@@ -163,6 +163,7 @@ exports.createResponse = async (req, res) => {
       price: price,
       seller_respond: seller_respond,
       timestamp: timestamp,
+      is_deleted: false,
     });
 
     // get Seller shop location
