@@ -29,8 +29,12 @@ module.exports = (sequelize, Sequelize) => {
       },
     },
     {
-      // Disable timestamps
       timestamps: false,
+      // indexes: [
+      //   {
+      //     fields: ["phone"],
+      //   },
+      // ],
     }
   );
 

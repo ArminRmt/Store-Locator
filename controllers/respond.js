@@ -102,7 +102,6 @@ exports.getUserResponses = async (req, res) => {
 // get user responds for specific request
 exports.UserRequestResponses = async (req, res) => {
   const requestId = req.body;
-  const userId = req.userId;
 
   const page = req.query.page || 1;
   const pageSize = req.query.pageSize || 10;
@@ -111,7 +110,6 @@ exports.UserRequestResponses = async (req, res) => {
   try {
     const userResponses = await Respond.findAll({
       where: {
-        users_id: userId,
         request_id: requestId,
         is_deleted: false,
       },
@@ -296,7 +294,6 @@ exports.DeleteResponse = async (req, res) => {
     const response = await Respond.findOne({
       where: {
         id: response_id,
-        users_id: req.userId,
       },
     });
 

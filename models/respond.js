@@ -32,6 +32,14 @@ module.exports = (sequelize, Sequelize) => {
     {
       // Disable timestamps
       timestamps: false,
+      indexes: [
+        {
+          fields: ["seller_id"],
+        },
+        {
+          fields: ["request_id"],
+        },
+      ],
     }
   );
 

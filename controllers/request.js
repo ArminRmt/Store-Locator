@@ -51,7 +51,6 @@ exports.GetUserRequest = async (req, res) => {
       limit: pageSize,
       offset: offset,
     });
-    console.log(userRequests);
 
     res.status(200).json(userRequests);
   } catch (err) {
@@ -172,7 +171,6 @@ exports.DeleteRequest = async (req, res) => {
     const request = await Request.findOne({
       where: {
         id: request_id,
-        users_id: req.userId,
       },
     });
 
