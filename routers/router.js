@@ -98,6 +98,9 @@ router.get("/GetSellerByToken", authJwt.verifyToken, seller.GetSellerByToken);
 // get all logged in seller shops
 router.get("/getShops", [authJwt.verifyToken, authJwt.isAdmin], shop.getShops);
 
+// get seller shop
+router.get("/getSellerShop", authJwt.verifyToken, shop.getSellerShop);
+
 // create shop
 router.post(
   "/createShop",

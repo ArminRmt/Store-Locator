@@ -70,9 +70,14 @@ exports.getUserResponses = async (req, res) => {
     const shopLocations = {};
     try {
       for (const sellerId of sellerIds) {
-        const { shopLatitude, shopLongitude, shopName } =
+        const { shopLatitude, shopLongitude, shopName, shopID } =
           await getSellerShopLocationAndName(sellerId);
-        shopLocations[sellerId] = { shopLatitude, shopLongitude, shopName };
+        shopLocations[sellerId] = {
+          shopLatitude,
+          shopLongitude,
+          shopName,
+          shopID,
+        };
       }
     } catch (error) {
       console.error("Error fetching shop locations:", error.message);
@@ -84,6 +89,7 @@ exports.getUserResponses = async (req, res) => {
       shopLatitude: shopLocations[response.seller_id].shopLatitude,
       shopLongitude: shopLocations[response.seller_id].shopLongitude,
       shopName: shopLocations[response.seller_id].shopName,
+      shopID: shopLocations[response.seller_id].shopID,
     }));
 
     res.status(200).json(combinedData);
@@ -127,9 +133,14 @@ exports.UserRequestResponses = async (req, res) => {
     const shopLocations = {};
     try {
       for (const sellerId of sellerIds) {
-        const { shopLatitude, shopLongitude, shopName } =
+        const { shopLatitude, shopLongitude, shopName, shopID } =
           await getSellerShopLocationAndName(sellerId);
-        shopLocations[sellerId] = { shopLatitude, shopLongitude, shopName };
+        shopLocations[sellerId] = {
+          shopLatitude,
+          shopLongitude,
+          shopName,
+          shopID,
+        };
       }
     } catch (error) {
       console.error("Error fetching shop locations:", error.message);
@@ -141,6 +152,7 @@ exports.UserRequestResponses = async (req, res) => {
       shopLatitude: shopLocations[response.seller_id].shopLatitude,
       shopLongitude: shopLocations[response.seller_id].shopLongitude,
       shopName: shopLocations[response.seller_id].shopName,
+      shopID: shopLocations[response.seller_id].shopID,
     }));
 
     res.status(200).json(combinedData);
@@ -166,14 +178,9 @@ exports.createResponse = async (req, res) => {
       is_deleted: false,
     });
 
-    // get Seller shop location
-    const shop = await Shop.findOne({ where: { seller_id: SellerId } });
-    if (!shop) {
-      res.status(400).json({ error: "فروشگاهی به نام این فروشنده پیدا نشد" });
-    }
-    const shopLatitude = shop.latitude;
-    const shopLongitude = shop.longitude;
-    const shopName = shop.name;
+    // get Seller shop details
+    const { shopLatitude, shopLongitude, shopName, shopID } =
+      await getSellerShopLocationAndName(SellerId);
 
     // Emit an event to the specific user
     const userSocketId = userSockets[buyerID];
@@ -188,6 +195,7 @@ exports.createResponse = async (req, res) => {
       shopLatitude: shopLatitude,
       shopLongitude: shopLongitude,
       shopName: shopName,
+      shopID: shopID,
     };
 
     if (userSocketId) {
@@ -203,6 +211,7 @@ exports.createResponse = async (req, res) => {
       timestamp: newResponse.timestamp,
       shopLatitude,
       shopLongitude,
+      shopID,
     };
 
     res.status(200).json(result);
@@ -243,7 +252,7 @@ exports.UpdateResponse = async (req, res) => {
     });
 
     const shop = await Shop.findOne({
-      attributes: ["name"],
+      attributes: ["name", "id"],
       where: { seller_id: updatedResponse.seller_id },
     });
 
@@ -251,6 +260,7 @@ exports.UpdateResponse = async (req, res) => {
       return res.status(404).json({ msg: "فروشنده مرتبط یافت نشد" });
     }
     const shopName = shop.name;
+    const shopID = shop.id;
 
     // Emit an event to the specific user
     const userSocketId = userSockets[request.users_id];
@@ -261,6 +271,7 @@ exports.UpdateResponse = async (req, res) => {
         seller_respond,
         timestamp,
         shopName,
+        shopID,
       });
     }
 
@@ -270,6 +281,7 @@ exports.UpdateResponse = async (req, res) => {
       price,
       seller_respond,
       timestamp,
+      shopID,
     });
   } catch (error) {
     console.error("Error updating response:", error.message);

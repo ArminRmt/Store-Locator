@@ -60,6 +60,10 @@
  *                 shopLongitude:
  *                   type: NUMERIC
  *                   example: 36.7
+ *                 shopID:
+ *                   type: string
+ *                   example:3
+ *
  *       401:
  *         description: Unauthorized
  *         content:
@@ -143,6 +147,7 @@
  *               price: 10
  *               seller_respond: "ok/no/mojod mikonam"
  *               timestamp: "2023-07-29T18:00:00Z"
+ *               shopID: 3
  *       403:
  *         description: Forbidden - Access not allowed
  *         content:

@@ -1,8 +1,8 @@
 const db = require("../config/db.config.js");
 const Request = db.Request;
 const RequestSellerLinks = db.RequestSellerLinks;
-const shop = require("./shop.js");
 const { io, sellerSockets } = require("../socketManager.js");
+const { NearestShops } = require("./shop.js");
 
 // get seller requests
 exports.SellerRequests = async (req, res) => {
@@ -63,9 +63,7 @@ exports.GetUserRequest = async (req, res) => {
 exports.createRequest = async (req, res) => {
   try {
     const userId = req.userId;
-    console.log(userId);
-
-    const { piece_name, content } = req.body;
+    const { piece_name, content, userLongitude, userLatitude } = req.body;
     const timestamp = new Date().toISOString();
 
     const newRequest = await Request.create({
@@ -75,9 +73,8 @@ exports.createRequest = async (req, res) => {
       timestamp: timestamp,
     });
 
-    const nearest_shops = await shop.NearestShops();
+    const nearest_shops = await NearestShops(userLongitude, userLatitude);
 
-    console.log(nearest_shops);
     // Use a Set to ensure unique seller_ids
     const uniqueSellerIds = new Set(
       nearest_shops.map((shop) => shop.seller_id)

@@ -38,6 +38,49 @@
  */
 /**
  * @swagger
+ * /getSellerShop:
+ *   get:
+ *     summary: Get Seller's Shop Information
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: Bearer <token>
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               sellerID:
+ *                 type: integer
+ *     responses:
+ *       200:
+ *         description: A shop object.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/shop'
+ *       401:
+ *         description: Unauthorized - invalid token
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   example: "خطای سرور"
+ */
+/**
+ * @swagger
  * /createShop:
  *   post:
  *     summary: Create shop by ID

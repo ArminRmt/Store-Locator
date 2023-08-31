@@ -6,7 +6,10 @@ const env = require("../config/env.js");
 
 exports.getSellerShopLocationAndName = async (sellerId) => {
   try {
-    const shop = await Shop.findOne({ where: { seller_id: sellerId } });
+    const shop = await Shop.findOne({
+      where: { seller_id: sellerId },
+      attributes: ["latitude", "longitude", "name", "id"],
+    });
 
     if (!shop) {
       throw new Error("فروشگاهی به نام این فروشنده پیدا نشد");
@@ -15,29 +18,32 @@ exports.getSellerShopLocationAndName = async (sellerId) => {
     const shopLatitude = shop.latitude;
     const shopLongitude = shop.longitude;
     const shopName = shop.name;
+    const shopID = shop.id;
 
-    return { shopLatitude, shopLongitude, shopName };
+    return { shopLatitude, shopLongitude, shopName, shopID };
   } catch (error) {
     throw error;
   }
 };
 
-exports.NearestShops = async () => {
-  // async function NearestShops() {
-  const address = "مازندران نوشهر هفت تیر هفت تیر ۱۰";
-  API_KEY = env.NESHAN_KEY;
+exports.NearestShops = async (userLongitude, userLatitude) => {
+  // const address = "مازندران نوشهر هفت تیر هفت تیر ۱۰";
+  // API_KEY = env.NESHAN_KEY;
   try {
-    const response = await axios.get("https://api.neshan.org/v4/geocoding", {
-      params: {
-        address,
-      },
-      headers: {
-        "Api-Key": API_KEY,
-      },
-    });
+    //   const response = await axios.get("https://api.neshan.org/v4/geocoding", {
+    //     params: {
+    //       address,
+    //     },
+    //     headers: {
+    //       "Api-Key": API_KEY,
+    //     },
+    //   });
 
-    userLongitude = parseFloat(response.data.location.x);
-    userLatitude = parseFloat(response.data.location.y);
+    // userLongitude = parseFloat(response.data.location.x);
+    // userLatitude = parseFloat(response.data.location.y);
+
+    userLongitude = 51.48726536307878;
+    userLatitude = 36.64185635489182;
 
     const shops = await Shop.findAll();
 
@@ -80,6 +86,23 @@ exports.getShops = async (req, res) => {
     res.status(200).json(shops);
   } catch (error) {
     res.status(500).json({ msg: error.message });
+  }
+};
+
+// seller shop details
+exports.getSellerShop = async (req, res) => {
+  try {
+    const sellerID = req.body;
+
+    const shops = await Shop.findOne({
+      where: {
+        seller_id: sellerID,
+      },
+    });
+
+    res.status(200).json(shops);
+  } catch (error) {
+    res.status(500).json({ msg: "خطای سرور" });
   }
 };
 

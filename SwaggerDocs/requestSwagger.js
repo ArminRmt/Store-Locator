@@ -24,6 +24,10 @@
  *                 type: string
  *               content:
  *                 type: string
+ *               userLongitude:
+ *                 type: float
+ *               userLatitude:
+ *                 type: float
  *     responses:
  *       200:
  *         description: Success
