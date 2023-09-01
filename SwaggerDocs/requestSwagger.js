@@ -48,7 +48,7 @@
  *                     $ref: '#/components/schemas/request'
  *             example:
  *               msg: درخواست با موفقیت به نزدیک ترین فروشنده ها ارسال شد
- *               RequestId: 1
+ *               request_id: 1
  *               piece_name: "Example Piece 1"
  *               content: "Example content for Piece 1"
  *               timestamp: "2023-07-29T18:00:00Z"
