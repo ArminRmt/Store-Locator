@@ -95,8 +95,11 @@ exports.createRequest = async (req, res) => {
       }
     }
 
+    const RequestId = newRequest.id;
+
     const result = {
       msg: "درخواست با موفقیت به نزدیک ترین فروشنده ها ارسال شد",
+      RequestId,
       piece_name,
       content,
       timestamp: timestamp,
