@@ -102,7 +102,7 @@ exports.getUserResponses = async (req, res) => {
 exports.getUserResponses2 = async (req, res) => {
   const userId = req.userId;
   const page = req.query.page || 1;
-  const pageSize = req.query.pageSize || 10;
+  const pageSize = req.query.pageSize || 5;
 
   const offset = (page - 1) * pageSize;
 
