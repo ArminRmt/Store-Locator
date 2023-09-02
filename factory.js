@@ -81,13 +81,16 @@ async function initial() {
     //   status: 0,
     // });
 
-    // await Respond.create({
-    //   seller_id: 1,
-    //   request_id: 1,
-    //   price: 10,
-    //   seller_respond: "daram",
-    //   timestamp: new Date().toISOString(),
-    // });
+    for (let i = 0; i < 10; i++) {
+      await Respond.create({
+        seller_id: 1,
+        request_id: 1,
+        price: 10,
+        seller_respond: `Fake seller_respond ${i}`,
+        timestamp: new Date().toISOString(),
+        is_deleted: false,
+      });
+    }
 
     console.log("Data initialization completed successfully!");
   } catch (error) {
