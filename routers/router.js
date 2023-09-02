@@ -180,6 +180,12 @@ router.get(
   respond.getUserResponses
 );
 
+router.get(
+  "/getUserResponses2",
+  [authJwt.verifyToken, authJwt.isUserOrAdmin],
+  respond.getUserResponses2
+);
+
 // get user responds for specific request
 router.get(
   "/UserRequestResponses",
