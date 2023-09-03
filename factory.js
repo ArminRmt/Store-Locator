@@ -177,6 +177,15 @@ async function initial() {
     //   });
     // }
 
+    await Respond.create({
+      seller_id: 1,
+      request_id: 1,
+      price: 10,
+      seller_respond: "موجود",
+      timestamp: new Date().toISOString(),
+      is_deleted: false,
+    });
+
     console.log("Data initialization completed successfully!");
   } catch (error) {
     console.error("Error initializing data:", error);
