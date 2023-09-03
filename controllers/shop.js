@@ -42,8 +42,8 @@ exports.NearestShops = async (userLongitude, userLatitude) => {
     // userLongitude = parseFloat(response.data.location.x);
     // userLatitude = parseFloat(response.data.location.y);
 
-    userLongitude = 51.48726536307878;
-    userLatitude = 36.64185635489182;
+    userLongitude = 52.6893;
+    userLatitude = 36.5393;
 
     const shops = await Shop.findAll();
 

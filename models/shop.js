@@ -19,6 +19,7 @@ module.exports = (sequelize, Sequelize) => {
       },
       bio: {
         type: Sequelize.TEXT,
+        allowNull: true,
       },
       address: {
         type: Sequelize.STRING,
