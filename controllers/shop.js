@@ -26,8 +26,8 @@ exports.getSellerShopLocationAndName = async (sellerId) => {
 
 exports.NearestShops = async (userLongitude, userLatitude) => {
   try {
-    userLongitude = 52.6893;
     userLatitude = 36.5393;
+    userLongitude = 52.6893;
     const MAX_DISTANCE = 5;
 
     const shops = await Shop.findAll();

@@ -38,8 +38,8 @@ async function initial() {
       address: "بابل،مراد بیگ،بلوار امام رضا",
       open_time: "08:00:00",
       avg_rating: 3.8,
-      latitude: 52.6822,
-      longitude: 36.5384,
+      latitude: 36.5384,
+      longitude: 52.6822,
     });
 
     await Shop.create({
@@ -50,8 +50,8 @@ async function initial() {
       address: "بابل،کیجا تکیه،خ. ولی عصر",
       open_time: "08:00:00",
       avg_rating: 3,
-      latitude: 52.684,
-      longitude: 36.565,
+      latitude: 36.565,
+      longitude: 52.684,
     });
 
     await Shop.create({
@@ -62,8 +62,8 @@ async function initial() {
       address: "امیرکلا, بلوار ساحلی امیرکلا, نرسیده به امام خمینی, امیرکلا",
       open_time: "09:00:00",
       avg_rating: 3,
-      latitude: 52.6723,
-      longitude: 36.5879,
+      latitude: 36.5879,
+      longitude: 52.6723,
     });
 
     await Shop.create({
@@ -74,8 +74,8 @@ async function initial() {
       address: "بابل،موزیرج شمالی،خ. ارشاد چهاردهم،خ. کنارگذر",
       open_time: "09:00:00",
       avg_rating: 3,
-      latitude: 52.6528,
-      longitude: 36.5349,
+      latitude: 36.5349,
+      longitude: 52.6528,
     });
 
     await Shop.create({
@@ -86,8 +86,8 @@ async function initial() {
       address: "بابل،کیجا تکیه،خ. بهشتی",
       open_time: "08:00:00",
       avg_rating: 3,
-      latitude: 52.6528,
-      longitude: 36.5349,
+      latitude: 36.5349,
+      longitude: 52.6528,
     });
 
     await Request.create({
