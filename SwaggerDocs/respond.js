@@ -291,6 +291,7 @@
  *                 shopLatitude: 51.7
  *                 shopLongitude: 36.7
  *                 shopName: "ایران خودرو"
+ *                 shopID: 3
  *               - id: 2
  *                 seller_id: 456
  *                 request_id: 789
@@ -300,6 +301,7 @@
  *                 shopLatitude: 51.7
  *                 shopLongitude: 36.7
  *                 shopName: "ایران خودرو"
+ *                 shopID: 3
  *       401:
  *         description: Unauthorized
  *         content:
@@ -351,6 +353,13 @@
  *         schema:
  *           type: integer
  *           default: 10
+ *       - in: id
+ *         name: id
+ *         required: true
+ *         description: ID of request
+ *         schema:
+ *           type: integer
+ *           format: int64
  *     requestBody:
  *       required: true
  *       content:
@@ -398,6 +407,7 @@
  *                 shopLatitude: 12.3456
  *                 shopLongitude: 78.9012
  *                 shopName: "ایران خودرو"
+ *                 shopID: 3
  *       400:
  *         description: Bad Request
  *         content:

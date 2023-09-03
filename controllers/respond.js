@@ -99,75 +99,93 @@ exports.getUserResponses = async (req, res) => {
   }
 };
 
-exports.getUserResponses2 = async (req, res) => {
-  const userId = req.userId;
-  const page = req.query.page || 1;
-  const pageSize = req.query.pageSize || 5;
+// exports.getUserResponses2 = async (req, res) => {
+//   const userId = req.userId;
+//   const page = req.query.page || 1;
+//   const pageSize = req.query.pageSize || 5;
 
-  const offset = (page - 1) * pageSize;
+//   const offset = (page - 1) * pageSize;
 
-  try {
-    const userResponses = await Respond.findAll({
-      where: {
-        is_deleted: false,
-      },
-      include: [
-        {
-          model: Request,
-          where: { users_id: userId },
-          attributes: ["id", "piece_name"],
-        },
-      ],
-      attributes: [
-        "id",
-        "seller_id",
-        "request_id",
-        "price",
-        "seller_respond",
-        "timestamp",
-      ],
-      order: [["timestamp", "DESC"]],
-      limit: pageSize,
-      offset: offset,
-    });
+//   try {
+//     const userResponses = await Respond.findAll({
+//       where: {
+//         is_deleted: false,
+//       },
+//       include: [
+//         {
+//           model: Request,
+//           where: { users_id: userId },
+//           attributes: ["id", "piece_name"],
+//         },
+//       ],
+//       attributes: [
+//         "id",
+//         "seller_id",
+//         "request_id",
+//         "price",
+//         "seller_respond",
+//         "timestamp",
+//       ],
+//       order: [["timestamp", "DESC"]],
+//       limit: pageSize,
+//       offset: offset,
+//     });
 
-    const sellerIds = userResponses.map((response) => response.seller_id);
+//     const sellerIds = userResponses.map((response) => response.seller_id);
 
-    const shopLocations = {};
-    try {
-      for (const sellerId of sellerIds) {
-        const { shopLatitude, shopLongitude, shopName, shopID } =
-          await getSellerShopLocationAndName(sellerId);
-        shopLocations[sellerId] = {
-          shopLatitude,
-          shopLongitude,
-          shopName,
-          shopID,
-        };
-      }
-    } catch (error) {
-      console.error("Error fetching shop locations:", error.message);
-      return res.status(400).json({ error: error.message });
-    }
+//     const shopLocations = {};
+//     try {
+//       for (const sellerId of sellerIds) {
+//         const { shopLatitude, shopLongitude, shopName, shopID } =
+//           await getSellerShopLocationAndName(sellerId);
+//         shopLocations[sellerId] = {
+//           shopLatitude,
+//           shopLongitude,
+//           shopName,
+//           shopID,
+//         };
+//       }
+//     } catch (error) {
+//       console.error("Error fetching shop locations:", error.message);
+//       return res.status(400).json({ error: error.message });
+//     }
 
-    const combinedData = userResponses.map((response) => ({
-      ...response.dataValues,
-      shopLatitude: shopLocations[response.seller_id].shopLatitude,
-      shopLongitude: shopLocations[response.seller_id].shopLongitude,
-      shopName: shopLocations[response.seller_id].shopName,
-      shopID: shopLocations[response.seller_id].shopID,
-    }));
+//     const groupedResponses = {};
 
-    res.status(200).json(combinedData);
-  } catch (error) {
-    console.error("Error fetching user responses:", error.message);
-    res.status(500).json({ error: "خطای داخلی سرور" });
-  }
-};
+//     for (const response of userResponses) {
+//       const { request_id, piece_name } = response.request;
+//       if (!groupedResponses[request_id]) {
+//         groupedResponses[request_id] = {
+//           request_id,
+//           piece_name,
+//           responds: [],
+//         };
+//       }
+//       groupedResponses[request_id].responds.push({
+//         id: response.id,
+//         seller_id: response.seller_id,
+//         price: response.price,
+//         seller_respond: response.seller_respond,
+//         timestamp: response.timestamp,
+//         shopLatitude: shopLocations[response.seller_id].shopLatitude,
+//         shopLongitude: shopLocations[response.seller_id].shopLongitude,
+//         shopName: shopLocations[response.seller_id].shopName,
+//         shopID: shopLocations[response.seller_id].shopID,
+//       });
+//     }
+
+//     const responseData = Object.values(groupedResponses);
+
+//     res.status(200).json(responseData);
+//   } catch (error) {
+//     console.error("Error fetching user responses:", error.message);
+//     res.status(500).json({ error: "خطای داخلی سرور" });
+//   }
+// };
 
 // get user responds for specific request
 exports.UserRequestResponses = async (req, res) => {
-  const requestId = req.body;
+  const requestId = req.params.id;
 
   const page = req.query.page || 1;
   const pageSize = req.query.pageSize || 10;

@@ -49,7 +49,14 @@
  *         required: true
  *         schema:
  *           type: string
- *           format: Bearer <token>
+ *           format: Bearer token
+ *       - in: id
+ *         name: id
+ *         required: true
+ *         description: ID of the seller
+ *         schema:
+ *           type: integer
+ *           format: int64
  *     requestBody:
  *       required: true
  *       content:
@@ -154,13 +161,6 @@
  *     summary: Update shop by ID
  *     description: Update a shop's information by its ID.
  *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: ID of the shop to update.
- *         schema:
- *           type: integer
- *           format: int64
  *       - in: header
  *         name: Authorization
  *         required: true

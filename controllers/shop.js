@@ -92,7 +92,7 @@ exports.getShops = async (req, res) => {
 // seller shop details
 exports.getSellerShop = async (req, res) => {
   try {
-    const sellerID = req.body;
+    const sellerID = req.params.id;
 
     const shops = await Shop.findOne({
       where: {

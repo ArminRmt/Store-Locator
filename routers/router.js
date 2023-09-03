@@ -99,7 +99,7 @@ router.get("/GetSellerByToken", authJwt.verifyToken, seller.GetSellerByToken);
 router.get("/getShops", [authJwt.verifyToken, authJwt.isAdmin], shop.getShops);
 
 // get seller shop
-router.get("/getSellerShop", authJwt.verifyToken, shop.getSellerShop);
+router.get("/getSellerShop/:id", authJwt.verifyToken, shop.getSellerShop);
 
 // create shop
 router.post(
@@ -180,15 +180,15 @@ router.get(
   respond.getUserResponses
 );
 
-router.get(
-  "/getUserResponses2",
-  [authJwt.verifyToken, authJwt.isUserOrAdmin],
-  respond.getUserResponses2
-);
+// router.get(
+//   "/getUserResponses2",
+//   [authJwt.verifyToken, authJwt.isUserOrAdmin],
+//   respond.getUserResponses2
+// );
 
 // get user responds for specific request
 router.get(
-  "/UserRequestResponses",
+  "/UserRequestResponses/:id",
   [authJwt.verifyToken, authJwt.isUserOrAdmin],
   respond.UserRequestResponses
 );
