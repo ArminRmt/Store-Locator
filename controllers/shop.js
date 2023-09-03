@@ -1,8 +1,6 @@
 const db = require("../config/db.config.js");
 const Shop = db.Shop;
-const axios = require("axios");
 const geolib = require("geolib");
-const env = require("../config/env.js");
 
 exports.getSellerShopLocationAndName = async (sellerId) => {
   try {
@@ -27,35 +25,40 @@ exports.getSellerShopLocationAndName = async (sellerId) => {
 };
 
 exports.NearestShops = async (userLongitude, userLatitude) => {
-  // const address = "مازندران نوشهر هفت تیر هفت تیر ۱۰";
-  // API_KEY = env.NESHAN_KEY;
   try {
-    //   const response = await axios.get("https://api.neshan.org/v4/geocoding", {
-    //     params: {
-    //       address,
-    //     },
-    //     headers: {
-    //       "Api-Key": API_KEY,
-    //     },
-    //   });
-
-    // userLongitude = parseFloat(response.data.location.x);
-    // userLatitude = parseFloat(response.data.location.y);
-
     userLongitude = 52.6893;
     userLatitude = 36.5393;
+    const MAX_DISTANCE = 5;
 
     const shops = await Shop.findAll();
 
-    const distances = shops.map((shop) => {
-      return {
-        ...shop,
-        distance: geolib.getDistance(
+    // const distances = shops.map((shop) => {
+    //   return {
+    //     ...shop,
+    //     distance: geolib.getDistance(
+    //       { latitude: userLatitude, longitude: userLongitude },
+    //       { latitude: shop.latitude, longitude: shop.longitude }
+    //     ),
+    //   };
+    // });
+
+    const distances = shops
+      .map((shop) => {
+        const distance = geolib.getDistance(
           { latitude: userLatitude, longitude: userLongitude },
           { latitude: shop.latitude, longitude: shop.longitude }
-        ),
-      };
-    });
+        );
+
+        if (distance <= MAX_DISTANCE * 1000) {
+          return {
+            ...shop,
+            distance: distance,
+          };
+        } else {
+          return null; // Exclude shops beyond 10 kilometers
+        }
+      })
+      .filter((shop) => shop !== null); // Remove null entries (shops beyond 10 kilometers)
 
     distances.sort((a, b) => a.distance - b.distance);
     const dataValuesOnly = distances.map((item) => item.dataValues);
