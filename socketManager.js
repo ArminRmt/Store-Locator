@@ -27,8 +27,8 @@ io.on("connection", (socket) => {
     // Check if there are any pending messages for this seller and send them
     if (messageQueue[sellerId]) {
       messageQueue[sellerId].forEach((message) => {
-        // socket.emit("newRequest", message);
-        io.to(socket.id).emit("newRequest", newRequest);
+        socket.emit("newRequest", message);
+        // io.to(socket.id).emit("newRequest", newRequest);
       });
       // Clear the queue after sending messages
       messageQueue[sellerId] = [];
