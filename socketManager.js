@@ -14,6 +14,7 @@ const io = socketIO(server, {
 
 const sellerSockets = {}; // Mapping of seller IDs to socket IDs
 const userSockets = {}; // Mapping of user IDs to socket IDs
+const messageQueue = {}; // Message queue for offline notifications
 
 io.on("connection", (socket) => {
   console.log("Client Enterd with id: ", socket.id);
@@ -22,6 +23,16 @@ io.on("connection", (socket) => {
   socket.on("identifySeller", (sellerId) => {
     sellerSockets[sellerId] = socket.id;
     console.log(`Seller ${sellerId} identified with socket ${socket.id}`);
+
+    // Check if there are any pending messages for this seller and send them
+    if (messageQueue[sellerId]) {
+      messageQueue[sellerId].forEach((message) => {
+        socket.emit("newRequest", message);
+        // io.to(socket.id).emit("newRequest", newRequest);
+      });
+      // Clear the queue after sending messages
+      messageQueue[sellerId] = [];
+    }
   });
 
   // Handle response from seller to user
@@ -53,4 +64,19 @@ io.on("connection", (socket) => {
   });
 });
 
-module.exports = { io, sellerSockets, userSockets, app, server };
+// add messages to the message queue
+function addToMessageQueue(sellerId, message) {
+  if (!messageQueue[sellerId]) {
+    messageQueue[sellerId] = [];
+  }
+  messageQueue[sellerId].push(message);
+}
+
+module.exports = {
+  io,
+  sellerSockets,
+  userSockets,
+  addToMessageQueue,
+  app,
+  server,
+};

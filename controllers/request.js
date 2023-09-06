@@ -1,7 +1,7 @@
 const db = require("../config/db.config.js");
 const Request = db.Request;
 const RequestSellerLinks = db.RequestSellerLinks;
-const { io, sellerSockets } = require("../socketManager.js");
+const { io, sellerSockets, addToMessageQueue } = require("../socketManager.js");
 const { NearestShops } = require("./shop.js");
 
 // get seller requests
@@ -88,10 +88,13 @@ exports.createRequest = async (req, res) => {
       });
 
       // Emit an event to the specific seller
-      // if (sellerSocketId && req.io.sockets.connected[sellerSocketId]) {
+      // if (sellerSocketId && io.sockets.connected[sellerSocketId]) {
       const sellerSocketId = sellerSockets[seller_id];
       if (sellerSocketId) {
         io.to(sellerSocketId).emit("newRequest", newRequest);
+      } else {
+        // Seller is offline, add message to the queue
+        addToMessageQueue(seller_id, newRequest);
       }
     }
 

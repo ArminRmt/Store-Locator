@@ -174,16 +174,16 @@ router.delete(
 ////////////////////////////////////    respond routes   ////////////////////////////////////
 
 // get user all responds
-router.get(
-  "/getUserResponses",
-  [authJwt.verifyToken, authJwt.isUserOrAdmin],
-  respond.getUserResponses
-);
+// router.get(
+//   "/getUserResponses",
+//   [authJwt.verifyToken, authJwt.isUserOrAdmin],
+//   respond.getUserResponses
+// );
 
 // router.get(
-//   "/getUserResponses2",
+//   "/responsesBasedonRequest",
 //   [authJwt.verifyToken, authJwt.isUserOrAdmin],
-//   respond.getUserResponses2
+//   respond.responsesBasedonRequest
 // );
 
 // get user responds for specific request
