@@ -2,8 +2,14 @@ const db = require("../config/db.config.js");
 const Respond = db.Respond;
 const Shop = db.Shop;
 const Request = db.Request;
-const { io, userSockets } = require("../socketManager.js");
-const shop = require("./shop.js");
+const {
+  io,
+  userSockets,
+  addToResponseQueue,
+  addToUpdatedResponseQueue,
+  addToDeletedResponseQueue,
+} = require("../socketManager.js");
+
 const { getSellerShopLocationAndName } = require("./shop.js");
 
 // get seller reponds
@@ -274,6 +280,9 @@ exports.createResponse = async (req, res) => {
 
     if (userSocketId) {
       io.to(userSocketId).emit("newResponse", socketRes);
+    } else {
+      // User is offline, add new response to the queue
+      addToResponseQueue(buyerID, socketRes);
     }
 
     const result = {
@@ -336,17 +345,21 @@ exports.UpdateResponse = async (req, res) => {
     const shopName = shop.name;
     const shopID = shop.id;
 
+    socketRes = {
+      response_id,
+      price,
+      seller_respond,
+      timestamp,
+      shopName,
+      shopID,
+    };
+
     // Emit an event to the specific user
     const userSocketId = userSockets[request.users_id];
     if (userSocketId) {
-      io.to(userSocketId).emit("responseUpdated", {
-        response_id,
-        price,
-        seller_respond,
-        timestamp,
-        shopName,
-        shopID,
-      });
+      io.to(userSocketId).emit("responseUpdated", socketRes);
+    } else {
+      addToUpdatedResponseQueue(buyerID, socketRes);
     }
 
     res.status(200).json({
@@ -385,9 +398,9 @@ exports.DeleteResponse = async (req, res) => {
 
     const userSocketId = userSockets[request.users_id];
     if (userSocketId) {
-      io.to(userSocketId).emit("responseDeleted", {
-        response_id,
-      });
+      io.to(userSocketId).emit("responseDeleted", response_id);
+    } else {
+      addToDeletedResponseQueue(request.users_id, response_id);
     }
 
     await response.destroy();

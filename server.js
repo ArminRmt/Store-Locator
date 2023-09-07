@@ -20,6 +20,11 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
+// capture errors from WebSocket connections and HTTP routes
+// app.use((err, req, res, next) => {
+//   console.error(`Server error: ${err.message}`);
+//   res.status(500).json({ error: "Internal server error" });
+// });
 app.use("/", router);
 
 app.use(

@@ -1,7 +1,14 @@
 const db = require("../config/db.config.js");
 const Request = db.Request;
 const RequestSellerLinks = db.RequestSellerLinks;
-const { io, sellerSockets, addToMessageQueue } = require("../socketManager.js");
+const {
+  io,
+  sellerSockets,
+  addToRequestQueue,
+  addToUpdatedRequestQueue,
+  addToDeletedRequestQueue,
+} = require("../socketManager.js");
+
 const { NearestShops } = require("./shop.js");
 
 // get seller requests
@@ -88,13 +95,12 @@ exports.createRequest = async (req, res) => {
       });
 
       // Emit an event to the specific seller
-      // if (sellerSocketId && io.sockets.connected[sellerSocketId]) {
       const sellerSocketId = sellerSockets[seller_id];
       if (sellerSocketId) {
         io.to(sellerSocketId).emit("newRequest", newRequest);
       } else {
         // Seller is offline, add message to the queue
-        addToMessageQueue(seller_id, newRequest);
+        addToRequestQueue(seller_id, newRequest);
       }
     }
 
@@ -146,15 +152,14 @@ exports.UpdateRequest = async (req, res) => {
       where: { request_id: request_id },
     });
 
+    updatedRequest = { request_id, piece_name, content, timestamp };
+
     for (const link of links) {
       const sellerSocketId = sellerSockets[link.seller_id];
       if (sellerSocketId) {
-        io.to(sellerSocketId).emit("requestUpdated", {
-          request_id,
-          piece_name,
-          content,
-          timestamp,
-        });
+        io.to(sellerSocketId).emit("requestUpdated", updatedRequest);
+      } else {
+        addToUpdatedRequestQueue(link.seller_id, updatedRequest);
       }
     }
 
@@ -194,7 +199,9 @@ exports.DeleteRequest = async (req, res) => {
     for (const link of links) {
       const sellerSocketId = sellerSockets[link.seller_id];
       if (sellerSocketId) {
-        io.to(sellerSocketId).emit("requestDeleted", { request_id });
+        io.to(sellerSocketId).emit("requestDeleted", request_id);
+      } else {
+        addToDeletedRequestQueue(link.seller_id, request_id);
       }
     }
 
