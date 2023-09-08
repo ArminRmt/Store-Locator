@@ -78,33 +78,34 @@ exports.createRequest = async (req, res) => {
       content: content,
       timestamp: timestamp,
     });
+    const request_id = newRequest.id;
 
     const nearest_shops = await NearestShops(userLongitude, userLatitude);
-
     // Use a Set to ensure unique seller_ids
     const uniqueSellerIds = new Set(
       nearest_shops.map((shop) => shop.seller_id)
     );
     const sellerIdsArray = Array.from(uniqueSellerIds);
 
-    for (const seller_id of sellerIdsArray) {
-      RequestSellerLinks.create({
-        request_id: newRequest.id,
-        seller_id: seller_id,
-        status: 0,
-      });
+    // batch insert (inserting multiple rows of data into a database in a single query)
+    const requestSellerLinksBatch = sellerIdsArray.map((seller_id) => ({
+      request_id: request_id,
+      seller_id: seller_id,
+      status: 0,
+    }));
+    await RequestSellerLinks.bulkCreate(requestSellerLinksBatch);
 
-      // Emit an event to the specific seller
+    // Emit events and add to the queue concurrently
+    const sellerOperations = sellerIdsArray.map(async (seller_id) => {
       const sellerSocketId = sellerSockets[seller_id];
       if (sellerSocketId) {
         io.to(sellerSocketId).emit("newRequest", newRequest);
       } else {
-        // Seller is offline, add message to the queue
         addToRequestQueue(seller_id, newRequest);
       }
-    }
+    });
 
-    const request_id = newRequest.id;
+    await Promise.all(sellerOperations);
 
     const result = {
       msg: "درخواست با موفقیت به نزدیک ترین فروشنده ها ارسال شد",
@@ -154,14 +155,16 @@ exports.UpdateRequest = async (req, res) => {
 
     updatedRequest = { request_id, piece_name, content, timestamp };
 
-    for (const link of links) {
+    const sellerOperations = links.map(async (link) => {
       const sellerSocketId = sellerSockets[link.seller_id];
       if (sellerSocketId) {
         io.to(sellerSocketId).emit("requestUpdated", updatedRequest);
       } else {
         addToUpdatedRequestQueue(link.seller_id, updatedRequest);
       }
-    }
+    });
+
+    await Promise.all(sellerOperations);
 
     res.status(200).json({
       msg: "درخواست به‌روزرسانی شد",
@@ -179,9 +182,11 @@ exports.DeleteRequest = async (req, res) => {
   const { request_id } = req.body;
 
   try {
+    // Check if the user has permission to delete the request
     const request = await Request.findOne({
       where: {
         id: request_id,
+        users_id: req.userId,
       },
     });
 
@@ -196,14 +201,15 @@ exports.DeleteRequest = async (req, res) => {
       where: { request_id: request_id },
     });
 
-    for (const link of links) {
+    const deleteOperations = links.map(async (link) => {
       const sellerSocketId = sellerSockets[link.seller_id];
       if (sellerSocketId) {
         io.to(sellerSocketId).emit("requestDeleted", request_id);
       } else {
         addToDeletedRequestQueue(link.seller_id, request_id);
       }
-    }
+    });
+    await Promise.all(deleteOperations);
 
     await request.destroy();
 

@@ -21,26 +21,6 @@ const ResponseQueue = {};
 const UpdatedResponseQueue = {};
 const DeletedResponseQueue = {};
 
-// Memory optimization: Cleanup empty queues
-// function cleanupEmptyQueues() {
-//   for (const sellerId in RequestQueue) {
-//     if (
-//       RequestQueue.hasOwnProperty(sellerId) &&
-//       RequestQueue[sellerId].length === 0
-//     ) {
-//       delete RequestQueue[sellerId];
-//     }
-//   }
-//   // Repeat the process for other queues (UpdatedRequestQueue, DeletedRequestQueue, ResponseQueue, etc.)
-//   setTimeout(cleanupEmptyQueues, cleanupInterval); // Repeat the cleanup after a certain interval
-// }
-
-// // Define the cleanup interval (adjust as needed)
-// const cleanupInterval = 30 * 60 * 1000; // Cleanup every 30 minutes
-
-// // Start the cleanup process
-// cleanupEmptyQueues();
-
 io.on("connection", (socket) => {
   console.log("Client Enterd with id: ", socket.id);
 
@@ -55,21 +35,21 @@ io.on("connection", (socket) => {
         RequestQueue[sellerId].forEach((message) => {
           socket.emit("newRequest", message);
         });
-        RequestQueue[sellerId] = [];
+        delete RequestQueue[sellerId];
       }
 
       if (UpdatedRequestQueue[sellerId]) {
         UpdatedRequestQueue[sellerId].forEach((message) => {
           socket.emit("requestUpdated", message);
         });
-        UpdatedRequestQueue[sellerId] = [];
+        delete UpdatedRequestQueue[sellerId];
       }
 
       if (DeletedRequestQueue[sellerId]) {
         DeletedRequestQueue[sellerId].forEach((message) => {
           socket.emit("requestDeleted", message);
         });
-        DeletedRequestQueue[sellerId] = [];
+        delete DeletedRequestQueue[sellerId];
       }
     } catch (error) {
       console.error(`Error in identifySeller: ${error.message}`);
@@ -87,21 +67,21 @@ io.on("connection", (socket) => {
         ResponseQueue[userId].forEach((message) => {
           socket.emit("newResponse", message);
         });
-        ResponseQueue[userId] = [];
+        delete ResponseQueue[userId];
       }
 
       if (UpdatedResponseQueue[userId]) {
         UpdatedResponseQueue[userId].forEach((message) => {
           socket.emit("responseUpdated", message);
         });
-        UpdatedResponseQueue[userId] = [];
+        delete UpdatedResponseQueue[userId];
       }
 
       if (DeletedResponseQueue[userId]) {
         DeletedResponseQueue[userId].forEach((message) => {
           socket.emit("responseDeleted", message);
         });
-        DeletedResponseQueue[userId] = [];
+        delete DeletedResponseQueue[userId];
       }
     } catch (error) {
       console.error(`Error in identifyBuyer: ${error.message}`);

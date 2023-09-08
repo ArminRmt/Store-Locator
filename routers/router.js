@@ -164,10 +164,9 @@ router.patch(
   request.UpdateRequest
 );
 
-// buyer delete his request
 router.delete(
   "/DeleteRequest",
-  [authJwt.verifyToken, authJwt.isUserOrAdmin],
+  [authJwt.verifyToken, authJwt.isBuyer],
   request.DeleteRequest
 );
 

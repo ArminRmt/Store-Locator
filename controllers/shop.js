@@ -24,6 +24,7 @@ exports.getSellerShopLocationAndName = async (sellerId) => {
   }
 };
 
+// TODO performance optimization
 exports.NearestShops = async (userLongitude, userLatitude) => {
   try {
     userLatitude = 36.5393;

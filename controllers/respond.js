@@ -249,18 +249,19 @@ exports.createResponse = async (req, res) => {
     const SellerId = req.userId;
     const timestamp = new Date().toISOString();
 
-    const newResponse = await Respond.create({
-      seller_id: SellerId,
-      request_id: request_id,
-      price: price,
-      seller_respond: seller_respond,
-      timestamp: timestamp,
-      is_deleted: false,
-    });
+    const [newResponse, shopDetails] = await Promise.all([
+      Respond.create({
+        seller_id: SellerId,
+        request_id: request_id,
+        price: price,
+        seller_respond: seller_respond,
+        timestamp: timestamp,
+        is_deleted: false,
+      }),
+      getSellerShopLocationAndName(SellerId),
+    ]);
 
-    // get Seller shop details
-    const { shopLatitude, shopLongitude, shopName, shopID } =
-      await getSellerShopLocationAndName(SellerId);
+    const { shopLatitude, shopLongitude, shopName, shopID } = shopDetails;
 
     // Emit an event to the specific user
     const userSocketId = userSockets[buyerID];
@@ -309,6 +310,7 @@ exports.UpdateResponse = async (req, res) => {
   const timestamp = new Date().toISOString();
 
   try {
+    // TODO update method could also be parller wiht two other querry below?
     const [rowsAffected, [updatedResponse]] = await Respond.update(
       {
         price,
@@ -330,14 +332,19 @@ exports.UpdateResponse = async (req, res) => {
         .json({ msg: "پاسخ پیدا نشد یا شما مجوز به‌روزرسانی ندارید" });
     }
 
-    const request = await Request.findOne({
-      where: { id: updatedResponse.request_id },
-    });
+    const updatedRequestId = updatedResponse.request_id;
+    const sellerId = updatedResponse.seller_id;
 
-    const shop = await Shop.findOne({
-      attributes: ["name", "id"],
-      where: { seller_id: updatedResponse.seller_id },
-    });
+    // Parallelize the queries for request and shop
+    const [request, shop] = await Promise.all([
+      Request.findOne({
+        where: { id: updatedRequestId },
+      }),
+      Shop.findOne({
+        attributes: ["name", "id"],
+        where: { seller_id: sellerId },
+      }),
+    ]);
 
     if (!shop) {
       return res.status(404).json({ msg: "فروشنده مرتبط یافت نشد" });
