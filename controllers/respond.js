@@ -14,27 +14,31 @@ const { getSellerShopLocationAndName } = require("./shop.js");
 
 // get seller reponds
 exports.GetSellerResponds = async (req, res) => {
-  const SellerId = req.userId;
-  const page = req.query.page || 1;
-  const pageSize = req.query.pageSize || 10;
-
-  const offset = (page - 1) * pageSize;
+  const sellerId = req.userId;
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = 10;
 
   try {
-    const responds = await Respond.findAll({
+    const { count, rows: responds } = await Respond.findAndCountAll({
       attributes: ["id", "request_id", "price", "seller_respond", "timestamp"],
       where: {
-        seller_id: SellerId,
+        seller_id: sellerId,
       },
       order: [["timestamp", "DESC"]],
       limit: pageSize,
-      offset: offset,
+      offset: (page - 1) * pageSize,
     });
 
-    res.status(200).json(responds);
+    if (count === 0) {
+      return res.status(404).json({ message: "هیچ پاسخ فروشنده‌ای یافت نشد" });
+    }
+
+    const totalPages = Math.ceil(count / pageSize);
+
+    return res.status(200).json({ responds, totalPages });
   } catch (err) {
-    console.error("Error fetching user requests:", err);
-    res.status(500).json({ error: "خطای داخلی سرور" });
+    console.error("Error fetching seller responds:", err);
+    return res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 
@@ -184,13 +188,11 @@ exports.GetSellerResponds = async (req, res) => {
 // get user responds for specific request
 exports.UserRequestResponses = async (req, res) => {
   const requestId = req.params.id;
-
-  const page = req.query.page || 1;
-  const pageSize = req.query.pageSize || 10;
-  const offset = (page - 1) * pageSize;
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = 10;
 
   try {
-    const userResponses = await Respond.findAll({
+    const { count, rows: userResponses } = await Respond.findAndCountAll({
       where: {
         request_id: requestId,
         is_deleted: false,
@@ -205,8 +207,13 @@ exports.UserRequestResponses = async (req, res) => {
       ],
       order: [["timestamp", "DESC"]],
       limit: pageSize,
-      offset: offset,
+      offset: (page - 1) * pageSize,
     });
+
+    if (count === 0) {
+      return res.status(404).json({ message: "هیچ پاسخ کاربری یافت نشد" });
+    }
+    const totalPages = Math.ceil(count / pageSize);
 
     const sellerIds = userResponses.map((response) => response.seller_id);
 
@@ -235,10 +242,10 @@ exports.UserRequestResponses = async (req, res) => {
       shopID: shopLocations[response.seller_id].shopID,
     }));
 
-    res.status(200).json(combinedData);
+    return res.status(200).json({ combinedData, totalPages });
   } catch (error) {
-    console.error("Error fetching user and request responses:", error.message);
-    res.status(500).json({ error: "خطای داخلی سرور" });
+    console.error("Error fetching user responses:", error.message);
+    return res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 

@@ -78,12 +78,6 @@
  *         schema:
  *           type: integer
  *           default: 1
- *       - in: query
- *         name: pageSize
- *         required: false
- *         schema:
- *           type: integer
- *           default: 10
  *     requestBody:
  *       required: true
  *       content:
@@ -99,15 +93,21 @@
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   feedback_text:
- *                     type: string
- *             example:
- *               - feedback_text: "متشکرم از خرید خوب شما."
- *               - feedback_text: "کیفیت بسیار خوبی دارد."
+ *               type: object
+ *               properties:
+ *                 feedbackTexts:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       feedback_text:
+ *                         type: string
+ *                 totalPages:
+ *                   type: integer
+ *                 example:
+ *                   feedbackTexts:
+ *                     - feedback_text: "متشکرم از خرید خوب شما."
+ *                   totalPages: 5
  *       401:
  *         description: Unauthorized
  *         content:
@@ -118,6 +118,26 @@
  *                 message:
  *                   type: string
  *                   example: "عدم مجوز! توکن نامعتبر است یا منقضی شده است."
+ *       403:
+ *         description: Forbidden
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "شما دسترسی به این فروشگاه را ندارید."
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "هیچ متن بازخوردی یافت نشد"
  *       500:
  *         description: Internal Server Error
  *         content:
@@ -275,12 +295,6 @@
  *         schema:
  *           type: integer
  *           default: 1
- *       - in: query
- *         name: pageSize
- *         required: false
- *         schema:
- *           type: integer
- *           default: 10
  *       - in: header
  *         name: Authorization
  *         required: true
@@ -293,15 +307,21 @@
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   feedback_text:
- *                     type: string
- *             example:
- *               - feedback_text: "متشکرم از خرید خوب شما."
- *               - feedback_text: "کیفیت بسیار خوبی دارد."
+ *               type: object
+ *               properties:
+ *                 feedbackTexts:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       feedback_text:
+ *                         type: string
+ *                 totalPages:
+ *                   type: integer
+ *                 example:
+ *                   feedbackTexts:
+ *                     - feedback_text: "متشکرم از خرید خوب شما."
+ *                   totalPages: 5
  *       401:
  *         description: Unauthorized
  *         content:
@@ -312,6 +332,16 @@
  *                 message:
  *                   type: string
  *                   example: "عدم مجوز! توکن نامعتبر است یا منقضی شده است."
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Review not found."
  *       500:
  *         description: Internal Server Error
  *         content:

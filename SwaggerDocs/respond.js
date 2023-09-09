@@ -341,83 +341,63 @@
  *     security:
  *       - bearerAuth: []
  *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the request.
  *       - in: query
  *         name: page
  *         required: false
  *         schema:
  *           type: integer
  *           default: 1
- *       - in: query
- *         name: pageSize
- *         required: false
- *         schema:
- *           type: integer
- *           default: 10
- *       - in: id
- *         name: id
- *         required: true
- *         description: ID of request
- *         schema:
- *           type: integer
- *           format: int64
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               requestId:
- *                 type: integer
  *     responses:
  *       200:
  *         description: Success
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: integer
- *                   seller_id:
- *                     type: integer
- *                   request_id:
- *                     type: integer
- *                   price:
- *                     type: number
- *                   seller_respond:
- *                     type: string
- *                   timestamp:
- *                     type: string
- *                   shopLatitude:
- *                     type: number
- *                   shopLongitude:
- *                     type: number
- *                   shopName:
- *                     type: string
- *             example:
- *               - id: 1
- *                 seller_id: 123
- *                 request_id: 456
- *                 price: 50.0
- *                 seller_respond: "Ready to deliver!"
- *                 timestamp: "2023-08-25T12:34:56Z"
- *                 shopLatitude: 12.3456
- *                 shopLongitude: 78.9012
- *                 shopName: "ایران خودرو"
- *                 shopID: 3
- *       400:
- *         description: Bad Request
+ *               type: object
+ *               properties:
+ *                 combinedData:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       seller_id:
+ *                         type: integer
+ *                       request_id:
+ *                         type: integer
+ *                       price:
+ *                         type: number
+ *                       seller_respond:
+ *                         type: string
+ *                       timestamp:
+ *                         type: string
+ *                       shopLatitude:
+ *                         type: number
+ *                       shopLongitude:
+ *                         type: number
+ *                       shopName:
+ *                         type: string
+ *                       shopID:
+ *                         type: integer
+ *                 totalPages:
+ *                   type: integer
+ *       404:
+ *         description: Not Found
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 error:
+ *                 message:
  *                   type: string
- *                   example: "Error fetching shop locations"
+ *                   example: "هیچ پاسخ کاربری یافت نشد"
  *       500:
  *         description: Internal Server Error
  *         content:
@@ -450,21 +430,22 @@
  *         schema:
  *           type: integer
  *           default: 1
- *       - in: query
- *         name: pageSize
- *         required: false
- *         schema:
- *           type: integer
- *           default: 10
  *     responses:
  *       200:
- *         description: Successful retrieval
+ *         description: Success
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/respond'
+ *               type: object
+ *               properties:
+ *                 requests:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                     $ref: '#/components/schemas/respond'
+ *                 totalPages:
+ *                   type: integer
  *       401:
  *         description: Unauthorized
  *       500:

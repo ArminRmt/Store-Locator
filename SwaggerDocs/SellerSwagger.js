@@ -133,42 +133,44 @@
  */
 /**
  * @swagger
- * /sellerRequests:
+ * /SellerRequests:
  *   get:
- *     summary: Get seller requests
- *     description: Retrieve requests related to the authenticated seller.
+ *     summary: Get Seller's Requests
  *     security:
  *       - bearerAuth: []
  *     parameters:
- *       - in: header
- *         name: Authorization
- *         required: true
- *         schema:
- *           type: string
- *           format: Bearer token
  *       - in: query
  *         name: page
  *         required: false
  *         schema:
  *           type: integer
  *           default: 1
- *       - in: query
- *         name: pageSize
- *         required: false
- *         schema:
- *           type: integer
- *           default: 10
  *     responses:
  *       200:
- *         description: Successful retrieval
+ *         description: Success
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/request'
- *       401:
- *         description: Unauthorized
+ *               type: object
+ *               properties:
+ *                 requests:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                     $ref: '#/components/schemas/request'
+ *                 totalPages:
+ *                   type: integer
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "هیچ درخواست فروشنده‌ای یافت نشد"
  *       500:
  *         description: Internal Server Error
  *         content:
@@ -178,6 +180,5 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "خطای سرور داخلی"
- *
+ *                   example: "خطای داخلی سرور"
  */

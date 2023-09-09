@@ -7,7 +7,7 @@ exports.getShopFeedbackTexts = async (req, res) => {
     const { shop_id } = req.body;
     const logedinSeller = req.userId;
     const page = req.query.page || 1;
-    const pageSize = req.query.pageSize || 10;
+    const pageSize = 10;
 
     const offset = (page - 1) * pageSize;
 
@@ -16,20 +16,25 @@ exports.getShopFeedbackTexts = async (req, res) => {
       attributes: ["seller_id"],
     });
 
-    if (shop.seller_id !== logedinSeller) {
+    if (!shop || shop.seller_id !== logedinSeller) {
       return res
         .status(403)
         .json({ message: "شما دسترسی به این فروشگاه را ندارید." });
     }
 
-    const feedbackTexts = await ShopReviews.findAll({
+    const { count, rows: feedbackTexts } = await ShopReviews.findAndCountAll({
       where: { shop_id },
       attributes: ["feedback_text"],
       limit: pageSize,
       offset: offset,
     });
 
-    res.status(200).json(feedbackTexts);
+    if (count === 0) {
+      return res.status(404).json({ message: "هیچ متن بازخوردی یافت نشد" });
+    }
+    const totalPages = Math.ceil(count / pageSize);
+
+    res.status(200).json({ feedbackTexts, totalPages });
   } catch (error) {
     console.error("Error fetching feedback texts:", error.message);
     res.status(500).json({ error: "خطای داخلی سرور" });
@@ -40,18 +45,23 @@ exports.getUserFeedbackTexts = async (req, res) => {
   try {
     const userId = req.userId;
     const page = req.query.page || 1;
-    const pageSize = req.query.pageSize || 10;
+    const pageSize = 10;
 
     const offset = (page - 1) * pageSize;
 
-    const feedbackTexts = await ShopReviews.findAll({
+    const { count, rows: feedbackTexts } = await ShopReviews.findAndCountAll({
       where: { buyer_id: userId },
       attributes: ["feedback_text"],
       limit: pageSize,
       offset: offset,
     });
 
-    res.status(200).json(feedbackTexts);
+    if (count === 0) {
+      return res.status(404).json({ message: "هیچ متن بازخوردی یافت نشد" });
+    }
+    const totalPages = Math.ceil(count / pageSize);
+
+    res.status(200).json({ feedbackTexts, totalPages });
   } catch (error) {
     console.error("Error fetching feedback texts:", error.message);
     res.status(500).json({ error: "خطای داخلی سرور" });

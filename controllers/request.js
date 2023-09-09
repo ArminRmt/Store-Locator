@@ -14,14 +14,11 @@ const { NearestShops } = require("./shop.js");
 // get seller requests
 exports.SellerRequests = async (req, res) => {
   const sellerID = req.userId;
-  const page = req.query.page || 1;
-  const pageSize = req.query.pageSize || 10;
-
-  const offset = (page - 1) * pageSize;
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = 10;
 
   try {
-    // join requests and request_seller_links tables
-    const requests = await Request.findAll({
+    const { count, rows: requests } = await Request.findAndCountAll({
       include: [
         {
           model: RequestSellerLinks,
@@ -30,39 +27,54 @@ exports.SellerRequests = async (req, res) => {
         },
       ],
       limit: pageSize,
-      offset: offset,
+      offset: (page - 1) * pageSize,
       order: [["timestamp", "DESC"]],
     });
 
-    res.status(200).json(requests);
+    if (count === 0) {
+      return res
+        .status(404)
+        .json({ message: "هیچ درخواست فروشنده‌ای یافت نشد" });
+    }
+    const totalPages = Math.ceil(count / pageSize);
+
+    return res.status(200).json({ requests, totalPages });
   } catch (err) {
     console.error("Error fetching seller requests:", err);
-    res.status(500).json({ error: "خطای داخلی سرور" });
+    return res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 
 exports.GetUserRequest = async (req, res) => {
   const userId = req.userId;
-  const page = req.query.page || 1;
-  const pageSize = req.query.pageSize || 10;
+  let page = parseInt(req.query.page) || 1;
+  const pageSize = 10;
 
-  const offset = (page - 1) * pageSize;
+  page = Math.max(1, page); // Ensure page is at least 1
 
   try {
-    const userRequests = await Request.findAll({
+    const { count, rows: userRequests } = await Request.findAndCountAll({
       attributes: ["id", "piece_name", "content", "timestamp"],
       where: {
         users_id: userId,
       },
       order: [["timestamp", "DESC"]],
       limit: pageSize,
-      offset: offset,
+      offset: (page - 1) * pageSize,
     });
 
-    res.status(200).json(userRequests);
+    if (count === 0) {
+      return res.status(404).json({ message: "هیچ درخواست کاربری یافت نشد" });
+    }
+
+    const totalPages = Math.ceil(count / pageSize);
+    return res.status(200).json({
+      userRequests,
+      totalPages,
+    });
   } catch (err) {
     console.error("Error fetching user requests:", err);
-    res.status(500).json({ error: "خطای داخلی سرور" });
+    return res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 

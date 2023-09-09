@@ -177,21 +177,22 @@
  *         schema:
  *           type: integer
  *           default: 1
- *       - in: query
- *         name: pageSize
- *         required: false
- *         schema:
- *           type: integer
- *           default: 10
  *     responses:
  *       200:
  *         description: Success
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/request'
+ *               type: object
+ *               properties:
+ *                 requests:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                     $ref: '#/components/schemas/request'
+ *                 totalPages:
+ *                   type: integer
  *       401:
  *         description: Unauthorized
  *         content:
