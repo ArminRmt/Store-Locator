@@ -66,12 +66,28 @@ exports.GetUserRequest = async (req, res) => {
     if (count === 0) {
       return res.status(404).json({ message: "هیچ درخواست کاربری یافت نشد" });
     }
-
     const totalPages = Math.ceil(count / pageSize);
+
     return res.status(200).json({
       userRequests,
       totalPages,
     });
+  } catch (err) {
+    console.error("Error fetching user requests:", err);
+    return res.status(500).json({ error: "خطای داخلی سرور" });
+  }
+};
+
+exports.GetRequest = async (req, res) => {
+  const requestId = req.params.id;
+  try {
+    const userRequest = await Request.findByPk(requestId);
+
+    if (!userRequest) {
+      return res.status(404).json({ message: "Request not found" });
+    }
+
+    return res.status(200).json(userRequest);
   } catch (err) {
     console.error("Error fetching user requests:", err);
     return res.status(500).json({ error: "خطای داخلی سرور" });

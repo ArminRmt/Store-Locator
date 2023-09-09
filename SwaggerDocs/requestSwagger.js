@@ -1,5 +1,47 @@
 /**
  * @swagger
+ * /GetRequest/{id}:
+ *   get:
+ *     summary: Get a User Request by ID
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The ID of the request to retrieve.
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/request'
+ *       404:
+ *         description: Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Request not found"
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "خطای داخلی سرور"
+ */
+/**
+ * @swagger
  *  /createRequest:
  *   post:
  *     summary: Create request
@@ -85,7 +127,6 @@
  *                   type: string
  *                   example: "خطای سرور داخلی"
  */
-
 /**
  * @swagger
  * /UpdateRequest:

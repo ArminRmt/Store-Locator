@@ -143,6 +143,13 @@ router.get(
   request.GetUserRequest
 );
 
+// get request details
+router.get(
+  "/GetRequest/:id",
+  [authJwt.verifyToken, authJwt.isUserOrAdmin],
+  request.GetRequest
+);
+
 // get seller request
 router.get(
   "/sellerRequests",
