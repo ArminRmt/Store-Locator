@@ -113,6 +113,7 @@ exports.createRequest = async (req, res) => {
       piece_name,
       content,
       timestamp: timestamp,
+      nearest_shops,
     };
 
     res.status(200).json(result);

@@ -28,7 +28,7 @@ exports.updateSeller = async (req, res) => {
         password: hashPassword,
       },
       {
-        returning: true,
+        returning: false,
         where: {
           id: request_id,
           users_id: req.userId,

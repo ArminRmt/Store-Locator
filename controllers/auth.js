@@ -21,7 +21,8 @@ exports.signup = async (req, res) => {
 
     res.status(201).json({ msg: "ثبت نام موفقیت‌آمیز", newUser });
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    console.error(error);
+    res.status(500).json({ msg: "مشکلی در ثبت نام به وجود آمده است." });
   }
 };
 
@@ -53,6 +54,7 @@ exports.signin = async (req, res) => {
 
     res.status(200).json({ msg: "ورود موفقیت‌آمیز", token });
   } catch (err) {
+    console.error(err);
     res.status(500).send({ message: "خطای سرور داخلی" });
   }
 };
@@ -72,7 +74,8 @@ exports.seller_signup = async (req, res) => {
 
     res.status(201).json({ msg: "ثبت نام موفقیت‌آمیز", newSeller });
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    console.error(error);
+    res.status(500).json({ msg: "مشکلی در ثبت نام به وجود آمده است." });
   }
 };
 
@@ -104,6 +107,7 @@ exports.signinSeller = async (req, res) => {
 
     res.status(200).json({ msg: "ورود موفقیت‌آمیز", token });
   } catch (err) {
+    console.error(err);
     res.status(500).send({ message: "خطای سرور داخلی" });
   }
 };

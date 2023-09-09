@@ -58,6 +58,7 @@ exports.getUserFeedbackTexts = async (req, res) => {
   }
 };
 
+// TODO Move Calculation to a Background Task (create queue worker for this)
 const calculateAverageRating = async (shopId) => {
   const shopReviews = await ShopReviews.findAll({
     where: { shop_id: shopId },
@@ -98,7 +99,9 @@ exports.submitShopRating = async (req, res) => {
     });
 
     // Calculate average rating and update shop's avg_rating
-    await calculateAverageRating(shop_id);
+    if (rating !== null) {
+      await calculateAverageRating(shop_id);
+    }
 
     res.status(200).json({ message: "امتیاز و بازخورد با موفقیت ارسال شد." });
   } catch (error) {
