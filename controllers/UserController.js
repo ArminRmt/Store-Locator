@@ -6,25 +6,39 @@ const env = require("../config/env.js");
 const { json } = require("body-parser");
 
 exports.GetUserByToken = async (req, res) => {
-  let authHeader = req.headers["authorization"];
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(403).send({
-      message: "پیام: هیچ توکنی ارائه نشده است!",
-    });
-  }
-
-  let token = authHeader.replace("Bearer ", "");
-
   try {
-    const decoded = await jwt.verify(token, env.AUTH_SECRET);
-    const userId = decoded.id;
+    const authHeader = req.headers["authorization"];
 
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(403).json({
+        msg: "پیام: هیچ توکنی ارائه نشده است!",
+      });
+    }
+
+    const token = authHeader.replace("Bearer ", "");
+    const decoded = await jwt.verify(token, env.AUTH_SECRET);
+
+    if (!decoded || !decoded.id) {
+      return res.status(401).json({
+        msg: "توکن غیر معتبر است",
+      });
+    }
+
+    const userId = decoded.id;
     const user = await User.findOne({ where: { id: userId } });
 
+    if (!user) {
+      return res.status(404).json({
+        msg: "کاربری با این توکن یافت نشد",
+      });
+    }
+
     res.status(200).json(user);
-  } catch (err) {
-    return res.status(401).json({ message: "توکن غیر معتبر است" });
+  } catch (error) {
+    console.error("error is: ", error.msg);
+    return res
+      .status(500)
+      .json({ error: "خطای سرور: لطفاً بعداً دوباره تلاش کنید" });
   }
 };
 
@@ -36,11 +50,11 @@ exports.getUserById = async (req, res) => {
     if (user) {
       res.status(200).json(user);
     } else {
-      res.status(404).json({ message: "کاربر یافت نشد" });
+      res.status(404).json({ msg: "کاربر یافت نشد" });
     }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "خطای سرور" });
+  } catch (error) {
+    console.error("error is: ", error.msg);
+    res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
 
@@ -50,7 +64,8 @@ exports.getUsers = async (req, res) => {
     const response = await User.findAll();
     res.status(200).json(response);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    console.error("error is: ", error.msg);
+    res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
 
@@ -85,6 +100,7 @@ exports.updateUser = async (req, res) => {
 
     res.status(200).json({ msg: "کاربر به‌روزرسانی شد" });
   } catch (error) {
-    res.status(500).json({ msg: "خطای سرور" });
+    console.error("error is: ", error.msg);
+    res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };

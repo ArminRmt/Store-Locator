@@ -4,13 +4,14 @@ const Seller = db.Seller;
 
 // get seller by token
 exports.GetSellerByToken = async (req, res) => {
+  const seller_id = req.userId;
   try {
-    const seller_id = req.userId;
     const seller = await Seller.findOne({ where: { id: seller_id } });
 
     res.status(200).json(seller);
-  } catch (err) {
-    return res.status(401).json({ message: "توکن غیر معتبر است" });
+  } catch (error) {
+    console.error("error is: ", error.msg);
+    return res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
 
@@ -44,6 +45,7 @@ exports.updateSeller = async (req, res) => {
 
     res.status(200).json({ msg: "فروشنده به‌روزرسانی شد" });
   } catch (error) {
-    res.status(500).json({ msg: "خطای سرور" });
+    console.error("Error:", error);
+    res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };

@@ -175,23 +175,6 @@ async function initial() {
       }),
     ];
 
-    // await RequestSellerLinks.create({
-    //   request_id: 1,
-    //   seller_id: 1,
-    //   status: 0,
-    // });
-
-    // for (let i = 0; i < 10; i++) {
-    //   await Respond.create({
-    //     seller_id: 1,
-    //     request_id: 1,
-    //     price: 10,
-    //     seller_respond: `Fake seller_respond ${i}`,
-    //     timestamp: new Date().toISOString(),
-    //     is_deleted: false,
-    //   });
-    // }
-
     const respondPromises = [
       Respond.create({
         seller_id: 1,
@@ -210,6 +193,23 @@ async function initial() {
       ...requestPromises,
       ...respondPromises,
     ]);
+
+    await RequestSellerLinks.create({
+      request_id: 1,
+      seller_id: 1,
+      status: 0,
+    });
+
+    // for (let i = 0; i < 10; i++) {
+    //   await Respond.create({
+    //     seller_id: 1,
+    //     request_id: 1,
+    //     price: 10,
+    //     seller_respond: `Fake seller_respond ${i}`,
+    //     timestamp: new Date().toISOString(),
+    //     is_deleted: false,
+    //   });
+    // }
 
     console.log("Data initialization completed successfully!");
   } catch (error) {

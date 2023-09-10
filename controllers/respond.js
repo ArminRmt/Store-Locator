@@ -30,14 +30,14 @@ exports.GetSellerResponds = async (req, res) => {
     });
 
     if (count === 0) {
-      return res.status(404).json({ message: "هیچ پاسخ فروشنده‌ای یافت نشد" });
+      return res.status(404).json({ msg: "هیچ پاسخ فروشنده‌ای یافت نشد" });
     }
 
     const totalPages = Math.ceil(count / pageSize);
 
     return res.status(200).json({ responds, totalPages });
-  } catch (err) {
-    console.error("Error fetching seller responds:", err);
+  } catch (error) {
+    console.error("Error fetching seller responds:", error);
     return res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
@@ -90,8 +90,8 @@ exports.GetSellerResponds = async (req, res) => {
 //         };
 //       }
 //     } catch (error) {
-//       console.error("Error fetching shop locations:", error.message);
-//       return res.status(400).json({ error: error.message });
+//       console.error("Error fetching shop locations:", error.msg);
+//       return res.status(400).json({ error: error.msg });
 //     }
 
 //     const combinedData = userResponses.map((response) => ({
@@ -104,7 +104,7 @@ exports.GetSellerResponds = async (req, res) => {
 
 //     res.status(200).json(combinedData);
 //   } catch (error) {
-//     console.error("Error fetching user responses:", error.message);
+//     console.error("Error fetching user responses:", error.msg);
 //     res.status(500).json({ error: "خطای داخلی سرور" });
 //   }
 // };
@@ -155,8 +155,8 @@ exports.GetSellerResponds = async (req, res) => {
 //         };
 //       }
 //     } catch (error) {
-//       console.error("Error fetching shop locations:", error.message);
-//       return res.status(400).json({ error: error.message });
+//       console.error("Error fetching shop locations:", error.msg);
+//       return res.status(400).json({ error: error.msg });
 //     }
 
 //     // Group userResponses by piece_name using reduce
@@ -180,7 +180,7 @@ exports.GetSellerResponds = async (req, res) => {
 
 //     res.status(200).json(groupedData);
 //   } catch (error) {
-//     console.error("Error fetching user responses:", error.message);
+//     console.error("Error fetching user responses:", error.msg);
 //     res.status(500).json({ error: "خطای داخلی سرور" });
 //   }
 // };
@@ -211,7 +211,7 @@ exports.UserRequestResponses = async (req, res) => {
     });
 
     if (count === 0) {
-      return res.status(404).json({ message: "هیچ پاسخ کاربری یافت نشد" });
+      return res.status(404).json({ msg: "هیچ پاسخ کاربری یافت نشد" });
     }
     const totalPages = Math.ceil(count / pageSize);
 
@@ -230,8 +230,8 @@ exports.UserRequestResponses = async (req, res) => {
         };
       }
     } catch (error) {
-      console.error("Error fetching shop locations:", error.message);
-      return res.status(400).json({ error: error.message });
+      console.error("Error fetching shop locations:", error.msg);
+      return res.status(400).json({ error: error.msg });
     }
 
     const combinedData = userResponses.map((response) => ({
@@ -244,16 +244,16 @@ exports.UserRequestResponses = async (req, res) => {
 
     return res.status(200).json({ combinedData, totalPages });
   } catch (error) {
-    console.error("Error fetching user responses:", error.message);
+    console.error("Error fetching user responses:", error.msg);
     return res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 
 exports.createResponse = async (req, res) => {
+  const { request_id, buyerID, price, seller_respond } = req.body;
+  // const buyerID = req.body.user_id;
+  const SellerId = req.userId;
   try {
-    const { request_id, buyerID, price, seller_respond } = req.body;
-    // const buyerID = req.body.user_id;
-    const SellerId = req.userId;
     const timestamp = new Date().toISOString();
 
     const [newResponse, shopDetails] = await Promise.all([
@@ -307,16 +307,16 @@ exports.createResponse = async (req, res) => {
 
     res.status(200).json(result);
   } catch (error) {
-    console.error("Error creating response:", error.message);
+    console.error("Error creating response:", error.msg);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 
 exports.UpdateResponse = async (req, res) => {
   const { response_id, price, seller_respond } = req.body;
-  const timestamp = new Date().toISOString();
 
   try {
+    const timestamp = new Date().toISOString();
     // TODO update method could also be parller wiht two other querry below?
     const [rowsAffected, [updatedResponse]] = await Respond.update(
       {
@@ -385,7 +385,7 @@ exports.UpdateResponse = async (req, res) => {
       shopID,
     });
   } catch (error) {
-    console.error("Error updating response:", error.message);
+    console.error("Error updating response:", error.msg);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
@@ -403,7 +403,7 @@ exports.DeleteResponse = async (req, res) => {
     if (!request) {
       return res
         .status(404)
-        .json({ message: "پاسخ یافت نشد یا شما مجوز حذف آن را ندارید." });
+        .json({ msg: "پاسخ یافت نشد یا شما مجوز حذف آن را ندارید." });
     }
 
     const request = await Request.findOne({
@@ -421,7 +421,7 @@ exports.DeleteResponse = async (req, res) => {
 
     res.status(200).json({ msg: "پاسخ حذف شد", response_id });
   } catch (error) {
-    console.error("Error deleting response:", error.message);
+    console.error("Error deleting response:", error.msg);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
@@ -436,7 +436,7 @@ exports.deleteUserResponse = async (req, res) => {
     res.status(200).json(response_id);
     // res.sendStatus(204); // Send a 'No Content' status code
   } catch (error) {
-    console.error("Error deleting response:", error.message);
+    console.error("Error deleting response:", error.msg);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };

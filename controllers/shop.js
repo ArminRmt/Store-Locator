@@ -106,11 +106,10 @@ exports.NearestShops = async (userLongitude, userLatitude) => {
 
 // Get all shops
 exports.getShops = async (req, res) => {
+  const sellerID = req.userId;
+  const page = req.query.page || 1;
+  const pageSize = 10;
   try {
-    const sellerID = req.userId;
-    const page = req.query.page || 1;
-    const pageSize = req.query.pageSize || 10;
-
     const offset = (page - 1) * pageSize;
 
     const shops = await Shop.findAll({
@@ -123,15 +122,15 @@ exports.getShops = async (req, res) => {
 
     res.status(200).json(shops);
   } catch (error) {
-    res.status(500).json({ msg: error.message });
+    console.error("Error:", error);
+    res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
 
 // seller shop details
 exports.getSellerShop = async (req, res) => {
+  const sellerID = req.params.id;
   try {
-    const sellerID = req.params.id;
-
     const shops = await Shop.findOne({
       where: {
         seller_id: sellerID,
@@ -140,7 +139,8 @@ exports.getSellerShop = async (req, res) => {
 
     res.status(200).json(shops);
   } catch (error) {
-    res.status(500).json({ msg: "خطای سرور" });
+    console.error("Error:", error);
+    res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
 
@@ -171,7 +171,8 @@ exports.createShop = async (req, res) => {
 
     res.status(201).json(newShop);
   } catch (error) {
-    res.status(500).json({ msg: "خطای سرور" });
+    console.error("Error:", error);
+    res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
 
@@ -220,16 +221,16 @@ exports.updateShop = async (req, res) => {
 
     res.status(200).json({ msg: "فروشگاه به‌روزرسانی شد" });
   } catch (error) {
-    res.status(500).json({ msg: "خطای سرور" });
+    console.error("Error:", error);
+    res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
 
 // Delete a shop by ID
 exports.deleteShop = async (req, res) => {
+  const { seller_id } = req.body;
+  const sellerID = req.userId;
   try {
-    const { seller_id } = req.body;
-    const sellerID = req.userId;
-
     const shop = await Shop.findOne({
       where: {
         id: seller_id,
@@ -240,14 +241,14 @@ exports.deleteShop = async (req, res) => {
     if (!request) {
       return res
         .status(404)
-        .json({ message: "فروشگاه یافت نشد یا شما مجوز حذف آن را ندارید." });
+        .json({ msg: "فروشگاه یافت نشد یا شما مجوز حذف آن را ندارید." });
     }
 
     await shop.destroy();
 
-    res.status(200).json({ message: "فروشگاه با موفقیت حذف شد" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "خطای سرور" });
+    res.status(200).json({ msg: "فروشگاه با موفقیت حذف شد" });
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };

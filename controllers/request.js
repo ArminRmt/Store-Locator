@@ -14,6 +14,7 @@ const { NearestShops } = require("./shop.js");
 // get seller requests
 exports.SellerRequests = async (req, res) => {
   const sellerID = req.userId;
+  console.log("sellerID: ", sellerID);
   const page = parseInt(req.query.page) || 1;
   const pageSize = 10;
 
@@ -31,16 +32,15 @@ exports.SellerRequests = async (req, res) => {
       order: [["timestamp", "DESC"]],
     });
 
-    if (count === 0) {
-      return res
-        .status(404)
-        .json({ message: "هیچ درخواست فروشنده‌ای یافت نشد" });
-    }
     const totalPages = Math.ceil(count / pageSize);
+    const responseObj = { requests };
+    if (totalPages > 0) {
+      responseObj.totalPages = totalPages;
+    }
 
-    return res.status(200).json({ requests, totalPages });
-  } catch (err) {
-    console.error("Error fetching seller requests:", err);
+    return res.status(200).json(responseObj);
+  } catch (error) {
+    console.error("Error fetching seller requests:", error);
     return res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
@@ -72,8 +72,8 @@ exports.GetUserRequest = async (req, res) => {
       userRequests,
       totalPages,
     });
-  } catch (err) {
-    console.error("Error fetching user requests:", err);
+  } catch (error) {
+    console.error("Error fetching user requests:", error);
     return res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
@@ -88,16 +88,16 @@ exports.GetRequest = async (req, res) => {
     }
 
     return res.status(200).json(userRequest);
-  } catch (err) {
-    console.error("Error fetching user requests:", err);
+  } catch (error) {
+    console.error("Error fetching user requests:", error);
     return res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 
 exports.createRequest = async (req, res) => {
+  const userId = req.userId;
+  const { piece_name, content, userLongitude, userLatitude } = req.body;
   try {
-    const userId = req.userId;
-    const { piece_name, content, userLongitude, userLatitude } = req.body;
     const timestamp = new Date().toISOString();
 
     const newRequest = await Request.create({
@@ -203,7 +203,8 @@ exports.UpdateRequest = async (req, res) => {
       timestamp,
     });
   } catch (error) {
-    res.status(500).json({ msg: "خطای سرور" });
+    console.error("error is: ", error.message);
+    res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
 
@@ -244,6 +245,7 @@ exports.DeleteRequest = async (req, res) => {
 
     res.status(200).json({ msg: "درخواست حذف شد", request_id });
   } catch (error) {
-    res.status(500).json({ msg: "خطای سرور" });
+    console.error("error is: ", error.message);
+    res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };

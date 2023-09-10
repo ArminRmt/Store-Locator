@@ -4,6 +4,7 @@ const Seller = db.Seller;
 const argon2 = require("argon2");
 var jwt = require("jsonwebtoken");
 const env = require("../config/env.js");
+const { where } = require("sequelize");
 
 // crete user or admin
 exports.signup = async (req, res) => {
@@ -28,10 +29,14 @@ exports.signup = async (req, res) => {
 
 // sign in user
 exports.signin = async (req, res) => {
-  try {
-    const { phone, password } = req.body;
+  const { phone, password } = req.body;
 
-    const user = await User.findOne({ phone });
+  try {
+    const user = await User.findOne({
+      where: {
+        phone: phone,
+      },
+    });
 
     if (!user) {
       return res.status(404).send({ message: "کاربر پیدا نشد." });
@@ -53,9 +58,9 @@ exports.signin = async (req, res) => {
     });
 
     res.status(200).json({ msg: "ورود موفقیت‌آمیز", token });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({ message: "خطای سرور داخلی" });
+  } catch (error) {
+    console.error("Error fetching seller requests:", error);
+    res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 
@@ -75,7 +80,7 @@ exports.seller_signup = async (req, res) => {
     res.status(201).json({ msg: "ثبت نام موفقیت‌آمیز", newSeller });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ msg: "مشکلی در ثبت نام به وجود آمده است." });
+    res.status(500).json({ error: "مشکلی در ثبت نام به وجود آمده است." });
   }
 };
 
@@ -84,7 +89,11 @@ exports.signinSeller = async (req, res) => {
   try {
     const { phone, password } = req.body;
 
-    const seller = await Seller.findOne({ phone });
+    const seller = await Seller.findOne({
+      where: {
+        phone: phone,
+      },
+    });
 
     if (!seller) {
       return res.status(404).send({ message: "فروشنده پیدا نشد." });
@@ -106,8 +115,8 @@ exports.signinSeller = async (req, res) => {
     });
 
     res.status(200).json({ msg: "ورود موفقیت‌آمیز", token });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({ message: "خطای سرور داخلی" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: "خطای سرور داخلی" });
   }
 };

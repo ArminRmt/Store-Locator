@@ -14,11 +14,11 @@ function generateVerificationCode() {
 async function sendVerificationCode(phone, verificationCode) {
   try {
     // Use SMS provider to send the verification code to the user's phone number
-    const message = await smsProvider.sendSMS({
+    const msg = await smsProvider.sendSMS({
       to: phone,
       body: `Your verification code is: ${verificationCode}`,
     });
-    return message;
+    return msg;
   } catch (error) {
     throw new Error("Failed to send verification code");
   }
@@ -50,7 +50,8 @@ exports.ForgotPassword = async (req, res) => {
     );
     res.status(200).json({ msg: "کد تایید ارسال شد", verificationCode });
   } catch (error) {
-    res.status(500).send(error.message);
+    console.error("error is: ", error.msg);
+    res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
 
@@ -81,7 +82,8 @@ exports.VerifyCode = async (req, res) => {
     // res.status(200).json({ msg: "Verification code is valid", token });
     res.status(200).json({ msg: "کد تأیید معتبر است", user });
   } catch (error) {
-    res.status(500).json({ msg: "خطایی در هنگام تأیید کد رخ داده است" });
+    console.error("error is: ", error.msg);
+    res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
 
@@ -104,7 +106,8 @@ exports.ResetPassword = async (req, res) => {
 
     res.status(200).json({ msg: "تغییر رمز عبور با موفقیت انجام شد" });
   } catch (error) {
-    res.status(400).send(error.message);
+    console.error("error is: ", error.msg);
+    res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
 
@@ -113,7 +116,7 @@ exports.GetUserByToken = async (req, res) => {
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(403).send({
-      message: "پیام: هیچ توکنی ارائه نشده است!",
+      msg: "پیام: هیچ توکنی ارائه نشده است!",
     });
   }
 
@@ -126,7 +129,8 @@ exports.GetUserByToken = async (req, res) => {
     const user = await User.findOne({ where: { id: userId } });
 
     res.status(200).json(user);
-  } catch (err) {
-    return res.status(401).json({ message: "توکن غیر معتبر است" });
+  } catch (error) {
+    console.error("error is: ", error.msg);
+    res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };

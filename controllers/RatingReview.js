@@ -3,10 +3,10 @@ const ShopReviews = db.ShopReviews;
 const Shop = db.Shop;
 
 exports.getShopFeedbackTexts = async (req, res) => {
+  const { shop_id } = req.body;
+  const logedinSeller = req.userId;
+  const page = req.query.page || 1;
   try {
-    const { shop_id } = req.body;
-    const logedinSeller = req.userId;
-    const page = req.query.page || 1;
     const pageSize = 10;
 
     const offset = (page - 1) * pageSize;
@@ -19,7 +19,7 @@ exports.getShopFeedbackTexts = async (req, res) => {
     if (!shop || shop.seller_id !== logedinSeller) {
       return res
         .status(403)
-        .json({ message: "شما دسترسی به این فروشگاه را ندارید." });
+        .json({ msg: "شما دسترسی به این فروشگاه را ندارید." });
     }
 
     const { count, rows: feedbackTexts } = await ShopReviews.findAndCountAll({
@@ -30,21 +30,21 @@ exports.getShopFeedbackTexts = async (req, res) => {
     });
 
     if (count === 0) {
-      return res.status(404).json({ message: "هیچ متن بازخوردی یافت نشد" });
+      return res.status(404).json({ msg: "هیچ متن بازخوردی یافت نشد" });
     }
     const totalPages = Math.ceil(count / pageSize);
 
     res.status(200).json({ feedbackTexts, totalPages });
   } catch (error) {
-    console.error("Error fetching feedback texts:", error.message);
+    console.error("Error fetching feedback texts:", error.msg);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 
 exports.getUserFeedbackTexts = async (req, res) => {
+  const userId = req.userId;
+  const page = req.query.page || 1;
   try {
-    const userId = req.userId;
-    const page = req.query.page || 1;
     const pageSize = 10;
 
     const offset = (page - 1) * pageSize;
@@ -57,13 +57,13 @@ exports.getUserFeedbackTexts = async (req, res) => {
     });
 
     if (count === 0) {
-      return res.status(404).json({ message: "هیچ متن بازخوردی یافت نشد" });
+      return res.status(404).json({ msg: "هیچ متن بازخوردی یافت نشد" });
     }
     const totalPages = Math.ceil(count / pageSize);
 
     res.status(200).json({ feedbackTexts, totalPages });
   } catch (error) {
-    console.error("Error fetching feedback texts:", error.message);
+    console.error("Error fetching feedback texts:", error.msg);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
@@ -97,10 +97,9 @@ const calculateAverageRating = async (shopId) => {
 };
 
 exports.submitShopRating = async (req, res) => {
+  const { shop_id, rating, feedback_text } = req.body;
+  const buyer_id = req.userId;
   try {
-    const { shop_id, rating, feedback_text } = req.body;
-    const buyer_id = req.userId;
-
     const newReview = await ShopReviews.create({
       shop_id,
       buyer_id,
@@ -113,17 +112,17 @@ exports.submitShopRating = async (req, res) => {
       await calculateAverageRating(shop_id);
     }
 
-    res.status(200).json({ message: "امتیاز و بازخورد با موفقیت ارسال شد." });
+    res.status(200).json({ msg: "امتیاز و بازخورد با موفقیت ارسال شد." });
   } catch (error) {
-    console.error("Error submitting rating and feedback:", error.message);
+    console.error("Error submitting rating and feedback:", error.msg);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 
 exports.updateShopReview = async (req, res) => {
-  try {
-    const { review_id, rating, feedback_text } = req.body;
+  const { review_id, rating, feedback_text } = req.body;
 
+  try {
     const [rowsAffected, [updatedReview]] = await ShopReviews.update(
       {
         rating: rating,
@@ -136,7 +135,7 @@ exports.updateShopReview = async (req, res) => {
     );
 
     if (rowsAffected === 0) {
-      return res.status(404).json({ message: "نقد یافت نشد." });
+      return res.status(404).json({ msg: "نقد یافت نشد." });
     }
 
     // Check if rating has changed and recalculate average if necessary
@@ -144,17 +143,17 @@ exports.updateShopReview = async (req, res) => {
       await calculateAverageRating(updatedReview.shop_id);
     }
 
-    res.status(200).json({ message: "نقد با موفقیت به‌روزرسانی شد." });
+    res.status(200).json({ msg: "نقد با موفقیت به‌روزرسانی شد." });
   } catch (error) {
-    console.error("Error updating review:", error.message);
+    console.error("Error updating review:", error.msg);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 
 exports.deleteShopReview = async (req, res) => {
-  try {
-    const { review_id } = req.body;
+  const { review_id } = req.body;
 
+  try {
     const reviewToDelete = await ShopReviews.findOne({
       where: {
         id: review_id,
@@ -165,7 +164,7 @@ exports.deleteShopReview = async (req, res) => {
     if (!reviewToDelete) {
       return res
         .status(404)
-        .json({ message: "نقد یافت نشد یا شما مجوز حذف آن را ندارید." });
+        .json({ msg: "نقد یافت نشد یا شما مجوز حذف آن را ندارید." });
     }
 
     const shopId = reviewToDelete.shop_id;
@@ -174,9 +173,9 @@ exports.deleteShopReview = async (req, res) => {
     // Recalculate average rating for the associated shop
     await calculateAverageRating(shopId);
 
-    res.status(200).json({ message: "نقد با موفقیت حذف شد." });
+    res.status(200).json({ msg: "نقد با موفقیت حذف شد." });
   } catch (error) {
-    console.error("Error deleting review:", error.message);
+    console.error("Error deleting review:", error.msg);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };

@@ -12,12 +12,13 @@ exports.allSettings = async (req, res) => {
 };
 
 exports.getSettingByKey = async (req, res) => {
+  const key = req.params.key;
+
   try {
-    const key = req.params.key;
     const setting = await SiteSettings.findOne({ where: { key } });
 
     if (!setting) {
-      return res.status(404).json({ message: "تنظیم یافت نشد." });
+      return res.status(404).json({ msg: "تنظیم یافت نشد." });
     }
 
     res.json(setting);
@@ -28,13 +29,13 @@ exports.getSettingByKey = async (req, res) => {
 };
 
 exports.createSetting = async (req, res) => {
-  try {
-    const { key, value } = req.body;
+  const { key, value } = req.body;
 
+  try {
     const newSetting = await SiteSettings.create({ key, value });
 
     res.status(201).json({
-      message: "Setting successfully created.",
+      msg: "Setting successfully created.",
       newSetting,
     });
   } catch (error) {
@@ -44,20 +45,20 @@ exports.createSetting = async (req, res) => {
 };
 
 exports.updateSetting = async (req, res) => {
-  try {
-    const { key, value } = req.body;
+  const { key, value } = req.body;
 
+  try {
     const [rowsAffected, [updatedSetting]] = await SiteSettings.update(
       { value },
       { returning: true, where: { key } }
     );
 
     if (rowsAffected === 0) {
-      return res.status(404).json({ message: "تنظیم یافت نشد." });
+      return res.status(404).json({ msg: "تنظیم یافت نشد." });
     }
 
     res.status(200).json({
-      message: "تنظیمات با موفقیت به‌روزرسانی شد.",
+      msg: "تنظیمات با موفقیت به‌روزرسانی شد.",
       updatedSetting,
     });
   } catch (error) {
@@ -67,15 +68,16 @@ exports.updateSetting = async (req, res) => {
 };
 
 exports.deleteSetting = async (req, res) => {
+  const key = req.params.key;
+
   try {
-    const key = req.params.key;
     const rowsDeleted = await SiteSettings.destroy({ where: { key } });
 
     if (rowsDeleted === 0) {
-      return res.status(404).json({ message: "تنظیم یافت نشد." });
+      return res.status(404).json({ msg: "تنظیم یافت نشد." });
     }
 
-    res.status(200).json({ message: "تنظیم با موفقیت حذف شد." });
+    res.status(200).json({ msg: "تنظیم با موفقیت حذف شد." });
   } catch (error) {
     console.error("Error deleting setting:", error);
     res.status(500).json({ error: "خطای داخلی سرور" });
