@@ -36,7 +36,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "امتیاز و بازخورد با موفقیت ارسال شد."
  *       401:
@@ -46,7 +46,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "عدم مجوز! توکن نامعتبر است یا منقضی شده است."
  *       500:
@@ -58,7 +58,7 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "خطای سرور داخلی"
+ *                   error: "خطای سرور داخلی"
  *
  * /getShopFeedbackTexts:
  *   get:
@@ -115,7 +115,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "عدم مجوز! توکن نامعتبر است یا منقضی شده است."
  *       403:
@@ -125,7 +125,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "شما دسترسی به این فروشگاه را ندارید."
  *       404:
@@ -135,7 +135,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "هیچ متن بازخوردی یافت نشد"
  *       500:
@@ -187,7 +187,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 msg:
  *                   type: string
  *                   example: "نقد با موفقیت به‌روزرسانی شد."
  *       401:
@@ -197,7 +197,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "عدم مجوز! توکن نامعتبر است یا منقضی شده است."
  *       500:
@@ -246,7 +246,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 msg:
  *                   type: string
  *                   example: "نقد با موفقیت حذف شد."
  *       401:
@@ -256,7 +256,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "عدم مجوز! توکن نامعتبر است یا منقضی شده است."
  *       404:
@@ -266,7 +266,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "Review not found."
  *       500:
@@ -329,7 +329,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "عدم مجوز! توکن نامعتبر است یا منقضی شده است."
  *       404:
@@ -339,7 +339,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "Review not found."
  *       500:

@@ -39,7 +39,7 @@ exports.signin = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).send({ message: "کاربر پیدا نشد." });
+      return res.status(404).send({ error: "کاربر پیدا نشد." });
     }
 
     const passwordIsValid = await argon2.verify(user.password, password);
@@ -47,7 +47,7 @@ exports.signin = async (req, res) => {
     if (!passwordIsValid) {
       return res.status(401).send({
         accessToken: null,
-        message: "رمز عبور نامعتبر است!",
+        error: "رمز عبور نامعتبر است!",
       });
     }
 
@@ -96,7 +96,7 @@ exports.signinSeller = async (req, res) => {
     });
 
     if (!seller) {
-      return res.status(404).send({ message: "فروشنده پیدا نشد." });
+      return res.status(404).send({ error: "فروشنده پیدا نشد." });
     }
 
     const passwordIsValid = await argon2.verify(seller.password, password);
@@ -104,7 +104,7 @@ exports.signinSeller = async (req, res) => {
     if (!passwordIsValid) {
       return res.status(401).send({
         accessToken: null,
-        message: "رمز عبور نامعتبر است!",
+        error: "رمز عبور نامعتبر است!",
       });
     }
 

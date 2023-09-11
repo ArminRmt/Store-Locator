@@ -26,7 +26,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "Request not found"
  *       500:
@@ -101,7 +101,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "عدم مجوز! توکن نامعتبر است یا منقضی شده است."
  *       403:
@@ -111,7 +111,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "هیچ توکنی ارائه نشده است!"
  *       404:
@@ -179,7 +179,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 msg:
+ *                 error:
  *                   type: string
  *                   example: "نام قطعه الزامی هستند"
  *       401:
@@ -193,7 +193,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 msg:
+ *                 error:
  *                   type: string
  *                   example: "خطای سرور"
  */
@@ -241,7 +241,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "عدم مجوز! توکن نامعتبر است یا منقضی شده است."
  *       500:
@@ -301,7 +301,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "عدم دسترسی مجاز"
  *       404:
@@ -311,7 +311,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 msg:
+ *                 error:
  *                   type: string
  *                   example: "درخواست پیدا نشد"
  *       500:
@@ -321,7 +321,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 msg:
+ *                 error:
  *                   type: string
  *                   example: "خطای سرور"
  */

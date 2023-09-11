@@ -18,7 +18,7 @@ exports.getSettingByKey = async (req, res) => {
     const setting = await SiteSettings.findOne({ where: { key } });
 
     if (!setting) {
-      return res.status(404).json({ msg: "تنظیم یافت نشد." });
+      return res.status(404).json({ error: "تنظیم یافت نشد." });
     }
 
     res.json(setting);
@@ -54,7 +54,7 @@ exports.updateSetting = async (req, res) => {
     );
 
     if (rowsAffected === 0) {
-      return res.status(404).json({ msg: "تنظیم یافت نشد." });
+      return res.status(404).json({ error: "تنظیم یافت نشد." });
     }
 
     res.status(200).json({
@@ -74,7 +74,7 @@ exports.deleteSetting = async (req, res) => {
     const rowsDeleted = await SiteSettings.destroy({ where: { key } });
 
     if (rowsDeleted === 0) {
-      return res.status(404).json({ msg: "تنظیم یافت نشد." });
+      return res.status(404).json({ error: "تنظیم یافت نشد." });
     }
 
     res.status(200).json({ msg: "تنظیم با موفقیت حذف شد." });

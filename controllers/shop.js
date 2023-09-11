@@ -216,7 +216,7 @@ exports.updateShop = async (req, res) => {
     if (rowsAffected === 0) {
       return res
         .status(404)
-        .json({ msg: "فروشگاه پیدا نشد یا شما مجوز به‌روزرسانی ندارید" });
+        .json({ error: "فروشگاه پیدا نشد یا شما مجوز به‌روزرسانی ندارید" });
     }
 
     res.status(200).json({ msg: "فروشگاه به‌روزرسانی شد" });
@@ -241,7 +241,7 @@ exports.deleteShop = async (req, res) => {
     if (!request) {
       return res
         .status(404)
-        .json({ msg: "فروشگاه یافت نشد یا شما مجوز حذف آن را ندارید." });
+        .json({ error: "فروشگاه یافت نشد یا شما مجوز حذف آن را ندارید." });
     }
 
     await shop.destroy();

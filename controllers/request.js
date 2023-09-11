@@ -64,7 +64,7 @@ exports.GetUserRequest = async (req, res) => {
     });
 
     if (count === 0) {
-      return res.status(404).json({ message: "هیچ درخواست کاربری یافت نشد" });
+      return res.status(404).json({ error: "هیچ درخواست کاربری یافت نشد" });
     }
     const totalPages = Math.ceil(count / pageSize);
 
@@ -84,7 +84,7 @@ exports.GetRequest = async (req, res) => {
     const userRequest = await Request.findByPk(requestId);
 
     if (!userRequest) {
-      return res.status(404).json({ message: "Request not found" });
+      return res.status(404).json({ error: "Request not found" });
     }
 
     return res.status(200).json(userRequest);
@@ -174,7 +174,7 @@ exports.UpdateRequest = async (req, res) => {
     if (rowsAffected === 0) {
       return res
         .status(404)
-        .json({ msg: "درخواست پیدا نشد یا شما مجوز به‌روزرسانی ندارید" });
+        .json({ error: "درخواست پیدا نشد یا شما مجوز به‌روزرسانی ندارید" });
     }
 
     // Get all seller_ids associated with the request from request_seller_links
@@ -223,7 +223,7 @@ exports.DeleteRequest = async (req, res) => {
     if (!request) {
       return res
         .status(404)
-        .json({ message: "درخواست یافت نشد یا شما مجوز حذف آن را ندارید." });
+        .json({ error: "درخواست یافت نشد یا شما مجوز حذف آن را ندارید." });
     }
 
     // Get all seller_ids associated with the request from request_seller_links

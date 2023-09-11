@@ -64,7 +64,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 msg:
  *                   type: string
  *                 newSetting:
  *                   $ref: '#/components/schemas/SiteSettings'
@@ -155,7 +155,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 msg:
  *                   type: string
  *                   example: "Setting successfully updated."
  *                 updatedSetting:
@@ -167,7 +167,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "Setting not found."
  *       500:

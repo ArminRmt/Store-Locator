@@ -9,7 +9,7 @@ const verifyToken = (req, res, next) => {
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(403).send({
-      message: "پیام: هیچ توکنی ارائه نشده است!",
+      error: "پیام: هیچ توکنی ارائه نشده است!",
     });
   }
 
@@ -19,11 +19,11 @@ const verifyToken = (req, res, next) => {
     if (err) {
       if (err.name === "TokenExpiredError") {
         return res.status(401).send({
-          message: "توکن منقضی شده است.",
+          error: "توکن منقضی شده است.",
         });
       } else {
         return res.status(401).send({
-          message: "عدم مجوز!",
+          error: "عدم مجوز!",
         });
       }
     }
@@ -36,16 +36,16 @@ const isAdmin = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.userId);
     if (!user) {
-      return res.status(404).send({ message: "کاربر پیدا نشد." });
+      return res.status(404).send({ error: "کاربر پیدا نشد." });
     }
 
     if (user.role === "admin") {
       next();
     } else {
-      res.status(403).send({ message: "نیاز به نقش مدیر دارد!" });
+      res.status(403).send({ error: "نیاز به نقش مدیر دارد!" });
     }
   } catch (err) {
-    res.status(500).send({ message: "خطای سرور" });
+    res.status(500).send({ error: "خطای سرور" });
   }
 };
 
@@ -53,16 +53,16 @@ const isBuyer = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.userId);
     if (!user) {
-      return res.status(404).send({ message: "کاربر پیدا نشد." });
+      return res.status(404).send({ error: "کاربر پیدا نشد." });
     }
 
     if (user.role === "buyer") {
       next();
     } else {
-      res.status(403).send({ message: "نیاز به نقش خریدار دارد!" });
+      res.status(403).send({ error: "نیاز به نقش خریدار دارد!" });
     }
   } catch (err) {
-    res.status(500).send({ message: "خطای سرور" });
+    res.status(500).send({ error: "خطای سرور" });
   }
 };
 
@@ -70,7 +70,7 @@ const isSeller = async (req, res, next) => {
   try {
     const user = await Seller.findByPk(req.userId);
     if (!user) {
-      return res.status(404).send({ message: "فروشنده پیدا نشد." });
+      return res.status(404).send({ error: "فروشنده پیدا نشد." });
     }
 
     // const userIdInRequest = req.params.id || req.body.id;
@@ -78,16 +78,16 @@ const isSeller = async (req, res, next) => {
     // if (!userIdInRequest || parseInt(userIdInRequest) !== req.userId) {
     //   return res
     //     .status(403)
-    //     .send({ message: "تنها صاحب یا مدیر دسترسی به این عملیات دارند." });
+    //     .send({ error: "تنها صاحب یا مدیر دسترسی به این عملیات دارند." });
     // }
 
     if (!user.role) {
       next();
     } else {
-      res.status(403).send({ message: "نیاز به نقش فروشنده دارد!" });
+      res.status(403).send({ error: "نیاز به نقش فروشنده دارد!" });
     }
   } catch (err) {
-    res.status(500).send({ message: "خطای سرور" });
+    res.status(500).send({ error: "خطای سرور" });
   }
 };
 
@@ -95,7 +95,7 @@ isUserOrAdmin = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.userId);
     if (!user) {
-      return res.status(404).send({ message: "کاربر پیدا نشد." });
+      return res.status(404).send({ error: "کاربر پیدا نشد." });
     }
 
     // const userIdInRequest = req.params.id || req.body.id;
@@ -103,16 +103,16 @@ isUserOrAdmin = async (req, res, next) => {
     // if (!userIdInRequest || parseInt(userIdInRequest) !== req.userId) {
     //   return res
     //     .status(403)
-    //     .send({ message: "تنها صاحب یا مدیر دسترسی به این عملیات دارند." });
+    //     .send({ error: "تنها صاحب یا مدیر دسترسی به این عملیات دارند." });
     // }
 
     if (user.role === "admin" || user.role === "buyer") {
       next();
     } else {
-      res.status(403).send({ message: "نیاز به نقش مدیر یا خریدار دارد!" });
+      res.status(403).send({ error: "نیاز به نقش مدیر یا خریدار دارد!" });
     }
   } catch (err) {
-    res.status(500).send({ message: "خطای سرور" });
+    res.status(500).send({ error: "خطای سرور" });
   }
 };
 
@@ -127,7 +127,7 @@ isSellerOrAdmin = async (req, res, next) => {
       if (!user) {
         return res
           .status(404)
-          .send({ message: "شما ادمین یا فروشنده نمی باشید" });
+          .send({ error: "شما ادمین یا فروشنده نمی باشید" });
       }
     }
 
@@ -136,16 +136,16 @@ isSellerOrAdmin = async (req, res, next) => {
     // if (!userIdInRequest || parseInt(userIdInRequest) !== req.userId) {
     //   return res
     //     .status(403)
-    //     .send({ message: "تنها صاحب یا مدیر دسترسی به این عملیات دارند." });
+    //     .send({ error: "تنها صاحب یا مدیر دسترسی به این عملیات دارند." });
     // }
 
     if (!user.role || user.role === "admin") {
       next();
     } else {
-      res.status(403).send({ message: "نیاز به نقش مدیر یا فروشنده دارد!" });
+      res.status(403).send({ error: "نیاز به نقش مدیر یا فروشنده دارد!" });
     }
   } catch (err) {
-    res.status(500).send({ message: "خطای سرور" });
+    res.status(500).send({ error: "خطای سرور" });
   }
 };
 

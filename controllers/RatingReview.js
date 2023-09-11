@@ -19,7 +19,7 @@ exports.getShopFeedbackTexts = async (req, res) => {
     if (!shop || shop.seller_id !== logedinSeller) {
       return res
         .status(403)
-        .json({ msg: "شما دسترسی به این فروشگاه را ندارید." });
+        .json({ error: "شما دسترسی به این فروشگاه را ندارید." });
     }
 
     const { count, rows: feedbackTexts } = await ShopReviews.findAndCountAll({
@@ -30,7 +30,7 @@ exports.getShopFeedbackTexts = async (req, res) => {
     });
 
     if (count === 0) {
-      return res.status(404).json({ msg: "هیچ متن بازخوردی یافت نشد" });
+      return res.status(404).json({ error: "هیچ متن بازخوردی یافت نشد" });
     }
     const totalPages = Math.ceil(count / pageSize);
 
@@ -57,7 +57,7 @@ exports.getUserFeedbackTexts = async (req, res) => {
     });
 
     if (count === 0) {
-      return res.status(404).json({ msg: "هیچ متن بازخوردی یافت نشد" });
+      return res.status(404).json({ error: "هیچ متن بازخوردی یافت نشد" });
     }
     const totalPages = Math.ceil(count / pageSize);
 
@@ -135,7 +135,7 @@ exports.updateShopReview = async (req, res) => {
     );
 
     if (rowsAffected === 0) {
-      return res.status(404).json({ msg: "نقد یافت نشد." });
+      return res.status(404).json({ error: "نقد یافت نشد." });
     }
 
     // Check if rating has changed and recalculate average if necessary
@@ -164,7 +164,7 @@ exports.deleteShopReview = async (req, res) => {
     if (!reviewToDelete) {
       return res
         .status(404)
-        .json({ msg: "نقد یافت نشد یا شما مجوز حذف آن را ندارید." });
+        .json({ error: "نقد یافت نشد یا شما مجوز حذف آن را ندارید." });
     }
 
     const shopId = reviewToDelete.shop_id;

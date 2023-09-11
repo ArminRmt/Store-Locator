@@ -79,16 +79,16 @@
  *                       field:
  *                         type: string
  *                         description: The field that caused the validation error.
- *                       message:
+ *                       error:
  *                         type: string
  *                         description: The error message indicating the reason for the validation failure.
  *               example:
  *                 msg: "Bad request with validation errors."
  *                 errors:
  *                   - field: "phone"
- *                     message: "Phone number must be a 10-digit number."
+ *                     error: "Phone number must be a 10-digit number."
  *                   - field: "role"
- *                     message: "Role must be either 'admin' or 'buyer'."
+ *                     error: "Role must be either 'admin' or 'buyer'."
  */
 
 /**
@@ -130,7 +130,7 @@
  *               properties:
  *                 accessToken:
  *                   type: null
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "رمز عبور نامعتبر است!"
  *       404:
@@ -140,7 +140,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "کاربر پیدا نشد."
  *       500:
@@ -150,7 +150,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "خطای سرور داخلی"
  */
@@ -194,7 +194,7 @@
  *               properties:
  *                 accessToken:
  *                   type: null
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "رمز عبور نامعتبر است!"
  *       404:
@@ -204,7 +204,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "فروشنده پیدا نشد."
  *       500:
@@ -214,7 +214,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "خطای سرور داخلی"
  */
@@ -260,7 +260,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 msg:
+ *                 error:
  *                   type: string
  *                   example: "Bad request with validation errors."
  *                 errors:
@@ -271,14 +271,14 @@
  *                       field:
  *                         type: string
  *                         description: The field that caused the validation error.
- *                       message:
+ *                       error:
  *                         type: string
  *                         description: The error message indicating the reason for the validation failure.
  *               example:
- *                 msg: "Bad request with validation errors."
+ *                 error: "Bad request with validation errors."
  *                 errors:
  *                   - field: "phone"
- *                     message: "Phone number must be a 10-digit number."
+ *                     error: "Phone number must be a 10-digit number."
  */
 /**
  * @swagger
@@ -303,7 +303,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 msg:
  *                   type: string
  *                   example: "توکن معتبر است."
  *       401:
@@ -313,11 +313,11 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "توکن منقضی شده است."
  *               example:
- *                 message: "توکن منقضی شده است."
+ *                 error: "توکن منقضی شده است."
  *       403:
  *         description: Forbidden
  *         content:
@@ -325,7 +325,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "هیچ توکنی ارائه نشده است!"
  */

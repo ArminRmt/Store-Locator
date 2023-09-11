@@ -51,7 +51,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *             example:
  *               message: "Only the owner or admin has this access"
@@ -117,7 +117,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "توکن غیر معتبر است"
  *       500:
@@ -168,7 +168,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "هیچ درخواست فروشنده‌ای یافت نشد"
  *       500:

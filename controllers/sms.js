@@ -30,7 +30,7 @@ exports.ForgotPassword = async (req, res) => {
 
   const user = await User.findOne({ phone });
   if (!user) {
-    return res.status(404).send("کاربر یافت نشد");
+    return res.status(404).send({ error: "کاربر یافت نشد" });
   }
 
   const verificationCode = generateVerificationCode();
@@ -70,7 +70,7 @@ exports.VerifyCode = async (req, res) => {
       !(await argon2.verify(user.verificationCode, verificationCode)) ||
       Date.now() > user.verificationCodeExpiresAt
     ) {
-      res.status(400).json({ msg: "کد تأیید نامعتبر یا منقضی شده است" });
+      res.status(400).json({ error: "کد تأیید نامعتبر یا منقضی شده است" });
     }
 
     // const token = jwt.sign({ id: user.id }, env.AUTH_SECRET, {
@@ -116,7 +116,7 @@ exports.GetUserByToken = async (req, res) => {
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(403).send({
-      msg: "پیام: هیچ توکنی ارائه نشده است!",
+      error: "پیام: هیچ توکنی ارائه نشده است!",
     });
   }
 

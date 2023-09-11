@@ -30,7 +30,7 @@ exports.GetSellerResponds = async (req, res) => {
     });
 
     if (count === 0) {
-      return res.status(404).json({ msg: "هیچ پاسخ فروشنده‌ای یافت نشد" });
+      return res.status(404).json({ error: "هیچ پاسخ فروشنده‌ای یافت نشد" });
     }
 
     const totalPages = Math.ceil(count / pageSize);
@@ -211,7 +211,7 @@ exports.UserRequestResponses = async (req, res) => {
     });
 
     if (count === 0) {
-      return res.status(404).json({ msg: "هیچ پاسخ کاربری یافت نشد" });
+      return res.status(404).json({ error: "هیچ پاسخ کاربری یافت نشد" });
     }
     const totalPages = Math.ceil(count / pageSize);
 
@@ -336,7 +336,7 @@ exports.UpdateResponse = async (req, res) => {
     if (rowsAffected === 0) {
       return res
         .status(404)
-        .json({ msg: "پاسخ پیدا نشد یا شما مجوز به‌روزرسانی ندارید" });
+        .json({ error: "پاسخ پیدا نشد یا شما مجوز به‌روزرسانی ندارید" });
     }
 
     const updatedRequestId = updatedResponse.request_id;
@@ -354,7 +354,7 @@ exports.UpdateResponse = async (req, res) => {
     ]);
 
     if (!shop) {
-      return res.status(404).json({ msg: "فروشنده مرتبط یافت نشد" });
+      return res.status(404).json({ error: "فروشنده مرتبط یافت نشد" });
     }
     const shopName = shop.name;
     const shopID = shop.id;
@@ -403,7 +403,7 @@ exports.DeleteResponse = async (req, res) => {
     if (!request) {
       return res
         .status(404)
-        .json({ msg: "پاسخ یافت نشد یا شما مجوز حذف آن را ندارید." });
+        .json({ error: "پاسخ یافت نشد یا شما مجوز حذف آن را ندارید." });
     }
 
     const request = await Request.findOne({

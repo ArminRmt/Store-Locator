@@ -11,7 +11,7 @@ exports.GetUserByToken = async (req, res) => {
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(403).json({
-        msg: "پیام: هیچ توکنی ارائه نشده است!",
+        error: "پیام: هیچ توکنی ارائه نشده است!",
       });
     }
 
@@ -20,7 +20,7 @@ exports.GetUserByToken = async (req, res) => {
 
     if (!decoded || !decoded.id) {
       return res.status(401).json({
-        msg: "توکن غیر معتبر است",
+        error: "توکن غیر معتبر است",
       });
     }
 
@@ -29,7 +29,7 @@ exports.GetUserByToken = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
-        msg: "کاربری با این توکن یافت نشد",
+        error: "کاربری با این توکن یافت نشد",
       });
     }
 
@@ -50,7 +50,7 @@ exports.getUserById = async (req, res) => {
     if (user) {
       res.status(200).json(user);
     } else {
-      res.status(404).json({ msg: "کاربر یافت نشد" });
+      res.status(404).json({ error: "کاربر یافت نشد" });
     }
   } catch (error) {
     console.error("error is: ", error.msg);
@@ -95,7 +95,7 @@ exports.updateUser = async (req, res) => {
     if (rowsAffected === 0) {
       return res
         .status(404)
-        .json({ msg: "کاربر پیدا نشد یا شما مجوز به‌روزرسانی ندارید" });
+        .json({ error: "کاربر پیدا نشد یا شما مجوز به‌روزرسانی ندارید" });
     }
 
     res.status(200).json({ msg: "کاربر به‌روزرسانی شد" });

@@ -115,10 +115,10 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *             example:
- *               message: "Only the owner or admin has this access"
+ *               error: "Only the owner or admin has this access"
  *       404:
  *         description: User Not found.
  *       500:

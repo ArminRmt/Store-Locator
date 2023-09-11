@@ -27,10 +27,10 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *             example:
- *               message: "Only the owner or admin has this access"
+ *               error: "Only the owner or admin has this access"
  *       404:
  *         description: User Not found.
  *       500:
@@ -82,7 +82,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 msg:
+ *                 error:
  *                   type: string
  *                   example: "خطای سرور"
  */
@@ -144,10 +144,10 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *             example:
- *               message: "Only the owner or admin has this access"
+ *               error: "Only the owner or admin has this access"
  *       404:
  *         description: Useer Not found.
  *       500:
@@ -200,7 +200,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 msg:
  *                   type: string
  *       400:
  *         description: Bad Request - invalid request data
@@ -213,10 +213,10 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *             example:
- *               message: "Only the owner or admin has this access"
+ *               error: "Only the owner or admin has this access"
  *       404:
  *         description: Shop Not found.
  *       500:
@@ -252,7 +252,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 msg:
  *                   type: string
  *       401:
  *         description: Unauthorized
@@ -263,10 +263,10 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *             example:
- *               message: "Only the owner or admin has this access"
+ *               error: "Only the owner or admin has this access"
  *       404:
  *         description: User Not found.
  *       500:

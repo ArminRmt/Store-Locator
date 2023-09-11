@@ -40,7 +40,7 @@ exports.updateSeller = async (req, res) => {
     if (rowsAffected === 0) {
       return res
         .status(404)
-        .json({ msg: "فروشنده پیدا نشد یا شما مجوز به‌روزرسانی ندارید" });
+        .json({ error: "فروشنده پیدا نشد یا شما مجوز به‌روزرسانی ندارید" });
     }
 
     res.status(200).json({ msg: "فروشنده به‌روزرسانی شد" });

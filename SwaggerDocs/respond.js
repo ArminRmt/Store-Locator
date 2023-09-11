@@ -81,7 +81,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 msg:
+ *                 error:
  *                   type: string
  *                   example: "درخواست یافت نشد"
  *       500:
@@ -155,7 +155,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "عدم دسترسی مجاز"
  *       404:
@@ -165,7 +165,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 msg:
+ *                 error:
  *                   type: string
  *                   example: "پاسخ پیدا نشد"
  *       500:
@@ -225,7 +225,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "عدم دسترسی مجاز"
  *       404:
@@ -235,7 +235,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 msg:
+ *                 error:
  *                   type: string
  *                   example: "پاسخ پیدا نشد"
  *       500:
@@ -309,7 +309,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "توکن منقضی شده است."
  *       403:
@@ -319,7 +319,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "هیچ توکنی ارائه نشده است!"
  *       500:
@@ -395,7 +395,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 error:
  *                   type: string
  *                   example: "هیچ پاسخ کاربری یافت نشد"
  *       500:
@@ -485,7 +485,7 @@
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 msg:
  *                   type: string
  *                   example: "nothing just 204 staus code"
  *       500:
