@@ -1,38 +1,75 @@
-const db = require("./config/db.config.js");
+const express = require("express");
+const bodyParser = require("body-parser");
+require("dotenv").config();
 const cors = require("cors");
-let router = require("./routers/router.js");
-var bodyParser = require("body-parser");
-const env = require("./config/env.js");
+const helmet = require("helmet");
+const db = require("./config/db.config.js");
+// const env = require("./config/env.js");
 const { initial } = require("./factory.js");
 const { swaggerUi, specs } = require("./config/swaggerConfig.js");
-const { app, server } = require("./socketManager");
+const { server } = require("./socketManager");
+const { logger } = require("./config/winston.js");
 
-// force: true will drop the table if it already exists
-db.sequelize.sync({ force: true }).then(() => {
-  console.log("Drop and Resync with { force: true }");
-  initial();
-});
+const app = express();
+
+// CORS configurationl
+const allowedOrigins = [
+  process.env.LOCAL_ALLOWED_ORIGIN,
+  process.env.PRODUCTION_ALLOWED_ORIGIN,
+];
 
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://storelocatorapp.dummy.monster"],
-  optionsSuccessStatus: 200,
+  origin: (origin, callback) => {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true, // You might need this for certain scenarios
+  optionsSuccessStatus: 204, // Some legacy browsers (IE11) choke on 200
 };
 
+// Middleware
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
-// capture errors from WebSocket connections and HTTP routes
-// app.use((err, req, res, next) => {
-//   console.error(`Server error: ${err.message}`);
-//   res.status(500).json({ error: "Internal server error" });
-// });
+app.use(helmet());
+
+// Routes
+const router = require("./routers/router.js");
 app.use("/", router);
 
+// Swagger UI
 app.use(
   "/api-docs",
   swaggerUi.serve,
   swaggerUi.setup(specs, { explorer: true })
 );
 
-server.listen(env.port, function () {
-  console.log(`App listening on port ${env.port}`);
+// Database synchronization
+db.sequelize
+  .sync()
+  .then(() => {
+    console.log("Database synchronized");
+    initial();
+  })
+  .catch((error) => {
+    console.error("Database synchronization failed:", error);
+  });
+
+// Server listening
+const serverInstance = server.listen(parseInt(process.env.PORT), () => {
+  logger.info(`App listening on port ${parseInt(process.env.PORT)}`);
 });
+
+// Graceful shutdown
+process.on("SIGINT", () => {
+  console.log("Received SIGINT. Closing server gracefully.");
+  serverInstance.close(() => {
+    console.log("Server closed.");
+    process.exit(0);
+  });
+});
+
+module.exports = app;
