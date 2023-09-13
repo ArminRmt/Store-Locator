@@ -1,4 +1,5 @@
 const Sequelize = require("sequelize");
+
 const flag = process.env.DEBUG === "true";
 
 const sequelize = new Sequelize(
@@ -8,7 +9,7 @@ const sequelize = new Sequelize(
   {
     host: flag ? process.env.DATABASE_HOST2 : process.env.DATABASE_HOST,
     dialect: process.env.DATABASE_DIALECT,
-    operatorsAliases: false,
+    // operatorsAliases: false,
     // operators: false,
 
     pool: {

@@ -211,8 +211,9 @@ exports.UserRequestResponses = async (req, res) => {
     });
 
     if (count === 0) {
-      return res.status(404).json({ error: "هیچ پاسخ کاربری یافت نشد" });
+      return res.status(404).json({ error: "هیچ پاسخ فروشنده‌ای یافت نشد" });
     }
+
     const totalPages = Math.ceil(count / pageSize);
 
     const sellerIds = userResponses.map((response) => response.seller_id);
@@ -242,7 +243,12 @@ exports.UserRequestResponses = async (req, res) => {
       shopID: shopLocations[response.seller_id].shopID,
     }));
 
-    return res.status(200).json({ combinedData, totalPages });
+    const responseObj = { combinedData };
+    if (totalPages > 0) {
+      responseObj.totalPages = totalPages;
+    }
+
+    return res.status(200).json(responseObj);
   } catch (error) {
     console.error("Error fetching user responses:", error.msg);
     return res.status(500).json({ error: "خطای داخلی سرور" });

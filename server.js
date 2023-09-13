@@ -1,6 +1,6 @@
+require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
-require("dotenv").config();
 const cors = require("cors");
 const helmet = require("helmet");
 const db = require("./config/db.config.js");
@@ -8,7 +8,7 @@ const db = require("./config/db.config.js");
 const { initial } = require("./factory.js");
 const { swaggerUi, specs } = require("./config/swaggerConfig.js");
 const { server } = require("./socketManager");
-const { logger } = require("./config/winston.js");
+// const { logger } = require("./config/winston.js");
 
 const app = express();
 
@@ -59,8 +59,9 @@ db.sequelize
   });
 
 // Server listening
-const serverInstance = server.listen(parseInt(process.env.PORT), () => {
-  logger.info(`App listening on port ${parseInt(process.env.PORT)}`);
+const serverInstance = server.listen(8080, () => {
+  // logger.info(`App listening on port ${8080}`);
+  console.log(`App listening on port ${8080}`);
 });
 
 // Graceful shutdown

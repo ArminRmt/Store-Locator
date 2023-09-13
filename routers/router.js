@@ -310,6 +310,7 @@ router.get("/verify-token", authJwt.verifyToken, (req, res) => {
   res.status(200).send({
     msg: "توکن معتبر است.",
   });
+  // next();
 });
 
 module.exports = router;
