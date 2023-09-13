@@ -2,7 +2,7 @@ const smsProvider = require("twilio"); // or any other SMS provider
 const db = require("../config/db.config.js");
 const User = db.User;
 const argon2 = require("argon2");
-const env = require("../config/env.js");
+// const env = require("../config/env.js");
 const jwt = require("jsonwebtoken");
 
 // Generate a random 6-digit verification code
@@ -73,7 +73,7 @@ exports.VerifyCode = async (req, res) => {
       res.status(400).json({ error: "کد تأیید نامعتبر یا منقضی شده است" });
     }
 
-    // const token = jwt.sign({ id: user.id }, env.AUTH_SECRET, {
+    // const token = jwt.sign({ id: user.id }, process.env.AUTH_SECRET, {
     //   algorithm: "HS256",
     //   allowInsecureKeySizes: true,
     //   expiresIn: "1h",
@@ -123,7 +123,7 @@ exports.GetUserByToken = async (req, res) => {
   let token = authHeader.replace("Bearer ", "");
 
   try {
-    const decoded = await jwt.verify(token, env.AUTH_SECRET);
+    const decoded = await jwt.verify(token, process.env.AUTH_SECRET);
     const userId = decoded.id;
 
     const user = await User.findOne({ where: { id: userId } });

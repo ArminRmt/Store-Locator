@@ -4,6 +4,9 @@ const SiteSettings = db.SiteSettings;
 exports.allSettings = async (req, res) => {
   try {
     const settings = await SiteSettings.findAll();
+    if (settings.length === 0) {
+      return res.status(404).json({ error: "تنظیمی یافت نشد." });
+    }
     res.json(settings);
   } catch (error) {
     console.error("Error fetching settings:", error);

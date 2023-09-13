@@ -119,7 +119,6 @@
  *                   type: string
  *                   example: "Internal server error"
  */
-
 /**
  * @swagger
  * /updateSetting:

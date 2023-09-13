@@ -2,7 +2,7 @@ const argon2 = require("argon2");
 const jwt = require("jsonwebtoken");
 const db = require("../config/db.config.js");
 const User = db.User;
-const env = require("../config/env.js");
+// const env = require("../config/env.js");
 const { json } = require("body-parser");
 
 exports.GetUserByToken = async (req, res) => {
@@ -16,7 +16,7 @@ exports.GetUserByToken = async (req, res) => {
     }
 
     const token = authHeader.replace("Bearer ", "");
-    const decoded = await jwt.verify(token, env.AUTH_SECRET);
+    const decoded = await jwt.verify(token, process.env.AUTH_SECRET);
 
     if (!decoded || !decoded.id) {
       return res.status(401).json({

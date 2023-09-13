@@ -3,8 +3,8 @@ const User = db.User;
 const Seller = db.Seller;
 const argon2 = require("argon2");
 var jwt = require("jsonwebtoken");
-const env = require("../config/env.js");
-const { where } = require("sequelize");
+// const env = require("../config/env.js");
+const { logger } = require("../config/winston.js");
 
 // crete user or admin
 exports.signup = async (req, res) => {
@@ -22,7 +22,8 @@ exports.signup = async (req, res) => {
 
     res.status(201).json({ msg: "ثبت نام موفقیت‌آمیز", newUser });
   } catch (error) {
-    console.error(error);
+    // console.error(error);
+    logger.error("Error in user signup:", error);
     res.status(500).json({ msg: "مشکلی در ثبت نام به وجود آمده است." });
   }
 };
@@ -51,7 +52,7 @@ exports.signin = async (req, res) => {
       });
     }
 
-    const token = jwt.sign({ id: user.id }, env.AUTH_SECRET, {
+    const token = jwt.sign({ id: user.id }, process.env.AUTH_SECRET, {
       algorithm: "HS256",
       allowInsecureKeySizes: true,
       expiresIn: "24h", // 86400 SECOND
@@ -59,7 +60,7 @@ exports.signin = async (req, res) => {
 
     res.status(200).json({ msg: "ورود موفقیت‌آمیز", token });
   } catch (error) {
-    console.error("Error fetching seller requests:", error);
+    logger.error("Error in user signin:", error);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
@@ -79,7 +80,7 @@ exports.seller_signup = async (req, res) => {
 
     res.status(201).json({ msg: "ثبت نام موفقیت‌آمیز", newSeller });
   } catch (error) {
-    console.error(error);
+    logger.error("Error in seller_signup:", error);
     res.status(500).json({ error: "مشکلی در ثبت نام به وجود آمده است." });
   }
 };
@@ -108,7 +109,7 @@ exports.signinSeller = async (req, res) => {
       });
     }
 
-    const token = jwt.sign({ id: seller.id }, env.AUTH_SECRET, {
+    const token = jwt.sign({ id: seller.id }, process.env.AUTH_SECRET, {
       algorithm: "HS256",
       allowInsecureKeySizes: true,
       expiresIn: "24h", // 86400 SECOND
@@ -116,7 +117,8 @@ exports.signinSeller = async (req, res) => {
 
     res.status(200).json({ msg: "ورود موفقیت‌آمیز", token });
   } catch (error) {
-    console.error(error);
+    // console.error(error);
+    logger.error("Error in seller signin:", error);
     res.status(500).send({ error: "خطای سرور داخلی" });
   }
 };

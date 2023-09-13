@@ -1,19 +1,24 @@
-const env = require("./env.js");
 const Sequelize = require("sequelize");
+const flag = process.env.DEBUG === "true";
 
-const sequelize = new Sequelize(env.database, env.username, env.password, {
-  host: env.host,
-  dialect: env.dialect,
-  operatorsAliases: false,
-  // operators: false,
+const sequelize = new Sequelize(
+  process.env.DATABASE_NAME,
+  process.env.DATABASE_USERNAME,
+  process.env.DATABASE_PASSWORD,
+  {
+    host: flag ? process.env.DATABASE_HOST2 : process.env.DATABASE_HOST,
+    dialect: process.env.DATABASE_DIALECT,
+    operatorsAliases: false,
+    // operators: false,
 
-  pool: {
-    max: env.max,
-    min: env.pool.min,
-    acquire: env.pool.acquire,
-    idle: env.pool.idle,
-  },
-});
+    pool: {
+      max: parseInt(process.env.DATABASE_POOL_MAX),
+      min: parseInt(process.env.DATABASE_POOL_MIN),
+      acquire: parseInt(process.env.DATABASE_POOL_ACQUIRE),
+      idle: parseInt(process.env.DATABASE_POOL_IDLE),
+    },
+  }
+);
 
 const db = {};
 
