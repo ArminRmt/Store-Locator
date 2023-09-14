@@ -2,8 +2,8 @@ const argon2 = require("argon2");
 const jwt = require("jsonwebtoken");
 const db = require("../config/db.config.js");
 const User = db.User;
-const env = require("../config/env.js");
 const { json } = require("body-parser");
+const { logger } = require("../config/winston.js");
 
 exports.GetUserByToken = async (req, res) => {
   try {
@@ -16,7 +16,7 @@ exports.GetUserByToken = async (req, res) => {
     }
 
     const token = authHeader.replace("Bearer ", "");
-    const decoded = await jwt.verify(token, env.AUTH_SECRET);
+    const decoded = await jwt.verify(token, process.env.AUTH_SECRET);
 
     if (!decoded || !decoded.id) {
       return res.status(401).json({
@@ -35,7 +35,7 @@ exports.GetUserByToken = async (req, res) => {
 
     res.status(200).json(user);
   } catch (error) {
-    console.error("error is: ", error.msg);
+    logger.error("error in GetUserByToken: ", error);
     return res
       .status(500)
       .json({ error: "خطای سرور: لطفاً بعداً دوباره تلاش کنید" });
@@ -53,7 +53,7 @@ exports.getUserById = async (req, res) => {
       res.status(404).json({ error: "کاربر یافت نشد" });
     }
   } catch (error) {
-    console.error("error is: ", error.msg);
+    logger.error("error in getUserById: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
@@ -64,7 +64,7 @@ exports.getUsers = async (req, res) => {
     const response = await User.findAll();
     res.status(200).json(response);
   } catch (error) {
-    console.error("error is: ", error.msg);
+    logger.error("error in getUsers: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
@@ -100,7 +100,7 @@ exports.updateUser = async (req, res) => {
 
     res.status(200).json({ msg: "کاربر به‌روزرسانی شد" });
   } catch (error) {
-    console.error("error is: ", error.msg);
+    logger.error("error in updateUser: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };

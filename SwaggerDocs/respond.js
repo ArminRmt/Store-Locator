@@ -61,8 +61,8 @@
  *                   type: NUMERIC
  *                   example: 36.7
  *                 shopID:
- *                   type: string
- *                   example:3
+ *                   type: integer
+ *                   example: 3
  *
  *       401:
  *         description: Unauthorized
@@ -335,7 +335,7 @@
  */
 /**
  * @swagger
- * /UserRequestResponses:
+ * /UserRequestResponses/{id}:
  *   get:
  *     summary: Get User's Responses for a Specific Request
  *     security:
@@ -388,16 +388,6 @@
  *                         type: integer
  *                 totalPages:
  *                   type: integer
- *       404:
- *         description: Not Found
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "هیچ پاسخ کاربری یافت نشد"
  *       500:
  *         description: Internal Server Error
  *         content:

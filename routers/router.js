@@ -273,13 +273,13 @@ router.delete(
 
 router.get(
   "/settings",
-  // [authJwt.verifyToken, authJwt.isAdmin],
+  [authJwt.verifyToken, authJwt.isAdmin],
   admin.allSettings
 );
 
 router.get(
   "/getSetting/:key",
-  // [authJwt.verifyToken, authJwt.isAdmin],
+  [authJwt.verifyToken, authJwt.isAdmin],
   admin.getSettingByKey
 );
 
@@ -308,8 +308,9 @@ router.delete(
 router.get("/verify-token", authJwt.verifyToken, (req, res) => {
   // If the token is valid, the middleware will have added userId to the request
   res.status(200).send({
-    message: "توکن معتبر است.",
+    msg: "توکن معتبر است.",
   });
+  // next();
 });
 
 module.exports = router;

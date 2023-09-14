@@ -1,13 +1,15 @@
 const socketIO = require("socket.io");
 const http = require("http");
 const express = require("express");
-
 const app = express();
 
 const server = http.createServer(app);
 const io = socketIO(server, {
   cors: {
-    origin: ["http://localhost:5173", "https://storelocatorapp.dummy.monster"],
+    origin: [
+      process.env.LOCAL_ALLOWED_ORIGIN,
+      process.env.PRODUCTION_ALLOWED_ORIGIN,
+    ],
     methods: ["GET", "POST", "PATH", "DELETE"],
   },
 });
@@ -171,6 +173,6 @@ module.exports = {
   addToResponseQueue,
   addToUpdatedResponseQueue,
   addToDeletedResponseQueue,
-  app,
   server,
+  app,
 };

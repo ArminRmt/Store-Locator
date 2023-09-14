@@ -9,6 +9,8 @@ const {
   addToDeletedRequestQueue,
 } = require("../socketManager.js");
 
+const { logger } = require("../config/winston.js");
+
 const { NearestShops } = require("./shop.js");
 
 // get seller requests
@@ -40,7 +42,7 @@ exports.SellerRequests = async (req, res) => {
 
     return res.status(200).json(responseObj);
   } catch (error) {
-    console.error("Error fetching seller requests:", error);
+    logger.error(`Error fetching seller requests: ${error}`);
     return res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
@@ -73,7 +75,7 @@ exports.GetUserRequest = async (req, res) => {
       totalPages,
     });
   } catch (error) {
-    console.error("Error fetching user requests:", error);
+    logger.error(`Error fetching user requests: ${error}`);
     return res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
@@ -89,7 +91,7 @@ exports.GetRequest = async (req, res) => {
 
     return res.status(200).json(userRequest);
   } catch (error) {
-    console.error("Error fetching user requests:", error);
+    logger.error("Error fetching user requests:", error);
     return res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
@@ -146,7 +148,7 @@ exports.createRequest = async (req, res) => {
 
     res.status(200).json(result);
   } catch (error) {
-    console.error("error is: ", error.message);
+    logger.error("error in createRequest: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
@@ -203,7 +205,7 @@ exports.UpdateRequest = async (req, res) => {
       timestamp,
     });
   } catch (error) {
-    console.error("error is: ", error.message);
+    logger.error("error in UpdateRequest ", error.message);
     res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
@@ -245,7 +247,7 @@ exports.DeleteRequest = async (req, res) => {
 
     res.status(200).json({ msg: "درخواست حذف شد", request_id });
   } catch (error) {
-    console.error("error is: ", error.message);
+    logger.error("error in DeleteRequest: ", error.message);
     res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };

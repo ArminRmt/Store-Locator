@@ -1,6 +1,7 @@
 const argon2 = require("argon2");
 const db = require("../config/db.config.js");
 const Seller = db.Seller;
+const { logger } = require("../config/winston.js");
 
 // get seller by token
 exports.GetSellerByToken = async (req, res) => {
@@ -10,7 +11,7 @@ exports.GetSellerByToken = async (req, res) => {
 
     res.status(200).json(seller);
   } catch (error) {
-    console.error("error is: ", error.msg);
+    logger.error("error in GetSellerByToken: ", error);
     return res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
@@ -45,7 +46,7 @@ exports.updateSeller = async (req, res) => {
 
     res.status(200).json({ msg: "فروشنده به‌روزرسانی شد" });
   } catch (error) {
-    console.error("Error:", error);
+    logger.error("error in updateSeller: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };

@@ -1,6 +1,7 @@
 const db = require("../config/db.config.js");
 const ShopReviews = db.ShopReviews;
 const Shop = db.Shop;
+const { logger } = require("../config/winston.js");
 
 exports.getShopFeedbackTexts = async (req, res) => {
   const { shop_id } = req.body;
@@ -36,7 +37,7 @@ exports.getShopFeedbackTexts = async (req, res) => {
 
     res.status(200).json({ feedbackTexts, totalPages });
   } catch (error) {
-    console.error("Error fetching feedback texts:", error.msg);
+    logger.error(`Error fetching feedback texts: ${error}`);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
@@ -63,37 +64,48 @@ exports.getUserFeedbackTexts = async (req, res) => {
 
     res.status(200).json({ feedbackTexts, totalPages });
   } catch (error) {
-    console.error("Error fetching feedback texts:", error.msg);
+    logger.error(`Error fetching feedback texts: ${error}`);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 
 // TODO Move Calculation to a Background Task (create queue worker for this)
 const calculateAverageRating = async (shopId) => {
-  const shopReviews = await ShopReviews.findAll({
-    where: { shop_id: shopId },
-    attributes: ["rating", "buyer_id"], // Include buyer_id to consider unique buyers
-  });
+  try {
+    // Fetch shop reviews
+    const shopReviews = await ShopReviews.findAll({
+      where: { shop_id: shopId },
+      attributes: ["rating", "buyer_id"],
+    });
 
-  // Calculate unique ratings based on buyer_id
-  const uniqueRatings = {};
-  shopReviews.forEach((review) => {
-    if (review.rating !== null) {
-      if (!uniqueRatings[review.buyer_id]) {
-        uniqueRatings[review.buyer_id] = review.rating;
-      }
+    if (!shopReviews || shopReviews.length === 0) {
+      throw new Error("No reviews found for this shop.");
     }
-  });
 
-  // Calculate total ratings and count only non-null ratings
-  const totalRatings = Object.values(uniqueRatings).reduce(
-    (sum, rating) => sum + rating,
-    0
-  );
-  const countRatings = Object.keys(uniqueRatings).length;
-  const averageRating = countRatings > 0 ? totalRatings / countRatings : 0;
+    // Calculate unique ratings based on buyer_id
+    const uniqueRatings = {};
+    shopReviews.forEach((review) => {
+      if (review.rating !== null) {
+        if (!uniqueRatings[review.buyer_id]) {
+          uniqueRatings[review.buyer_id] = review.rating;
+        }
+      }
+    });
 
-  await Shop.update({ avg_rating: averageRating }, { where: { id: shopId } });
+    // Calculate total ratings and count only non-null ratings
+    const totalRatings = Object.values(uniqueRatings).reduce(
+      (sum, rating) => sum + rating,
+      0
+    );
+    const countRatings = Object.keys(uniqueRatings).length;
+    const averageRating = countRatings > 0 ? totalRatings / countRatings : 0;
+
+    // Update the shop's average rating
+    await Shop.update({ avg_rating: averageRating }, { where: { id: shopId } });
+  } catch (error) {
+    logger.error("Error calculating average rating:", error);
+    throw error;
+  }
 };
 
 exports.submitShopRating = async (req, res) => {
@@ -114,7 +126,7 @@ exports.submitShopRating = async (req, res) => {
 
     res.status(200).json({ msg: "امتیاز و بازخورد با موفقیت ارسال شد." });
   } catch (error) {
-    console.error("Error submitting rating and feedback:", error.msg);
+    logger.error(`Error submitting rating and feedback: ${error}`);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
@@ -145,7 +157,7 @@ exports.updateShopReview = async (req, res) => {
 
     res.status(200).json({ msg: "نقد با موفقیت به‌روزرسانی شد." });
   } catch (error) {
-    console.error("Error updating review:", error.msg);
+    logger.error(`Error updating review: ${error}`);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
@@ -175,7 +187,7 @@ exports.deleteShopReview = async (req, res) => {
 
     res.status(200).json({ msg: "نقد با موفقیت حذف شد." });
   } catch (error) {
-    console.error("Error deleting review:", error.msg);
+    logger.error(`Error deleting review: ${error}`);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };

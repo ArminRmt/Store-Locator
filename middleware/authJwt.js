@@ -2,20 +2,21 @@ const jwt = require("jsonwebtoken");
 const db = require("../config/db.config.js");
 const User = db.User;
 const Seller = db.Seller;
-const env = require("../config/env.js");
+const { logger } = require("../config/winston.js");
 
 const verifyToken = (req, res, next) => {
   let authHeader = req.headers["authorization"];
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    const errorMessage = "پیام: هیچ توکنی ارائه نشده است!";
     return res.status(403).send({
-      error: "پیام: هیچ توکنی ارائه نشده است!",
+      error: errorMessage,
     });
   }
 
   let token = authHeader.replace("Bearer ", "");
 
-  jwt.verify(token, env.AUTH_SECRET, (err, decoded) => {
+  jwt.verify(token, process.env.AUTH_SECRET, (err, decoded) => {
     if (err) {
       if (err.name === "TokenExpiredError") {
         return res.status(401).send({
@@ -45,7 +46,9 @@ const isAdmin = async (req, res, next) => {
       res.status(403).send({ error: "نیاز به نقش مدیر دارد!" });
     }
   } catch (err) {
-    res.status(500).send({ error: "خطای سرور" });
+    const errorMessage = "خطای سرور";
+    logger.error(errorMessage, err);
+    res.status(500).send({ error: errorMessage });
   }
 };
 
@@ -62,7 +65,9 @@ const isBuyer = async (req, res, next) => {
       res.status(403).send({ error: "نیاز به نقش خریدار دارد!" });
     }
   } catch (err) {
-    res.status(500).send({ error: "خطای سرور" });
+    const errorMessage = "خطای سرور";
+    logger.error(errorMessage, err);
+    res.status(500).send({ error: errorMessage });
   }
 };
 
@@ -87,7 +92,9 @@ const isSeller = async (req, res, next) => {
       res.status(403).send({ error: "نیاز به نقش فروشنده دارد!" });
     }
   } catch (err) {
-    res.status(500).send({ error: "خطای سرور" });
+    const errorMessage = "خطای سرور";
+    logger.error(errorMessage, err);
+    res.status(500).send({ error: errorMessage });
   }
 };
 
@@ -112,7 +119,9 @@ isUserOrAdmin = async (req, res, next) => {
       res.status(403).send({ error: "نیاز به نقش مدیر یا خریدار دارد!" });
     }
   } catch (err) {
-    res.status(500).send({ error: "خطای سرور" });
+    const errorMessage = "خطای سرور";
+    logger.error(errorMessage, err);
+    res.status(500).send({ error: errorMessage });
   }
 };
 
@@ -145,7 +154,9 @@ isSellerOrAdmin = async (req, res, next) => {
       res.status(403).send({ error: "نیاز به نقش مدیر یا فروشنده دارد!" });
     }
   } catch (err) {
-    res.status(500).send({ error: "خطای سرور" });
+    const errorMessage = "خطای سرور";
+    logger.error(errorMessage, err);
+    res.status(500).send({ error: errorMessage });
   }
 };
 
