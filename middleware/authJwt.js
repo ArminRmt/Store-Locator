@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const db = require("../config/db.config.js");
 const User = db.User;
 const Seller = db.Seller;
-// const env = require("../config/env.js");
 const { logger } = require("../config/winston.js");
 
 const verifyToken = (req, res, next) => {

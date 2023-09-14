@@ -1,5 +1,6 @@
 const db = require("../config/db.config.js");
 const SiteSettings = db.SiteSettings;
+const { logger } = require("../config/winston.js");
 
 exports.allSettings = async (req, res) => {
   try {
@@ -9,7 +10,7 @@ exports.allSettings = async (req, res) => {
     }
     res.json(settings);
   } catch (error) {
-    console.error("Error fetching settings:", error);
+    logger.error("Error fetching settings:", error);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
@@ -26,7 +27,7 @@ exports.getSettingByKey = async (req, res) => {
 
     res.json(setting);
   } catch (error) {
-    console.error("Error fetching setting:", error);
+    logger.error("Error fetching setting:", error);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
@@ -42,7 +43,7 @@ exports.createSetting = async (req, res) => {
       newSetting,
     });
   } catch (error) {
-    console.error("خطا در به‌روزرسانی تنظیم:", error);
+    logger.error("Error creating setting:", error);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
@@ -65,7 +66,7 @@ exports.updateSetting = async (req, res) => {
       updatedSetting,
     });
   } catch (error) {
-    console.error("خطا در به‌روزرسانی تنظیم:", error);
+    logger.error("Error updating setting:", error);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
@@ -82,7 +83,7 @@ exports.deleteSetting = async (req, res) => {
 
     res.status(200).json({ msg: "تنظیم با موفقیت حذف شد." });
   } catch (error) {
-    console.error("Error deleting setting:", error);
+    logger.error("Error deleting setting:", error);
     res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };

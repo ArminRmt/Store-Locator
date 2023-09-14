@@ -1,7 +1,7 @@
 const socketIO = require("socket.io");
 const http = require("http");
-const { app } = require("./server.js");
-// const env = require("./config/env.js");
+const express = require("express");
+const app = express();
 
 const server = http.createServer(app);
 const io = socketIO(server, {
@@ -174,4 +174,5 @@ module.exports = {
   addToUpdatedResponseQueue,
   addToDeletedResponseQueue,
   server,
+  app,
 };

@@ -1,6 +1,7 @@
 const db = require("../config/db.config.js");
 const Shop = db.Shop;
 const geolib = require("geolib");
+const { logger } = require("../config/winston.js");
 
 exports.getSellerShopLocationAndName = async (sellerId) => {
   try {
@@ -23,7 +24,8 @@ exports.getSellerShopLocationAndName = async (sellerId) => {
 
     return { shopLatitude, shopLongitude, shopName, shopID };
   } catch (error) {
-    throw error;
+    logger.error("error in getSellerShopLocationAndName: ", error);
+    return res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
 
@@ -60,7 +62,8 @@ exports.NearestShops = async (userLongitude, userLatitude) => {
 
     return dataValuesOnly;
   } catch (error) {
-    throw error;
+    logger.error("error in NearestShops: ", error);
+    return res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
 
@@ -125,7 +128,7 @@ exports.getShops = async (req, res) => {
 
     res.status(200).json(shops);
   } catch (error) {
-    console.error("Error:", error);
+    logger.error("error in getShops: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
@@ -142,7 +145,7 @@ exports.getSellerShop = async (req, res) => {
 
     res.status(200).json(shops);
   } catch (error) {
-    console.error("Error:", error);
+    logger.error("error in getSellerShop: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
@@ -174,7 +177,7 @@ exports.createShop = async (req, res) => {
 
     res.status(201).json(newShop);
   } catch (error) {
-    console.error("Error:", error);
+    logger.error("error in createShop: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
@@ -224,7 +227,7 @@ exports.updateShop = async (req, res) => {
 
     res.status(200).json({ msg: "فروشگاه به‌روزرسانی شد" });
   } catch (error) {
-    console.error("Error:", error);
+    logger.error("error in updateShop: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
@@ -251,7 +254,7 @@ exports.deleteShop = async (req, res) => {
 
     res.status(200).json({ msg: "فروشگاه با موفقیت حذف شد" });
   } catch (error) {
-    console.error("Error:", error);
+    logger.error("error in deleteShop: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };

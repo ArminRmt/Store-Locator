@@ -2,8 +2,8 @@ const smsProvider = require("twilio"); // or any other SMS provider
 const db = require("../config/db.config.js");
 const User = db.User;
 const argon2 = require("argon2");
-// const env = require("../config/env.js");
 const jwt = require("jsonwebtoken");
+const { logger } = require("../config/winston.js");
 
 // Generate a random 6-digit verification code
 function generateVerificationCode() {
@@ -50,7 +50,7 @@ exports.ForgotPassword = async (req, res) => {
     );
     res.status(200).json({ msg: "کد تایید ارسال شد", verificationCode });
   } catch (error) {
-    console.error("error is: ", error.msg);
+    logger.error("error in ForgotPassword: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
@@ -82,7 +82,7 @@ exports.VerifyCode = async (req, res) => {
     // res.status(200).json({ msg: "Verification code is valid", token });
     res.status(200).json({ msg: "کد تأیید معتبر است", user });
   } catch (error) {
-    console.error("error is: ", error.msg);
+    logger.error("error in VerifyCode: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
@@ -106,7 +106,7 @@ exports.ResetPassword = async (req, res) => {
 
     res.status(200).json({ msg: "تغییر رمز عبور با موفقیت انجام شد" });
   } catch (error) {
-    console.error("error is: ", error.msg);
+    logger.error("error in ResetPassword: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
@@ -130,7 +130,7 @@ exports.GetUserByToken = async (req, res) => {
 
     res.status(200).json(user);
   } catch (error) {
-    console.error("error is: ", error.msg);
+    logger.error("error in GetUserByToken: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };

@@ -1,16 +1,12 @@
 require("dotenv").config();
-const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const helmet = require("helmet");
 const db = require("./config/db.config.js");
-// const env = require("./config/env.js");
 const { initial } = require("./factory.js");
 const { swaggerUi, specs } = require("./config/swaggerConfig.js");
-const { server } = require("./socketManager");
+const { app, server } = require("./socketManager");
 // const { logger } = require("./config/winston.js");
-
-const app = express();
 
 // CORS configurationl
 const allowedOrigins = [
@@ -59,9 +55,8 @@ db.sequelize
   });
 
 // Server listening
-const serverInstance = server.listen(8080, () => {
-  // logger.info(`App listening on port ${8080}`);
-  console.log(`App listening on port ${8080}`);
+const serverInstance = server.listen(parseInt(process.env.PORT), () => {
+  console.log(`App listening on port ${parseInt(process.env.PORT)}`);
 });
 
 // Graceful shutdown
@@ -72,5 +67,3 @@ process.on("SIGINT", () => {
     process.exit(0);
   });
 });
-
-module.exports = app;

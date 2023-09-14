@@ -3,7 +3,6 @@ const User = db.User;
 const Seller = db.Seller;
 const argon2 = require("argon2");
 var jwt = require("jsonwebtoken");
-// const env = require("../config/env.js");
 const { logger } = require("../config/winston.js");
 
 // crete user or admin
@@ -22,7 +21,6 @@ exports.signup = async (req, res) => {
 
     res.status(201).json({ msg: "ثبت نام موفقیت‌آمیز", newUser });
   } catch (error) {
-    // console.error(error);
     logger.error("Error in user signup:", error);
     res.status(500).json({ msg: "مشکلی در ثبت نام به وجود آمده است." });
   }
@@ -117,7 +115,6 @@ exports.signinSeller = async (req, res) => {
 
     res.status(200).json({ msg: "ورود موفقیت‌آمیز", token });
   } catch (error) {
-    // console.error(error);
     logger.error("Error in seller signin:", error);
     res.status(500).send({ error: "خطای سرور داخلی" });
   }
