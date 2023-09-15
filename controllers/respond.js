@@ -78,13 +78,13 @@ exports.GetSellerResponds = async (req, res) => {
       offset: (page - 1) * pageSize,
     });
 
-    if (count === 0) {
-      return res.status(404).json({ error: "هیچ پاسخ فروشنده‌ای یافت نشد" });
-    }
-
     const totalPages = Math.ceil(count / pageSize);
 
-    return res.status(200).json({ responds, totalPages });
+    const responseObj = { responds };
+    if (totalPages > 0) {
+      responseObj.totalPages = totalPages;
+    }
+    return res.status(200).json(responseObj);
   } catch (error) {
     logger.error(`Error fetching seller responds: ${error}`);
     return res.status(500).json({ error: "خطای داخلی سرور" });
