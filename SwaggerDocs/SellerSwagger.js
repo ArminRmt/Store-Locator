@@ -101,6 +101,8 @@
  *                 updatedAt:
  *                   type: string
  *                   format: date-time
+ *                 shop_id:
+ *                   type: integer
  *             example:
  *               id: 1
  *               full_name: "armin"
@@ -108,8 +110,7 @@
  *               password: "$argon2id....."
  *               verificationCode: "null"
  *               verificationCodeExpiresAt: "null"
- *               createdAt: "2023-07-29T17:38:46.185Z"
- *               updatedAt: "2023-07-29T17:38:46.185Z"
+ *               shop_id: 1
  *       401:
  *         description: Unauthorized
  *         content:
