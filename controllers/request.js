@@ -12,11 +12,61 @@ const {
 const { logger } = require("../config/winston.js");
 
 const { NearestShops } = require("./shop.js");
+// const { Op } = require("sequelize");
+const Sequelize = db.Sequelize;
+const sequelize = db.sequelize;
+const { Op } = Sequelize;
+
+exports.searchRequests = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = 6;
+  const keyword = req.query.q;
+  const startDate = req.query.startDate;
+  const endDate = req.query.endDate;
+  const desiredTimestamp = req.query.time;
+
+  if (!keyword || keyword.trim() === "") {
+    return res.status(400).json({ error: "کلمه کلیدی جستجو نامعتبر است" });
+  }
+
+  try {
+    const offset = (page - 1) * pageSize;
+
+    const whereClause = {
+      [Op.or]: [
+        { piece_name: { [Op.iLike]: `%${keyword}%` } },
+        { content: { [Op.iLike]: `%${keyword}%` } },
+      ],
+      users_id: req.userId,
+    };
+
+    // if Dates are provided, add them to the whereClause
+    if (startDate && endDate) {
+      whereClause.timestamp = {
+        [Op.between]: [startDate, endDate],
+      };
+    } else if (desiredTimestamp) {
+      whereClause.timestamp = new Date(desiredTimestamp).toISOString();
+    }
+
+    // Subquery to retrieve all matching records
+    const matchingRecords = await Request.findAll({
+      where: whereClause,
+      order: [["timestamp", "DESC"]],
+      limit: pageSize,
+      offset: offset,
+    });
+
+    return res.status(200).json(matchingRecords);
+  } catch (error) {
+    console.error("Error searching requests:", error);
+    res.status(500).json({ error: "خطای داخلی سرور" });
+  }
+};
 
 // get seller requests
 exports.SellerRequests = async (req, res) => {
   const sellerID = req.userId;
-  console.log("sellerID: ", sellerID);
   const page = parseInt(req.query.page) || 1;
   const pageSize = 10;
 

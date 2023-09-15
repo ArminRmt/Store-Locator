@@ -14,6 +14,53 @@ const { logger } = require("../config/winston.js");
 
 const { getSellerShopLocationAndName } = require("./shop.js");
 
+// search for responds
+exports.searchResponses = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = 5;
+  const keyword = req.query.q;
+  const startDate = req.query.startDate;
+  const endDate = req.query.endDate;
+  const desiredTimestamp = req.query.time;
+
+  if (!keyword || keyword.trim() === "") {
+    return res.status(400).json({ error: "Invalid search keyword" });
+  }
+
+  try {
+    const offset = (page - 1) * pageSize;
+
+    // Subquery to retrieve all matching records
+    const whereClause = {
+      [Op.or]: [
+        { seller_respond: { [Op.iLike]: `%${keyword}%` } },
+        { price: { [Op.iLike]: `%${keyword}%` } },
+      ],
+      seller_id: req.userId,
+    };
+
+    if (startDate && endDate) {
+      whereClause.timestamp = {
+        [Op.between]: [startDate, endDate],
+      };
+    } else if (desiredTimestamp) {
+      whereClause.timestamp = new Date(desiredTimestamp).toISOString();
+    }
+
+    const matchingRecords = await Respond.findAll({
+      where: whereClause,
+      order: [["timestamp", "DESC"]],
+      limit: pageSize,
+      offset: offset,
+    });
+
+    return res.status(200).json(matchingRecords);
+  } catch (error) {
+    logger.error("Error searching responds:", error);
+    res.status(500).json({ error: "خطای داخلی سرور" });
+  }
+};
+
 // get seller reponds
 exports.GetSellerResponds = async (req, res) => {
   const sellerId = req.userId;
@@ -211,10 +258,6 @@ exports.UserRequestResponses = async (req, res) => {
       limit: pageSize,
       offset: (page - 1) * pageSize,
     });
-
-    if (count === 0) {
-      return res.status(404).json({ error: "هیچ پاسخ فروشنده‌ای یافت نشد" });
-    }
 
     const totalPages = Math.ceil(count / pageSize);
 

@@ -72,7 +72,7 @@ router.patch(
 );
 
 // get user details by token
-router.get("/getuserbytoken", users.GetUserByToken);
+router.get("/getuserbytoken", authJwt.verifyToken, users.GetUserByToken);
 
 ////////////////////////////////////      seller routes     ////////////////////////////////////
 
@@ -136,6 +136,13 @@ router.delete(
 
 ////////////////////////////////////    request routes   ////////////////////////////////////
 
+// get user all requests based on search
+router.get(
+  "/searchRequests",
+  [authJwt.verifyToken, authJwt.isUserOrAdmin],
+  request.searchRequests
+);
+
 // get user all requests
 router.get(
   "/userRequests",
@@ -191,6 +198,13 @@ router.delete(
 //   [authJwt.verifyToken, authJwt.isUserOrAdmin],
 //   respond.responsesBasedonRequest
 // );
+
+// get seller all responds based on search
+router.get(
+  "/searchResponses",
+  [authJwt.verifyToken, authJwt.isSellerOrAdmin],
+  respond.searchResponses
+);
 
 // get user responds for specific request
 router.get(
@@ -271,11 +285,7 @@ router.delete(
 
 ////////////////////////////////////    siteSettings routes   ////////////////////////////////////
 
-router.get(
-  "/settings",
-  [authJwt.verifyToken, authJwt.isAdmin],
-  admin.allSettings
-);
+router.get("/settings", admin.allSettings);
 
 router.get(
   "/getSetting/:key",

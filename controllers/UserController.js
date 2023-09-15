@@ -6,25 +6,8 @@ const { json } = require("body-parser");
 const { logger } = require("../config/winston.js");
 
 exports.GetUserByToken = async (req, res) => {
+  const userId = req.userId;
   try {
-    const authHeader = req.headers["authorization"];
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(403).json({
-        error: "پیام: هیچ توکنی ارائه نشده است!",
-      });
-    }
-
-    const token = authHeader.replace("Bearer ", "");
-    const decoded = await jwt.verify(token, process.env.AUTH_SECRET);
-
-    if (!decoded || !decoded.id) {
-      return res.status(401).json({
-        error: "توکن غیر معتبر است",
-      });
-    }
-
-    const userId = decoded.id;
     const user = await User.findOne({ where: { id: userId } });
 
     if (!user) {
