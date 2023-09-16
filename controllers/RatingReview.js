@@ -79,7 +79,7 @@ const calculateAverageRating = async (shopId) => {
     });
 
     if (!shopReviews || shopReviews.length === 0) {
-      throw new Error("No reviews found for this shop.");
+      throw new Error("هیچ نقدی برای این فروشگاه یافت نشد");
     }
 
     // Calculate unique ratings based on buyer_id
@@ -126,8 +126,12 @@ exports.submitShopRating = async (req, res) => {
 
     res.status(200).json({ msg: "امتیاز و بازخورد با موفقیت ارسال شد." });
   } catch (error) {
-    logger.error(`Error submitting rating and feedback: ${error}`);
-    res.status(500).json({ error: "خطای داخلی سرور" });
+    if (error.message === "هیچ نقدی برای این فروشگاه یافت نشد") {
+      res.status(400).json({ error: error.message });
+    } else {
+      logger.error(`Error submitting rating and feedback: ${error.message}`);
+      res.status(500).json({ error: "خطای داخلی سرور" });
+    }
   }
 };
 
@@ -157,8 +161,12 @@ exports.updateShopReview = async (req, res) => {
 
     res.status(200).json({ msg: "نقد با موفقیت به‌روزرسانی شد." });
   } catch (error) {
-    logger.error(`Error updating review: ${error}`);
-    res.status(500).json({ error: "خطای داخلی سرور" });
+    if (error.message === "هیچ نقدی برای این فروشگاه یافت نشد") {
+      res.status(400).json({ error: error.message });
+    } else {
+      logger.error(`Error updating review: ${error.message}`);
+      res.status(500).json({ error: "خطای داخلی سرور" });
+    }
   }
 };
 
@@ -187,7 +195,11 @@ exports.deleteShopReview = async (req, res) => {
 
     res.status(200).json({ msg: "نقد با موفقیت حذف شد." });
   } catch (error) {
-    logger.error(`Error deleting review: ${error}`);
-    res.status(500).json({ error: "خطای داخلی سرور" });
+    if (error.message === "هیچ نقدی برای این فروشگاه یافت نشد") {
+      res.status(400).json({ error: error.message });
+    } else {
+      logger.error(`Error deleting review: ${error.message}`);
+      res.status(500).json({ error: "خطای داخلی سرور" });
+    }
   }
 };

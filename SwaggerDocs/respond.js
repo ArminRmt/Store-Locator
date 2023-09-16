@@ -561,3 +561,40 @@
  *                   type: string
  *                   example: "خطای داخلی سرور"
  */
+/**
+ * @swagger
+ * /autoCompleteRespond:
+ *   get:
+ *     summary: Get Auto-Completion Suggestions for Seller Responses
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: q
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The partial query for auto-completion of seller responses.
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *               example:
+ *                 - "Suggestion 1"
+ *                 - "Suggestion 2"
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "خطای داخلی سرور"
+ */

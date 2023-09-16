@@ -63,20 +63,20 @@ exports.signin = async (req, res) => {
   }
 };
 
-// crete seller
+// create seller
 exports.seller_signup = async (req, res) => {
   const { full_name, phone, password } = req.body;
 
   try {
     const hashPassword = await argon2.hash(password);
 
-    const newSeller = await Seller.create({
+    await Seller.create({
       full_name,
       phone,
       password: hashPassword,
     });
 
-    res.status(201).json({ msg: "ثبت نام موفقیت‌آمیز", newSeller });
+    res.status(201).json({ msg: "ثبت نام موفقیت‌آمیز" });
   } catch (error) {
     logger.error("Error in seller_signup:", error);
     res.status(500).json({ error: "مشکلی در ثبت نام به وجود آمده است." });

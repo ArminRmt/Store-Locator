@@ -99,7 +99,7 @@ router.get("/GetSellerByToken", authJwt.verifyToken, seller.GetSellerByToken);
 router.get("/getShops", [authJwt.verifyToken, authJwt.isAdmin], shop.getShops);
 
 // get seller shop
-router.get("/getSellerShop/:id", authJwt.verifyToken, shop.getSellerShop);
+router.get("/getSellerShop/:id", shop.getSellerShop);
 
 // create shop
 router.post(
@@ -135,6 +135,13 @@ router.delete(
 );
 
 ////////////////////////////////////    request routes   ////////////////////////////////////
+
+// Auto-completion route
+router.get(
+  "/autoComplete",
+  [authJwt.verifyToken, authJwt.isUserOrAdmin],
+  request.autoComplete
+);
 
 // get user all requests based on search
 router.get(
@@ -198,6 +205,13 @@ router.delete(
 //   [authJwt.verifyToken, authJwt.isUserOrAdmin],
 //   respond.responsesBasedonRequest
 // );
+
+// Auto-completion route
+router.get(
+  "/autoCompleteRespond",
+  [authJwt.verifyToken, authJwt.isSellerOrAdmin],
+  respond.autoCompleteRespond
+);
 
 // get seller all responds based on search
 router.get(
