@@ -83,33 +83,18 @@
  *             schema:
  *               type: object
  *               properties:
- *                 id:
- *                   type: integer
  *                 full_name:
  *                   type: string
  *                 phone:
  *                   type: string
  *                 password:
  *                   type: string
- *                 verificationCode:
- *                   type: string
- *                 verificationCodeExpiresAt:
- *                   type: string
- *                 createdAt:
- *                   type: string
- *                   format: date-time
- *                 updatedAt:
- *                   type: string
- *                   format: date-time
  *                 shop_id:
  *                   type: integer
  *             example:
- *               id: 1
  *               full_name: "armin"
  *               phone: "9876543210"
  *               password: "$argon2id....."
- *               verificationCode: "null"
- *               verificationCodeExpiresAt: "null"
  *               shop_id: 1
  *       401:
  *         description: Unauthorized

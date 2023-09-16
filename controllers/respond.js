@@ -14,6 +14,29 @@ const { logger } = require("../config/winston.js");
 
 const { getSellerShopLocationAndName } = require("./shop.js");
 
+exports.autoCompleteRespond = async (req, res) => {
+  const partialQuery = req.query.q;
+
+  try {
+    const suggestions = await Respond.findAll({
+      attributes: ["seller_respond"],
+      where: {
+        seller_respond: {
+          [Op.iLike]: `%${partialQuery}%`,
+        },
+        seller_id: req.userId,
+      },
+      limit: 10,
+    });
+
+    const suggestionList = suggestions.map((respond) => respond.seller_respond);
+    return res.status(200).json(suggestionList);
+  } catch (error) {
+    console.error("Error fetching auto-completion suggestions:", error);
+    res.status(500).json({ error: "خطای داخلی سرور" });
+  }
+};
+
 // search for responds
 exports.searchResponses = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
@@ -302,8 +325,8 @@ exports.UserRequestResponses = async (req, res) => {
 
 exports.createResponse = async (req, res) => {
   const { request_id, buyerID, price, seller_respond } = req.body;
-  // const buyerID = req.body.user_id;
   const SellerId = req.userId;
+
   try {
     const timestamp = new Date().toISOString();
 
@@ -358,8 +381,12 @@ exports.createResponse = async (req, res) => {
 
     res.status(200).json(result);
   } catch (error) {
-    logger.error(`Error creating response: ${error}`);
-    res.status(500).json({ error: "خطای داخلی سرور" });
+    if (error.message === "فروشگاهی به نام این فروشنده پیدا نشد") {
+      res.status(400).json({ error: error.message });
+    } else {
+      logger.error(`Error creating response: ${error.message}`);
+      res.status(500).json({ error: "خطای داخلی سرور" });
+    }
   }
 };
 
