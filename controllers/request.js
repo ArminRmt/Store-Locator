@@ -4,9 +4,10 @@ const RequestSellerLinks = db.RequestSellerLinks;
 const {
   io,
   sellerSockets,
-  addToRequestQueue,
-  addToUpdatedRequestQueue,
-  addToDeletedRequestQueue,
+  RequestQueue,
+  UpdatedRequestQueue,
+  DeletedRequestQueue,
+  addToQueue,
 } = require("../socketManager.js");
 
 const { logger } = require("../config/winston.js");
@@ -200,7 +201,7 @@ exports.createRequest = async (req, res) => {
       if (sellerSocketId) {
         io.to(sellerSocketId).emit("newRequest", newRequest);
       } else {
-        addToRequestQueue(seller_id, newRequest);
+        addToQueue(RequestQueue, seller_id, newRequest);
       }
     });
 
@@ -260,7 +261,7 @@ exports.UpdateRequest = async (req, res) => {
       if (sellerSocketId) {
         io.to(sellerSocketId).emit("requestUpdated", updatedRequest);
       } else {
-        addToUpdatedRequestQueue(link.seller_id, updatedRequest);
+        addToQueue(UpdatedRequestQueue, link.seller_id, updatedRequest);
       }
     });
 
@@ -307,7 +308,7 @@ exports.DeleteRequest = async (req, res) => {
       if (sellerSocketId) {
         io.to(sellerSocketId).emit("requestDeleted", request_id);
       } else {
-        addToDeletedRequestQueue(link.seller_id, request_id);
+        addToQueue(DeletedRequestQueue, link.seller_id, request_id);
       }
     });
     await Promise.all(deleteOperations);
