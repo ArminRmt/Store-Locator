@@ -8,7 +8,10 @@ const { logger } = require("../config/winston.js");
 exports.GetSellerByToken = async (req, res) => {
   const seller_id = req.userId;
   try {
-    const seller = await Seller.findOne({ where: { id: seller_id } });
+    const seller = await Seller.findOne({
+      where: { id: seller_id },
+      attributes: ["full_name", "phone", "password"],
+    });
 
     if (!seller) {
       return res.status(404).json({ error: "فروشنده پیدا نشد" });

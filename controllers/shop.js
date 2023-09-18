@@ -11,10 +11,7 @@ exports.getSellerShopLocationAndName = async (sellerId) => {
     });
 
     if (!shop) {
-      // throw new Error("فروشگاهی به نام این فروشنده پیدا نشد");
-      return res
-        .status(400)
-        .json({ msg: "فروشگاهی به نام این فروشنده پیدا نشد" });
+      throw new Error("فروشگاهی به نام این فروشنده پیدا نشد");
     }
 
     const shopLatitude = shop.latitude;
@@ -25,7 +22,7 @@ exports.getSellerShopLocationAndName = async (sellerId) => {
     return { shopLatitude, shopLongitude, shopName, shopID };
   } catch (error) {
     logger.error("error in getSellerShopLocationAndName: ", error);
-    return res.status(500).json({ error: "خطای سرور داخلی" });
+    throw error;
   }
 };
 
@@ -63,7 +60,7 @@ exports.NearestShops = async (userLongitude, userLatitude) => {
     return dataValuesOnly;
   } catch (error) {
     logger.error("error in NearestShops: ", error);
-    return res.status(500).json({ error: "خطای سرور داخلی" });
+    throw error;
   }
 };
 

@@ -12,10 +12,31 @@ const {
 const { logger } = require("../config/winston.js");
 
 const { NearestShops } = require("./shop.js");
-// const { Op } = require("sequelize");
 const Sequelize = db.Sequelize;
-const sequelize = db.sequelize;
 const { Op } = Sequelize;
+
+exports.autoComplete = async (req, res) => {
+  const partialQuery = req.query.q;
+
+  try {
+    const suggestions = await Request.findAll({
+      attributes: ["piece_name"],
+      where: {
+        piece_name: {
+          [Op.iLike]: `%${partialQuery}%`,
+        },
+        users_id: req.userId,
+      },
+      limit: 10,
+    });
+
+    const suggestionList = suggestions.map((request) => request.piece_name);
+    return res.status(200).json(suggestionList);
+  } catch (error) {
+    console.error("Error fetching auto-completion suggestions:", error);
+    res.status(500).json({ error: "خطای داخلی سرور" });
+  }
+};
 
 exports.searchRequests = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
@@ -40,7 +61,6 @@ exports.searchRequests = async (req, res) => {
       users_id: req.userId,
     };
 
-    // if Dates are provided, add them to the whereClause
     if (startDate && endDate) {
       whereClause.timestamp = {
         [Op.between]: [startDate, endDate],
@@ -49,7 +69,6 @@ exports.searchRequests = async (req, res) => {
       whereClause.timestamp = new Date(desiredTimestamp).toISOString();
     }
 
-    // Subquery to retrieve all matching records
     const matchingRecords = await Request.findAll({
       where: whereClause,
       order: [["timestamp", "DESC"]],

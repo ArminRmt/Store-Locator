@@ -250,9 +250,7 @@
  *               properties:
  *                 msg:
  *                   type: string
- *                   description: A success message.
- *                 newSeller:
- *                   $ref: '#/components/schemas/seller'
+ *                   description: ثبت نام موفقیت‌آمیز
  *       400:
  *         description: Bad request with error messages.
  *         content:
