@@ -1,10 +1,12 @@
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
+
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const helmet = require("helmet");
 const db = require("./config/db.config.js");
 const { initial } = require("./factory.js");
-const { swaggerUi, specs } = require("./config/swaggerConfig.js");
+const { swaggerUi, swaggerSpecs } = require("./config/swaggerConfig.js");
 const { app, server } = require("./socketManager");
 const { logger } = require("./config/winston.js");
 
@@ -40,7 +42,7 @@ app.use("/", router);
 app.use(
   "/api-docs",
   swaggerUi.serve,
-  swaggerUi.setup(specs, { explorer: true })
+  swaggerUi.setup(swaggerSpecs, { explorer: true })
 );
 
 // Database synchronization

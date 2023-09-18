@@ -6,4 +6,3 @@ Dockerfile
 *.yml
 error.log
 combined.log
-.env

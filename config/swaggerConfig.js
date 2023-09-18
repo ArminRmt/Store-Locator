@@ -1,41 +1,38 @@
-// swaggerConfig.js
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
-const options = {
+const baseURL =
+  process.env.DEBUG === "true"
+    ? "http://localhost:8081"
+    : "https://storelocatorapi.dummy.monster";
+
+const swaggerOptions = {
   definition: {
     openapi: "3.1.0",
     info: {
-      title: "store-locator api doc",
+      title: "store-locator API Documentation",
       version: "0.1.0",
       description:
-        "rest api made with sequelize-orm, Express and documented with Swagger",
+        "REST API made with Sequelize ORM, Express, and documented with Swagger",
       license: {
         name: "MIT",
         url: "https://spdx.org/licenses/MIT.html",
       },
       contact: {
         name: "Armin",
-        url:
-          process.env.DEBUG === "true"
-            ? "http://localhost:8081"
-            : "https://storelocatorapi.dummy.monster",
-
+        url: baseURL,
         email: "arminrahmati83@gmail.com",
       },
     },
     servers: [
       {
-        url:
-          process.env.DEBUG === "true"
-            ? "http://localhost:8081"
-            : "https://storelocatorapi.dummy.monster",
+        url: baseURL,
       },
     ],
   },
   apis: ["./SwaggerDocs/*.js"],
 };
 
-const specs = swaggerJsdoc(options);
+const swaggerSpecs = swaggerJsdoc(swaggerOptions);
 
-module.exports = { swaggerUi, specs };
+module.exports = { swaggerUi, swaggerSpecs };
