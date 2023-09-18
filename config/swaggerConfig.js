@@ -16,13 +16,20 @@ const options = {
       },
       contact: {
         name: "Armin",
-        url: "https://storelocatorapi.dummy.monster",
+        url:
+          process.env.DEBUG === "true"
+            ? "http://localhost:8081"
+            : "https://storelocatorapi.dummy.monster",
+
         email: "arminrahmati83@gmail.com",
       },
     },
     servers: [
       {
-        url: "https://storelocatorapi.dummy.monster",
+        url:
+          process.env.DEBUG === "true"
+            ? "http://localhost:8081"
+            : "https://storelocatorapi.dummy.monster",
       },
     ],
   },

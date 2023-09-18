@@ -1,5 +1,6 @@
 const db = require("./config/db.config.js");
 const argon2 = require("argon2");
+const { logger } = require("./config/winston.js");
 
 const User = db.User;
 const Seller = db.Seller;
@@ -213,7 +214,7 @@ async function initial() {
 
     console.log("Data initialization completed successfully!");
   } catch (error) {
-    console.error("Error initializing data:", error);
+    logger.error(`Error initializing data: ${error.message}`);
   }
 }
 

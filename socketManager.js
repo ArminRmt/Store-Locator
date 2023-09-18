@@ -10,6 +10,10 @@ const io = socketIO(server, {
       process.env.LOCAL_ALLOWED_ORIGIN,
       process.env.PRODUCTION_ALLOWED_ORIGIN,
     ],
+    // origin:
+    //   process.env.DEBUG === "true"
+    //     ? process.env.LOCAL_ALLOWED_ORIGIN
+    //     : process.env.PRODUCTION_ALLOWED_ORIGIN,
     methods: ["GET", "POST", "PATH", "DELETE"],
   },
 });

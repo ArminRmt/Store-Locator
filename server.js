@@ -6,7 +6,7 @@ const db = require("./config/db.config.js");
 const { initial } = require("./factory.js");
 const { swaggerUi, specs } = require("./config/swaggerConfig.js");
 const { app, server } = require("./socketManager");
-// const { logger } = require("./config/winston.js");
+const { logger } = require("./config/winston.js");
 
 // CORS configurationl
 const allowedOrigins = [
@@ -51,7 +51,7 @@ db.sequelize
     initial();
   })
   .catch((error) => {
-    console.error("Database synchronization failed:", error);
+    logger.error("Database synchronization failed:", error);
   });
 
 // Server listening

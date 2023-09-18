@@ -1,13 +1,18 @@
 const Sequelize = require("sequelize");
 
-const flag = process.env.DEBUG === "true";
+const debug_mode = process.env.DEBUG === "true";
+
+const databaseHost = debug_mode
+  ? process.env.DATABASE_HOST2
+  : process.env.DATABASE_HOST;
 
 const sequelize = new Sequelize(
   process.env.DATABASE_NAME,
   process.env.DATABASE_USERNAME,
   process.env.DATABASE_PASSWORD,
   {
-    host: flag ? process.env.DATABASE_HOST2 : process.env.DATABASE_HOST,
+    host: databaseHost,
+    // port: 5432,
     dialect: process.env.DATABASE_DIALECT,
     // operatorsAliases: false,
     // operators: false,
