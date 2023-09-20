@@ -31,6 +31,14 @@ const corsOptions = {
 
 // Middleware
 app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: new RegExp(
+      "https?://([a-zA-Z0-9]+([-,_][a-zA-Z0-9]+)*.)?(domain.com|domain2.in|domaini.shop"
+    ),
+  })
+);
+// https://storelocatorapp.dummy.monster
 app.use(bodyParser.json());
 app.use(helmet());
 
