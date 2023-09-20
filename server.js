@@ -3,7 +3,7 @@ dotenv.config();
 
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const helmet = require("helmet");
+// const helmet = require("helmet");
 const db = require("./config/db-config.js");
 const { initial } = require("./factory.js");
 const { swaggerUi, swaggerSpecs } = require("./config/swaggerConfig.js");
@@ -16,30 +16,23 @@ const allowedOrigins = [
   process.env.PRODUCTION_ALLOWED_ORIGIN,
 ];
 
-// const corsOptions = {
-//   origin: (origin, callback) => {
-//     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error("Not allowed by CORS"));
-//     }
-//   },
-//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//   credentials: true, // You might need this for certain scenarios
-//   optionsSuccessStatus: 204, // Some legacy browsers (IE11) choke on 200
-// };
-
 const corsOptions = {
-  origin: "*",
+  origin: (origin, callback) => {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true,
-  optionsSuccessStatus: 204,
+  credentials: true, // You might need this for certain scenarios
+  optionsSuccessStatus: 204, // Some legacy browsers (IE11) choke on 200
 };
 
 // Middleware
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
-app.use(helmet());
+// app.use(helmet());
 
 // Routes
 const router = require("./routers/router.js");
