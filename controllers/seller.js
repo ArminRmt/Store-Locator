@@ -1,5 +1,5 @@
 const argon2 = require("argon2");
-const db = require("../config/db.config.js");
+const db = require("../config/db-config.js");
 const Seller = db.Seller;
 const Shop = db.Shop;
 const { logger } = require("../config/winston.js");

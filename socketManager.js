@@ -18,8 +18,8 @@ const io = socketIO(server, {
   },
 });
 
-const sellerSockets = {}; // Mapping of seller IDs to socket IDs
-const userSockets = {}; // Mapping of user IDs to socket IDs
+const sellerSockets = {};
+const userSockets = {};
 const RequestQueue = {};
 const UpdatedRequestQueue = {};
 const DeletedRequestQueue = {};
@@ -37,26 +37,19 @@ io.on("connection", (socket) => {
 
     try {
       // if new request has been made and seller where offline
-      if (RequestQueue[sellerId]) {
-        RequestQueue[sellerId].forEach((message) => {
-          socket.emit("newRequest", message);
-        });
-        delete RequestQueue[sellerId];
-      }
-
-      if (UpdatedRequestQueue[sellerId]) {
-        UpdatedRequestQueue[sellerId].forEach((message) => {
-          socket.emit("requestUpdated", message);
-        });
-        delete UpdatedRequestQueue[sellerId];
-      }
-
-      if (DeletedRequestQueue[sellerId]) {
-        DeletedRequestQueue[sellerId].forEach((message) => {
-          socket.emit("requestDeleted", message);
-        });
-        delete DeletedRequestQueue[sellerId];
-      }
+      sendQueuedMessages(socket, sellerId, RequestQueue, "newRequest");
+      sendQueuedMessages(
+        socket,
+        sellerId,
+        UpdatedRequestQueue,
+        "requestUpdated"
+      );
+      sendQueuedMessages(
+        socket,
+        sellerId,
+        DeletedRequestQueue,
+        "requestDeleted"
+      );
     } catch (error) {
       console.error(`Error in identifySeller: ${error.message}`);
     }
@@ -69,26 +62,19 @@ io.on("connection", (socket) => {
 
     try {
       // if new response made and user where offline
-      if (ResponseQueue[userId]) {
-        ResponseQueue[userId].forEach((message) => {
-          socket.emit("newResponse", message);
-        });
-        delete ResponseQueue[userId];
-      }
-
-      if (UpdatedResponseQueue[userId]) {
-        UpdatedResponseQueue[userId].forEach((message) => {
-          socket.emit("responseUpdated", message);
-        });
-        delete UpdatedResponseQueue[userId];
-      }
-
-      if (DeletedResponseQueue[userId]) {
-        DeletedResponseQueue[userId].forEach((message) => {
-          socket.emit("responseDeleted", message);
-        });
-        delete DeletedResponseQueue[userId];
-      }
+      sendQueuedMessages(socket, userId, ResponseQueue, "newResponse");
+      sendQueuedMessages(
+        socket,
+        userId,
+        UpdatedResponseQueue,
+        "responseUpdated"
+      );
+      sendQueuedMessages(
+        socket,
+        userId,
+        DeletedResponseQueue,
+        "responseDeleted"
+      );
     } catch (error) {
       console.error(`Error in identifyBuyer: ${error.message}`);
     }
@@ -125,58 +111,34 @@ io.on("connection", (socket) => {
   });
 });
 
-function addToRequestQueue(sellerId, message) {
-  if (!RequestQueue[sellerId]) {
-    RequestQueue[sellerId] = [];
+function sendQueuedMessages(socket, recipientId, queue, eventName) {
+  const messages = queue[recipientId];
+  if (messages) {
+    messages.forEach((message) => {
+      socket.emit(eventName, message);
+    });
+    delete queue[recipientId];
   }
-  RequestQueue[sellerId].push(message);
 }
 
-function addToUpdatedRequestQueue(sellerId, message) {
-  if (!UpdatedRequestQueue[sellerId]) {
-    UpdatedRequestQueue[sellerId] = [];
+function addToQueue(queue, userId, message) {
+  if (!queue[userId]) {
+    queue[userId] = [];
   }
-  UpdatedRequestQueue[sellerId].push(message);
-}
-
-function addToDeletedRequestQueue(sellerId, message) {
-  if (!DeletedRequestQueue[sellerId]) {
-    DeletedRequestQueue[sellerId] = [];
-  }
-  DeletedRequestQueue[sellerId].push(message);
-}
-
-function addToResponseQueue(userID, message) {
-  if (!ResponseQueue[userID]) {
-    ResponseQueue[userID] = [];
-  }
-  ResponseQueue[userID].push(message);
-}
-
-function addToUpdatedResponseQueue(userID, message) {
-  if (!UpdatedResponseQueue[userID]) {
-    UpdatedResponseQueue[userID] = [];
-  }
-  UpdatedResponseQueue[userID].push(message);
-}
-
-function addToDeletedResponseQueue(userID, message) {
-  if (!DeletedResponseQueue[userID]) {
-    DeletedResponseQueue[userID] = [];
-  }
-  DeletedResponseQueue[userID].push(message);
+  queue[userId].push(message);
 }
 
 module.exports = {
   io,
   sellerSockets,
   userSockets,
-  addToRequestQueue,
-  addToUpdatedRequestQueue,
-  addToDeletedRequestQueue,
-  addToResponseQueue,
-  addToUpdatedResponseQueue,
-  addToDeletedResponseQueue,
+  RequestQueue,
+  UpdatedRequestQueue,
+  DeletedRequestQueue,
+  ResponseQueue,
+  UpdatedResponseQueue,
+  DeletedResponseQueue,
+  addToQueue,
   server,
   app,
 };

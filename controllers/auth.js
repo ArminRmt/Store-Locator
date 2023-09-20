@@ -1,4 +1,4 @@
-const db = require("../config/db.config.js");
+const db = require("../config/db-config.js");
 const User = db.User;
 const Seller = db.Seller;
 const argon2 = require("argon2");

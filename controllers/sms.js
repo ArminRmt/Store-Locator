@@ -1,5 +1,5 @@
 const smsProvider = require("twilio"); // or any other SMS provider
-const db = require("../config/db.config.js");
+const db = require("../config/db-config.js");
 const User = db.User;
 const argon2 = require("argon2");
 const jwt = require("jsonwebtoken");

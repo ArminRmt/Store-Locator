@@ -1,13 +1,14 @@
-const db = require("../config/db.config.js");
+const db = require("../config/db-config.js");
 const Respond = db.Respond;
 const Shop = db.Shop;
 const Request = db.Request;
 const {
   io,
   userSockets,
-  addToResponseQueue,
-  addToUpdatedResponseQueue,
-  addToDeletedResponseQueue,
+  ResponseQueue,
+  UpdatedResponseQueue,
+  DeletedResponseQueue,
+  addToQueue,
 } = require("../socketManager.js");
 
 const { logger } = require("../config/winston.js");
@@ -364,7 +365,7 @@ exports.createResponse = async (req, res) => {
       io.to(userSocketId).emit("newResponse", socketRes);
     } else {
       // User is offline, add new response to the queue
-      addToResponseQueue(buyerID, socketRes);
+      addToQueue(ResponseQueue, buyerID, socketRes);
     }
 
     const result = {
@@ -451,7 +452,7 @@ exports.UpdateResponse = async (req, res) => {
     if (userSocketId) {
       io.to(userSocketId).emit("responseUpdated", socketRes);
     } else {
-      addToUpdatedResponseQueue(buyerID, socketRes);
+      addToQueue(UpdatedResponseQueue, buyerID, socketRes);
     }
 
     res.status(200).json({
@@ -492,7 +493,7 @@ exports.DeleteResponse = async (req, res) => {
     if (userSocketId) {
       io.to(userSocketId).emit("responseDeleted", response_id);
     } else {
-      addToDeletedResponseQueue(request.users_id, response_id);
+      addToQueue(DeletedResponseQueue, request.users_id, response_id);
     }
 
     await response.destroy();

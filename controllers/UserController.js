@@ -1,6 +1,6 @@
 const argon2 = require("argon2");
 const jwt = require("jsonwebtoken");
-const db = require("../config/db.config.js");
+const db = require("../config/db-config.js");
 const User = db.User;
 const { json } = require("body-parser");
 const { logger } = require("../config/winston.js");

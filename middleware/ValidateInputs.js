@@ -1,4 +1,4 @@
-const db = require("../config/db.config.js");
+const db = require("../config/db-config.js");
 const User = db.User;
 
 async function isPhoneNumberUnique(phoneNumber) {

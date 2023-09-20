@@ -1,4 +1,4 @@
-const db = require("../config/db.config.js");
+const db = require("../config/db-config.js");
 const Shop = db.Shop;
 const geolib = require("geolib");
 const { logger } = require("../config/winston.js");
@@ -72,7 +72,7 @@ exports.NearestShops = async (userLongitude, userLatitude) => {
 //     userLongitude = 52.6893;
 //     const MAX_DISTANCE = 5;
 
-//     // Use sequelize and Op from your db.config.js
+//     // Use sequelize and Op from your db-config.js
 //     const { sequelize, Sequelize } = db;
 //     const { Op } = Sequelize;
 
