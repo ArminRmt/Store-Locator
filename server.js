@@ -33,9 +33,7 @@ const corsOptions = {
 // app.use(cors(corsOptions));
 app.use(
   cors({
-    origin: new RegExp(
-      "https?://([a-zA-Z0-9]+([-,_][a-zA-Z0-9]+)*.)?(domain.com|domain2.in|domaini.shop"
-    ),
+    origin: new RegExp("https://storelocatorapp\\.dummy\\.monster"),
   })
 );
 // https://storelocatorapp.dummy.monster
