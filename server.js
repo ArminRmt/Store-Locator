@@ -3,7 +3,7 @@ dotenv.config();
 
 const bodyParser = require("body-parser");
 const cors = require("cors");
-// const helmet = require("helmet");
+const helmet = require("helmet");
 const db = require("./config/db-config.js");
 const { initial } = require("./factory.js");
 const { swaggerUi, swaggerSpecs } = require("./config/swaggerConfig.js");
@@ -32,7 +32,7 @@ const corsOptions = {
 // Middleware
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
-// app.use(helmet());
+app.use(helmet());
 
 // Routes
 const router = require("./routers/router.js");
