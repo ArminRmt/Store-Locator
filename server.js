@@ -30,13 +30,7 @@ const corsOptions = {
 };
 
 // Middleware
-// app.use(cors(corsOptions));
-app.use(
-  cors({
-    origin: new RegExp("https://storelocatorapp\\.dummy\\.monster"),
-  })
-);
-// https://storelocatorapp.dummy.monster
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(helmet());
 
