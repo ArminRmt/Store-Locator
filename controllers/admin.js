@@ -6,7 +6,7 @@ exports.allSettings = async (req, res) => {
   try {
     const settings = await SiteSettings.findAll();
     if (settings.length === 0) {
-      return res.status(404).json({ error: "تنظیمات استاتیک سایت یافت نشد." });
+      res.status(404).json({ error: "تنظیمات استاتیک سایت یافت نشد." });
     }
     res.json(settings);
   } catch (error) {

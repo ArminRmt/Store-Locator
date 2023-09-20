@@ -1,8 +1,5 @@
 node_modules
 npm-debug.log
-.gitignore
-Dockerfile
-.dockerignore
 *.yml
 error.log
 combined.log

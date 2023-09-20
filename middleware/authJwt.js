@@ -36,15 +36,16 @@ const verifyToken = (req, res, next) => {
 const isAdmin = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.userId);
+
     if (!user) {
       return res.status(404).send({ error: "کاربر پیدا نشد." });
     }
 
-    if (user.role === "admin") {
-      next();
-    } else {
-      res.status(403).send({ error: "نیاز به نقش مدیر دارد!" });
+    if (user.role !== "admin") {
+      return res.status(403).send({ error: "نیاز به نقش مدیر دارد!" });
     }
+
+    next();
   } catch (err) {
     const errorMessage = "خطای سرور";
     logger.error(errorMessage, err);
@@ -55,15 +56,16 @@ const isAdmin = async (req, res, next) => {
 const isBuyer = async (req, res, next) => {
   try {
     const user = await User.findByPk(req.userId);
+
     if (!user) {
       return res.status(404).send({ error: "کاربر پیدا نشد." });
     }
 
-    if (user.role === "buyer") {
-      next();
-    } else {
-      res.status(403).send({ error: "نیاز به نقش خریدار دارد!" });
+    if (user.role !== "buyer") {
+      return res.status(403).send({ error: "نیاز به نقش خریدار دارد!" });
     }
+
+    next();
   } catch (err) {
     const errorMessage = "خطای سرور";
     logger.error(errorMessage, err);
@@ -73,24 +75,17 @@ const isBuyer = async (req, res, next) => {
 
 const isSeller = async (req, res, next) => {
   try {
-    const user = await Seller.findByPk(req.userId);
-    if (!user) {
+    const seller = await Seller.findByPk(req.userId);
+
+    if (!seller) {
       return res.status(404).send({ error: "فروشنده پیدا نشد." });
     }
 
-    // const userIdInRequest = req.params.id || req.body.id;
-
-    // if (!userIdInRequest || parseInt(userIdInRequest) !== req.userId) {
-    //   return res
-    //     .status(403)
-    //     .send({ error: "تنها صاحب یا مدیر دسترسی به این عملیات دارند." });
-    // }
-
-    if (!user.role) {
-      next();
-    } else {
-      res.status(403).send({ error: "نیاز به نقش فروشنده دارد!" });
+    if (seller.role) {
+      return res.status(403).send({ error: "نیاز به نقش فروشنده دارد!" });
     }
+
+    next();
   } catch (err) {
     const errorMessage = "خطای سرور";
     logger.error(errorMessage, err);
@@ -104,14 +99,6 @@ isUserOrAdmin = async (req, res, next) => {
     if (!user) {
       return res.status(404).send({ error: "کاربر پیدا نشد." });
     }
-
-    // const userIdInRequest = req.params.id || req.body.id;
-
-    // if (!userIdInRequest || parseInt(userIdInRequest) !== req.userId) {
-    //   return res
-    //     .status(403)
-    //     .send({ error: "تنها صاحب یا مدیر دسترسی به این عملیات دارند." });
-    // }
 
     if (user.role === "admin" || user.role === "buyer") {
       next();
@@ -136,17 +123,9 @@ isSellerOrAdmin = async (req, res, next) => {
       if (!user) {
         return res
           .status(404)
-          .send({ error: "شما ادمین یا فروشنده نمی باشید" });
+          .send({ error: "تنها ادمین یا فروشنده دسترسی دارند" });
       }
     }
-
-    // const userIdInRequest = req.params.id || req.body.id;
-
-    // if (!userIdInRequest || parseInt(userIdInRequest) !== req.userId) {
-    //   return res
-    //     .status(403)
-    //     .send({ error: "تنها صاحب یا مدیر دسترسی به این عملیات دارند." });
-    // }
 
     if (!user.role || user.role === "admin") {
       next();
