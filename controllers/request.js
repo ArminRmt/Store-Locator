@@ -1,4 +1,4 @@
-const db = require("../config/db.config.js");
+const db = require("../config/db-config.js");
 const Request = db.Request;
 const RequestSellerLinks = db.RequestSellerLinks;
 const {

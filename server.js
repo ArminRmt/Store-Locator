@@ -4,7 +4,7 @@ dotenv.config();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const helmet = require("helmet");
-const db = require("./config/db.config.js");
+const db = require("./config/db-config.js");
 const { initial } = require("./factory.js");
 const { swaggerUi, swaggerSpecs } = require("./config/swaggerConfig.js");
 const { app, server } = require("./socketManager");

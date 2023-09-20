@@ -1,4 +1,4 @@
-const db = require("../config/db.config.js");
+const db = require("../config/db-config.js");
 const Respond = db.Respond;
 const Shop = db.Shop;
 const Request = db.Request;

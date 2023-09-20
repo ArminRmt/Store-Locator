@@ -26,7 +26,7 @@
 
 ## installation:            
 ### local           
-change db to localhost in db.config.js          
+change db to localhost in db-config.js          
 ```
 npm install
 npm run dev

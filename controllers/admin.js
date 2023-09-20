@@ -1,4 +1,4 @@
-const db = require("../config/db.config.js");
+const db = require("../config/db-config.js");
 const SiteSettings = db.SiteSettings;
 const { logger } = require("../config/winston.js");
 

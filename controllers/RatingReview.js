@@ -1,4 +1,4 @@
-const db = require("../config/db.config.js");
+const db = require("../config/db-config.js");
 const ShopReviews = db.ShopReviews;
 const Shop = db.Shop;
 const { logger } = require("../config/winston.js");
