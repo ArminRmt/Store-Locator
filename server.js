@@ -17,7 +17,7 @@ const allowedOrigins = [
 ];
 
 const corsOptions = {
-  origin: allowedOrigins,
+  origin: "https://storelocatorapp.dummy.monster",
 };
 
 // const corsOptions = {
