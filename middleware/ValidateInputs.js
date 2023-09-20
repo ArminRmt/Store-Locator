@@ -14,11 +14,13 @@ async function isPhoneNumberUnique(phoneNumber) {
 exports.validateName = (req, res, next) => {
   const name = req.body.full_name;
 
+  const namePattern = /^[a-zA-Z\s]+(?:[0-9])?$/;
+
   if (
     !name ||
-    !/^[a-zA-Z\s]+(?:[0-9])?$/.test(name) ||
     name.length < 3 ||
-    name.length > 100
+    name.length > 100 ||
+    !namePattern.test(name)
   ) {
     return res.status(400).json({
       error:
@@ -62,10 +64,12 @@ exports.ValidateRole = (req, res, next) => {
 exports.validatePhoneNumber = async (req, res, next) => {
   const { phone } = req.body;
 
-  if (!phone || !/^\d{11}$/.test(phone)) {
-    return res
-      .status(400)
-      .json({ error: "شماره تلفن باید یک عدد ۱۱ رقمی معتبر باشد." });
+  const phonePattern = /^\d{11}$/;
+
+  if (!phone || !phonePattern.test(phone)) {
+    return res.status(400).json({
+      error: "شماره تلفن باید یک عدد ۱۱ رقمی معتبر باشد.",
+    });
   }
 
   const isUnique = await isPhoneNumberUnique(phone);
@@ -79,6 +83,7 @@ exports.validatePhoneNumber = async (req, res, next) => {
 
 exports.RequireFieldsSeller = (req, res, next) => {
   const { full_name, phone } = req.body;
+
   if (!full_name || !phone) {
     return res
       .status(400)
@@ -89,6 +94,7 @@ exports.RequireFieldsSeller = (req, res, next) => {
 
 exports.RequireFieldsUser = (req, res, next) => {
   const { full_name, phone, role } = req.body;
+
   if (!full_name || !phone || !role) {
     return res.status(400).json({
       error: "نام و نام خانوادگی، شماره تلفن و نقش، فیلدهای اجباری هستند.",
