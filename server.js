@@ -16,6 +16,10 @@ const allowedOrigins = [
   process.env.PRODUCTION_ALLOWED_ORIGIN,
 ];
 
+const corsOptions = {
+  origin: allowedOrigins,
+};
+
 // const corsOptions = {
 //   origin: (origin, callback) => {
 //     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
@@ -30,7 +34,7 @@ const allowedOrigins = [
 // };
 
 // Middleware
-app.use(cors(allowedOrigins));
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(helmet());
 
