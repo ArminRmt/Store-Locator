@@ -16,17 +16,24 @@ const allowedOrigins = [
   process.env.PRODUCTION_ALLOWED_ORIGIN,
 ];
 
+// const corsOptions = {
+//   origin: (origin, callback) => {
+//     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error("Not allowed by CORS"));
+//     }
+//   },
+//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//   credentials: true, // You might need this for certain scenarios
+//   optionsSuccessStatus: 204, // Some legacy browsers (IE11) choke on 200
+// };
+
 const corsOptions = {
-  origin: (origin, callback) => {
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: "*",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true, // You might need this for certain scenarios
-  optionsSuccessStatus: 204, // Some legacy browsers (IE11) choke on 200
+  credentials: true,
+  optionsSuccessStatus: 204,
 };
 
 // Middleware
