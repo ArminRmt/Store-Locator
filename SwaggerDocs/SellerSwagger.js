@@ -83,6 +83,8 @@
  *             schema:
  *               type: object
  *               properties:
+ *                  id:
+ *                   type: integer
  *                 full_name:
  *                   type: string
  *                 phone:
@@ -92,6 +94,7 @@
  *                 shop_id:
  *                   type: integer
  *             example:
+ *               id: 1
  *               full_name: "armin"
  *               phone: "9876543210"
  *               password: "$argon2id....."

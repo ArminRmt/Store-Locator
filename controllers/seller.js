@@ -10,7 +10,7 @@ exports.GetSellerByToken = async (req, res) => {
   try {
     const seller = await Seller.findOne({
       where: { id: seller_id },
-      attributes: ["full_name", "phone", "password"],
+      attributes: ["id", "full_name", "phone", "password"],
     });
 
     if (!seller) {
