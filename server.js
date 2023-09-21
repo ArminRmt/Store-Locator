@@ -30,7 +30,7 @@ const corsOptions = {
 };
 
 // Middleware
-app.use(cors(corsOptions));
+app.use(cors({origin: new RegExp("https?\:\/\/([a-zA-Z0-9]+([-,_][a-zA-Z0-9]+)*\.)?(dummy\.monster")}));
 app.use(bodyParser.json());
 app.use(helmet());
 
