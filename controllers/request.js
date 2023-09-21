@@ -173,6 +173,7 @@ exports.createRequest = async (req, res) => {
     const timestamp = new Date().toISOString();
 
     const newRequest = await Request.create({
+      userId: 1,
       users_id: userId,
       piece_name: piece_name,
       content: content,
