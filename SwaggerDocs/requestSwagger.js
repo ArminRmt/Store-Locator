@@ -44,8 +44,8 @@
  * @swagger
  *  /createRequest:
  *   post:
- *     summary: Create request
- *     description: Create a request and send it to the nearest shops.
+ *     summary: Create a Request and Send it to Nearest Sellers
+ *     description: Create a request and send it to the nearest sellers.
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -67,9 +67,11 @@
  *               content:
  *                 type: string
  *               userLongitude:
- *                 type: float
+ *                 type: string
+ *                 format: float
  *               userLatitude:
- *                 type: float
+ *                 type: string
+ *                 format: float
  *     responses:
  *       200:
  *         description: Success
@@ -80,20 +82,52 @@
  *               properties:
  *                 msg:
  *                   type: string
+ *                 request_id:
+ *                   type: integer
  *                 piece_name:
  *                   type: string
  *                 content:
  *                   type: string
  *                 timestamp:
  *                   type: string
+ *                 nearest_shops:
+ *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/request'
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       seller_id:
+ *                         type: integer
+ *                       latitude:
+ *                         type: string
+ *                         format: float
+ *                       longitude:
+ *                         type: string
+ *                         format: float
  *             example:
- *               msg: درخواست با موفقیت به نزدیک ترین فروشنده ها ارسال شد
- *               request_id: 1
- *               piece_name: "Example Piece 1"
- *               content: "Example content for Piece 1"
- *               timestamp: "2023-07-29T18:00:00Z"
+ *               msg: "درخواست با موفقیت به نزدیک ترین فروشنده ها ارسال شد"
+ *               request_id: 11
+ *               piece_name: "piece1"
+ *               content: "ahahah"
+ *               timestamp: "2023-09-20T22:52:54.509Z"
+ *               nearest_shops:
+ *                 - id: 1
+ *                   seller_id: 1
+ *                   latitude: "36.538400"
+ *                   longitude: "52.682200"
+ *                 - id: 2
+ *                   seller_id: 1
+ *                   latitude: "36.565000"
+ *                   longitude: "52.684000"
+ *                 - id: 4
+ *                   seller_id: 1
+ *                   latitude: "36.534900"
+ *                   longitude: "52.652800"
+ *                 - id: 5
+ *                   seller_id: 1
+ *                   latitude: "36.534900"
+ *                   longitude: "52.652800"
  *       401:
  *         description: Unauthorized
  *         content:
