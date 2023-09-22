@@ -38,34 +38,17 @@
  */
 /**
  * @swagger
- * /getSellerShop:
+ * /getSellerShop/{id}:
  *   get:
- *     summary: Get Seller's Shop Information
- *     security:
- *       - bearerAuth: []
+ *     summary: Get Seller's Shop by ID
+ *     description: Retrieve the shop information of a seller by their ID.
  *     parameters:
- *       - in: header
- *         name: Authorization
- *         required: true
- *         schema:
- *           type: string
- *           format: Bearer token
- *       - in: id
+ *       - in: path
  *         name: id
  *         required: true
- *         description: ID of the seller
  *         schema:
  *           type: integer
- *           format: int64
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               sellerID:
- *                 type: integer
+ *         description: The ID of the seller for whom you want to retrieve the shop information.
  *     responses:
  *       200:
  *         description: A shop object.
@@ -73,8 +56,16 @@
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/shop'
- *       401:
- *         description: Unauthorized - invalid token
+ *       404:
+ *         description: Seller Not Found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Seller not found."
  *       500:
  *         description: Internal Server Error
  *         content:
@@ -84,7 +75,7 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "خطای سرور"
+ *                   example: "خطای سرور داخلی"
  */
 /**
  * @swagger

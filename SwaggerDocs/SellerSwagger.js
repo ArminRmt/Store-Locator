@@ -2,8 +2,10 @@
  * @swagger
  * /updateSeller:
  *   patch:
- *     summary: Update a seller by ID
- *     description: Update a seller's information by its ID.
+ *     summary: Update Seller
+ *     description: Update seller information, including full name, phone number, and password.
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -24,10 +26,6 @@
  *                 type: string
  *               password:
  *                 type: string
- *               confirmPassword:
- *                 type: string
- *     security:
- *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Seller Updated
@@ -39,13 +37,13 @@
  *                 msg:
  *                   type: string
  *             example:
- *               msg: "Seller Updated"
+ *               msg: "فروشنده به‌روزرسانی شد"
  *       400:
  *         description: Bad Request - invalid request data
  *       401:
  *         description: Unauthorized - invalid token or not authorized to update Seller
- *       403:
- *         description: Forbidden - only the owner or admin has this access
+ *       404:
+ *         description: Seller Not Found or Not Authorized
  *         content:
  *           application/json:
  *             schema:
@@ -54,11 +52,18 @@
  *                 error:
  *                   type: string
  *             example:
- *               message: "Only the owner or admin has this access"
- *       404:
- *         description: Seller Not found.
+ *               error: "فروشنده پیدا نشد یا شما مجوز به‌روزرسانی ندارید"
  *       500:
- *         description: Internal server error
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *             example:
+ *               error: "خطای سرور داخلی"
  */
 /**
  * @swagger
