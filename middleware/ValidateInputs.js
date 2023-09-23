@@ -14,7 +14,7 @@ async function isPhoneNumberUnique(phoneNumber) {
 exports.validateName = (req, res, next) => {
   const name = req.body.full_name;
 
-  const namePattern = /^[a-zA-Z\s]+(?:[0-9])?$/;
+  const namePattern = /^[\u0600-\u06FF\s]+(?:\s\d+)?$/;
 
   if (
     !name ||
@@ -24,7 +24,7 @@ exports.validateName = (req, res, next) => {
   ) {
     return res.status(400).json({
       error:
-        "نام باید تنها شامل حروف، فاصله‌ها و می‌تواند به اختیار با یک عدد ختم شود. طول آن باید بین ۳ تا ۱۰۰ کاراکتر باشد.",
+        "نام باید به قارسی , تنها شامل حروف، فاصله‌ها و می‌تواند به اختیار با یک عدد ختم شود. طول آن باید بین ۳ تا ۱۰۰ کاراکتر باشد.",
     });
   }
 

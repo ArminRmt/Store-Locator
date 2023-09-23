@@ -479,7 +479,7 @@ exports.DeleteResponse = async (req, res) => {
       },
     });
 
-    if (!request) {
+    if (!response) {
       return res
         .status(404)
         .json({ error: "پاسخ یافت نشد یا شما مجوز حذف آن را ندارید." });
