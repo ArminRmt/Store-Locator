@@ -165,8 +165,6 @@
  *           schema:
  *             type: object
  *             properties:
- *               seller_id:
- *                 type: integer
  *               name:
  *                 type: string
  *               phone:

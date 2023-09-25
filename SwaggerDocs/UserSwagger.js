@@ -62,13 +62,6 @@
  *     security:
  *       - bearerAuth: []
  *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         description: ID of the user to update.
- *         schema:
- *           type: integer
- *           format: int64
  *       - in: header
  *         name: Authorization
  *         required: true
@@ -89,8 +82,6 @@
  *               password:
  *                 type: string
  *               confirmPassword:
- *                 type: string
- *               role:
  *                 type: string
  *     responses:
  *       200:

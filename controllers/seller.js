@@ -34,24 +34,24 @@ exports.GetSellerByToken = async (req, res) => {
 // Update a seller by ID
 exports.updateSeller = async (req, res) => {
   const { full_name, phone, password } = req.body;
+  const userId = req.userId;
+
+  const updateFields = {};
+
+  if (full_name) updateFields.full_name = full_name;
+  if (phone) updateFields.phone = phone;
+  if (password) {
+    const hashPassword = await argon2.hash(password);
+    updateFields.password = hashPassword;
+  }
 
   try {
-    const hashPassword = await argon2.hash(password);
-
-    const [rowsAffected, [updatedSeller]] = await Seller.update(
-      {
-        full_name,
-        phone,
-        password: hashPassword,
+    const [rowsAffected, [updatedSeller]] = await Seller.update(updateFields, {
+      returning: true,
+      where: {
+        id: userId,
       },
-      {
-        returning: false,
-        where: {
-          id: request_id,
-          users_id: req.userId,
-        },
-      }
-    );
+    });
 
     if (rowsAffected === 0) {
       return res
@@ -61,7 +61,7 @@ exports.updateSeller = async (req, res) => {
 
     res.status(200).json({ msg: "فروشنده به‌روزرسانی شد" });
   } catch (error) {
-    logger.error("error in updateSeller: ", error);
+    console.error("error in updateSeller: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };

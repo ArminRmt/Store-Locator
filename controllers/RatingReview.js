@@ -139,11 +139,13 @@ exports.updateShopReview = async (req, res) => {
   const { review_id, rating, feedback_text } = req.body;
 
   try {
+    const updateFields = {};
+
+    if (rating !== undefined) updateFields.rating = rating;
+    if (feedback_text !== undefined) updateFields.feedback_text = feedback_text;
+
     const [rowsAffected, [updatedReview]] = await ShopReviews.update(
-      {
-        rating: rating,
-        feedback_text: feedback_text,
-      },
+      updateFields,
       {
         returning: true,
         where: { id: review_id, buyer_id: req.userId },

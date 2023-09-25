@@ -228,12 +228,14 @@ exports.UpdateRequest = async (req, res) => {
   const timestamp = new Date().toISOString();
 
   try {
+    const updateFields = {};
+
+    if (piece_name) updateFields.piece_name = piece_name;
+    if (content) updateFields.content = content;
+    updateFields.timestamp = timestamp;
+
     const [rowsAffected, [updatedRequest]] = await Request.update(
-      {
-        piece_name,
-        content,
-        timestamp: timestamp,
-      },
+      updateFields,
       {
         returning: true,
         where: {

@@ -54,26 +54,25 @@ exports.getUsers = async (req, res) => {
 
 // Update a user by ID
 exports.updateUser = async (req, res) => {
-  const { full_name, phone, password, role } = req.body;
+  const { full_name, phone, password } = req.body;
+  const userId = req.userId;
+
+  const updateFields = {};
+
+  if (full_name) updateFields.full_name = full_name;
+  if (phone) updateFields.phone = phone;
+  if (password) {
+    const hashPassword = await argon2.hash(password);
+    updateFields.password = hashPassword;
+  }
 
   try {
-    const hashPassword = await argon2.hash(password);
-
-    const [rowsAffected, [updatedUser]] = await User.update(
-      {
-        full_name,
-        phone,
-        password: hashPassword,
-        role,
+    const [rowsAffected, [updatedUser]] = await User.update(updateFields, {
+      returning: true,
+      where: {
+        id: userId,
       },
-      {
-        returning: false,
-        where: {
-          id: request_id,
-          users_id: req.userId,
-        },
-      }
-    );
+    });
 
     if (rowsAffected === 0) {
       return res
@@ -83,7 +82,7 @@ exports.updateUser = async (req, res) => {
 
     res.status(200).json({ msg: "کاربر به‌روزرسانی شد" });
   } catch (error) {
-    logger.error("error in updateUser: ", error);
+    console.error("error in updateUser: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };

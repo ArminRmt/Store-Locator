@@ -24,6 +24,7 @@ const {
   RequireFieldsRequest,
   RequireFieldsRespond,
   RequireFieldsRating,
+  // validatePhoneNumberUpdate,
 } = require("../middleware/ValidateInputs.js");
 
 ////////////////////////////////////      authorization     ////////////////////////////////////
@@ -63,10 +64,9 @@ router.patch(
     authJwt.isUserOrAdmin,
     validatePassword,
     validatePasswordMatch,
-    ValidateRole,
     validatePhoneNumber,
     validateName,
-    RequireFieldsUser,
+    // RequireFieldsUser,
   ],
   users.updateUser
 );
@@ -85,7 +85,7 @@ router.patch(
     validatePasswordMatch,
     validatePhoneNumber,
     validateName,
-    RequireFieldsSeller,
+    // RequireFieldsSeller,
   ],
   seller.updateSeller
 );
@@ -117,13 +117,7 @@ router.post(
 // seller update his shop
 router.patch(
   "/updateShop",
-  [
-    authJwt.verifyToken,
-    authJwt.isSeller,
-    validatePhoneNumber,
-    validateName,
-    RequireFieldsShop,
-  ],
+  [authJwt.verifyToken, authJwt.isSeller, validatePhoneNumber, validateName],
   shop.updateShop
 );
 
@@ -181,7 +175,7 @@ router.post(
 // buyer update his request
 router.patch(
   "/UpdateRequest",
-  [authJwt.verifyToken, authJwt.isBuyer, RequireFieldsRequest],
+  [authJwt.verifyToken, authJwt.isBuyer],
   request.UpdateRequest
 );
 
@@ -244,7 +238,7 @@ router.post(
 // seller update his respond
 router.patch(
   "/UpdateResponse",
-  [authJwt.verifyToken, authJwt.isSeller, RequireFieldsRespond],
+  [authJwt.verifyToken, authJwt.isSeller],
   respond.UpdateResponse
 );
 
@@ -287,7 +281,7 @@ router.post(
 // user update his review
 router.patch(
   "/updateShopReview",
-  [authJwt.verifyToken, authJwt.isBuyer, RequireFieldsRating],
+  [authJwt.verifyToken, authJwt.isBuyer],
   RatingReview.updateShopReview
 );
 

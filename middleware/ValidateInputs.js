@@ -14,6 +14,10 @@ async function isPhoneNumberUnique(phoneNumber) {
 exports.validateName = (req, res, next) => {
   const name = req.body.full_name;
 
+  if (req.originalUrl.includes("update") && !name) {
+    return next();
+  }
+
   const namePattern = /^[\u0600-\u06FF\s]+(?:\s\d+)?$/;
 
   if (
@@ -64,6 +68,11 @@ exports.ValidateRole = (req, res, next) => {
 exports.validatePhoneNumber = async (req, res, next) => {
   const { phone } = req.body;
 
+  // Check if phone number is provided in the request body for updates
+  if (req.originalUrl.includes("update") && !phone) {
+    return next();
+  }
+
   const phonePattern = /^\d{11}$/;
 
   if (!phone || !phonePattern.test(phone)) {
@@ -93,9 +102,9 @@ exports.RequireFieldsSeller = (req, res, next) => {
 };
 
 exports.RequireFieldsUser = (req, res, next) => {
-  const { full_name, phone, role } = req.body;
+  const { full_name, phone } = req.body;
 
-  if (!full_name || !phone || !role) {
+  if (!full_name || !phone) {
     return res.status(400).json({
       error: "نام و نام خانوادگی، شماره تلفن و نقش، فیلدهای اجباری هستند.",
     });
