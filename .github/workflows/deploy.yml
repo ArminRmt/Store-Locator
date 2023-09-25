@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Add Envs 📝
-        run: echo "${{ vars.ENV_FILE }}" > .
+        run: echo "${{ vars.ENV_FILE }}" > .env
 
       - name: Install, Build and Deploy 🔧 🚀
         run: docker compose up -d --build

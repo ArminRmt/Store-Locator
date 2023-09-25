@@ -349,7 +349,7 @@ exports.createResponse = async (req, res) => {
     const userSocketId = userSockets[buyerID];
 
     socketRes = {
-      newResponseId: newResponse.id,
+      id: newResponse.id,
       seller_id: SellerId,
       request_id: request_id,
       price: price,
@@ -393,21 +393,25 @@ exports.createResponse = async (req, res) => {
 
 exports.UpdateResponse = async (req, res) => {
   const { response_id, price, seller_respond } = req.body;
+  const sellerId = req.userId;
 
   try {
     const timestamp = new Date().toISOString();
-    // TODO update method could also be parller wiht two other querry below?
+
+    const updateFields = {};
+
+    if (price !== undefined) updateFields.price = price;
+    if (seller_respond !== undefined)
+      updateFields.seller_respond = seller_respond;
+
+    // TODO update method could also be parller with two other querry below?
     const [rowsAffected, [updatedResponse]] = await Respond.update(
-      {
-        price,
-        seller_respond,
-        timestamp: timestamp,
-      },
+      updateFields,
       {
         returning: true,
         where: {
           id: response_id,
-          users_id: req.userId,
+          seller_id: sellerId,
         },
       }
     );
@@ -419,13 +423,10 @@ exports.UpdateResponse = async (req, res) => {
     }
 
     const updatedRequestId = updatedResponse.request_id;
-    const sellerId = updatedResponse.seller_id;
 
     // Parallelize the queries for request and shop
     const [request, shop] = await Promise.all([
-      Request.findOne({
-        where: { id: updatedRequestId },
-      }),
+      Request.findByPk(updatedRequestId),
       Shop.findOne({
         attributes: ["name", "id"],
         where: { seller_id: sellerId },
@@ -447,8 +448,10 @@ exports.UpdateResponse = async (req, res) => {
       shopID,
     };
 
+    const buyerID = request.users_id;
+
     // Emit an event to the specific user
-    const userSocketId = userSockets[request.users_id];
+    const userSocketId = userSockets[buyerID];
     if (userSocketId) {
       io.to(userSocketId).emit("responseUpdated", socketRes);
     } else {
@@ -479,7 +482,7 @@ exports.DeleteResponse = async (req, res) => {
       },
     });
 
-    if (!request) {
+    if (!response) {
       return res
         .status(404)
         .json({ error: "پاسخ یافت نشد یا شما مجوز حذف آن را ندارید." });

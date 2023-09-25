@@ -40,6 +40,54 @@ async function initial() {
         phone: "09111184506",
         password: hashedPassword,
       }),
+
+      await Seller.create({
+        full_name: "مریم رضوی",
+        phone: "09111184507",
+        password: hashedPassword,
+      }),
+
+      await Seller.create({
+        full_name: "حسن شیرازی",
+        phone: "09111184508",
+        password: hashedPassword,
+      }),
+
+      await Seller.create({
+        full_name: "فاطمه آقاجانی",
+        phone: "09111184509",
+        password: hashedPassword,
+      }),
+
+      await Seller.create({
+        full_name: "علی اصغری",
+        phone: "09111184510",
+        password: hashedPassword,
+      }),
+
+      await Seller.create({
+        full_name: "سارا حسینی",
+        phone: "09111184511",
+        password: hashedPassword,
+      }),
+
+      await Seller.create({
+        full_name: "محمد رضایی",
+        phone: "09111184512",
+        password: hashedPassword,
+      }),
+
+      await Seller.create({
+        full_name: "نگار جلالی",
+        phone: "09111184513",
+        password: hashedPassword,
+      }),
+
+      await Seller.create({
+        full_name: "رضا کریمی",
+        phone: "09111184514",
+        password: hashedPassword,
+      }),
     ];
 
     const shopPromises = [
@@ -56,7 +104,7 @@ async function initial() {
       }),
 
       await Shop.create({
-        seller_id: 1,
+        seller_id: 2,
         name: "ایران خودرو",
         phone: "1234567895",
         bio: "ایران خودرو در محله کیجا تکیه بابل و در خیابان ولی عصر واقع شده است. از لحاظ موقعیت جغرافیایی این مکان در نزدیکی مراکزی مانند تجهیزات و یراق آلات رضا و بستنی عمو رحیم و رستوران سنتی برگ ریزان و دانشگاه صنعتی نوشیروانی بابل و شیرینی سرای بابل قرار گرفته است.",
@@ -68,7 +116,7 @@ async function initial() {
       }),
 
       await Shop.create({
-        seller_id: 1,
+        seller_id: 3,
         name: "فروشگاه لوازم خودرو mvm حسن پور",
         phone: "09111134882",
         bio: "",
@@ -80,7 +128,7 @@ async function initial() {
       }),
 
       await Shop.create({
-        seller_id: 1,
+        seller_id: 4,
         name: "مرکز فروش تخصصی لنت ترمز/ دیوا لنت",
         phone: "09119092808",
         bio: "مرکز فروش تخصصی لنت ترمز در محله موزیرج شمالی بابل و در خیابان ارشاد چهاردهم،خیابان کنارگذر واقع شده است. از لحاظ موقعیت جغرافیایی این مکان در نزدیکی مراکزی مانند مرکز معاینه فنی خودروهای سبک رنجبر و ورزشگاه شهید باباگلی موزیرج و تعمیرگاه تخصصی ترمز و تعمیرات دوچرخه امیر و درمانگاه شبانه‌روزی مهرآبادیان قرار گرفته است.",
@@ -92,7 +140,7 @@ async function initial() {
       }),
 
       await Shop.create({
-        seller_id: 1,
+        seller_id: 5,
         name: "فروشگاه الماس یدک",
         phone: "09379387447",
         bio: "فروشگاه الماس یدک در محله کیجا تکیه بابل و در خیابان بهشتی واقع شده است. از لحاظ موقعیت جغرافیایی این مکان در نزدیکی مراکزی مانند شهربازی پارک نوشیروانی و رستوران سنتی برگ ریزان و کله پزی شاخ طلا و شیرینی سرای سان سیتی و شیرینی سرای بابل قرار گرفته است.",

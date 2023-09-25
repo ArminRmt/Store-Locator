@@ -182,7 +182,6 @@ exports.createShop = async (req, res) => {
 // Update a shop by ID
 exports.updateShop = async (req, res) => {
   const {
-    seller_id,
     name,
     phone,
     bio,
@@ -195,26 +194,24 @@ exports.updateShop = async (req, res) => {
 
   const sellerID = req.userId;
 
+  const updateFields = {};
+
+  if (name) updateFields.name = name;
+  if (phone) updateFields.phone = phone;
+  if (bio) updateFields.bio = bio;
+  if (address) updateFields.address = address;
+  if (open_time) updateFields.open_time = open_time;
+  if (avg_rating) updateFields.avg_rating = avg_rating;
+  if (latitude) updateFields.latitude = latitude;
+  if (longitude) updateFields.longitude = longitude;
+
   try {
-    const [rowsAffected, [updatedshop]] = await Shop.update(
-      {
-        name,
-        phone,
-        bio,
-        address,
-        open_time,
-        avg_rating,
-        latitude,
-        longitude,
+    const [rowsAffected, [updatedshop]] = await Shop.update(updateFields, {
+      returning: true,
+      where: {
+        seller_id: sellerID,
       },
-      {
-        returning: false,
-        where: {
-          id: seller_id,
-          users_id: sellerID,
-        },
-      }
-    );
+    });
 
     if (rowsAffected === 0) {
       return res
@@ -224,7 +221,7 @@ exports.updateShop = async (req, res) => {
 
     res.status(200).json({ msg: "فروشگاه به‌روزرسانی شد" });
   } catch (error) {
-    logger.error("error in updateShop: ", error);
+    console.error("error in updateShop: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };

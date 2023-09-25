@@ -25,8 +25,12 @@ const logger = winston.createLogger({
 });
 
 // Add an error handler for unhandled promise rejections
-process.on("unhandledRejection", (error) => {
-  logger.error(`Unhandled Rejection: ${error.message} error: ${error}`);
+process.on("unhandledRejection", (reason, promise) => {
+  // Log the specific error message from the rejection reason
+  logger.error(
+    "Unhandled Rejection:",
+    reason instanceof Error ? reason.stack || reason.message || reason : reason
+  );
 });
 
 module.exports = logger;
