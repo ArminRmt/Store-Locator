@@ -1,16 +1,35 @@
 const db = require("../config/db-config.js");
 const SiteSettings = db.SiteSettings;
 const { logger } = require("../config/winston.js");
+const { Op } = require("sequelize");
 
-exports.allSettings = async (req, res) => {
+exports.getSettingsByKeyPrefix = async (req, res) => {
   try {
-    const settings = await SiteSettings.findAll();
+    const { keyPrefix } = req.body;
+
+    const settings = await SiteSettings.findAll({
+      where: {
+        key: {
+          [Op.like]: `${keyPrefix}%`,
+        },
+      },
+    });
+
     if (settings.length === 0) {
-      res.status(404).json({ error: "تنظیمات استاتیک سایت یافت نشد." });
+      res
+        .status(404)
+        .json({ error: `تنظیمات با پیش‌وند کلید '${keyPrefix}' یافت نشد.` });
+      return;
     }
-    res.json(settings);
+
+    const result = {};
+    settings.forEach((setting) => {
+      result[setting.key] = setting.value;
+    });
+
+    res.json(result);
   } catch (error) {
-    logger.error("Error fetching settings:", error);
+    console.log("Error fetching settings:", error);
     res.status(500).json({ error: error.message });
   }
 };

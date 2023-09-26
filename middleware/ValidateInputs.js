@@ -37,6 +37,11 @@ exports.validateName = (req, res, next) => {
 
 exports.validatePassword = (req, res, next) => {
   const password = req.body.password;
+
+  if (req.originalUrl.includes("update") && !password) {
+    return next();
+  }
+
   if (!password || password.length < 8 || password.length > 30) {
     return res
       .status(400)
@@ -47,6 +52,11 @@ exports.validatePassword = (req, res, next) => {
 
 exports.validatePasswordMatch = (req, res, next) => {
   const { password, confirmPassword } = req.body;
+
+  if (req.originalUrl.includes("update") && !password) {
+    return next();
+  }
+
   if (password !== confirmPassword) {
     return res
       .status(400)
@@ -57,6 +67,11 @@ exports.validatePasswordMatch = (req, res, next) => {
 
 exports.ValidateRole = (req, res, next) => {
   const { role } = req.body;
+
+  if (req.originalUrl.includes("update") && !role) {
+    return next();
+  }
+
   if (role !== "admin" && role !== "buyer") {
     return res
       .status(400)
@@ -68,7 +83,6 @@ exports.ValidateRole = (req, res, next) => {
 exports.validatePhoneNumber = async (req, res, next) => {
   const { phone } = req.body;
 
-  // Check if phone number is provided in the request body for updates
   if (req.originalUrl.includes("update") && !phone) {
     return next();
   }
