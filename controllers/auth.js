@@ -21,8 +21,8 @@ exports.signup = async (req, res) => {
 
     res.status(201).json({ msg: "ثبت نام موفقیت‌آمیز", newUser });
   } catch (error) {
-    logger.error("Error in user signup:", error);
     res.status(500).json({ msg: "مشکلی در ثبت نام به وجود آمده است." });
+    logger.error("Error in user signup:", error);
   }
 };
 

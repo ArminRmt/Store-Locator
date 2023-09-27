@@ -307,7 +307,7 @@ async function initial() {
 
     console.log("Data initialization completed successfully!");
   } catch (error) {
-    logger.error(`Error initializing data: ${error.message}`);
+    logger.error(`Error initializing data: ${error}`);
   }
 }
 
