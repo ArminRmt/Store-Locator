@@ -293,7 +293,7 @@ router.delete(
 
 ////////////////////////////////////    siteSettings routes   ////////////////////////////////////
 
-router.get("/settings", admin.allSettings);
+router.get("/homePageSettings", admin.getSettingsByKeyPrefix);
 
 router.get(
   "/getSetting/:key",

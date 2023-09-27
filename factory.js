@@ -8,6 +8,7 @@ const Shop = db.Shop;
 const Request = db.Request;
 const Respond = db.Respond;
 const RequestSellerLinks = db.RequestSellerLinks;
+const SiteSettings = db.SiteSettings;
 
 async function initial() {
   try {
@@ -235,12 +236,35 @@ async function initial() {
       }),
     ];
 
+    const SiteSettingsPromises = [
+      await SiteSettings.create({
+        key: "homepage nav",
+        value: "Homepage navigation settings",
+      }),
+
+      await SiteSettings.create({
+        key: "homepage footer",
+        value: "Homepage footer settings",
+      }),
+
+      await SiteSettings.create({
+        key: "infopage nav",
+        value: "Infopage navigation settings",
+      }),
+
+      await SiteSettings.create({
+        key: "infopage footer",
+        value: "Infopage footer settings",
+      }),
+    ];
+
     await Promise.all([
       ...userPromises,
       ...sellerPromises,
       ...shopPromises,
       ...requestPromises,
       ...respondPromises,
+      ...SiteSettingsPromises,
     ]);
 
     await RequestSellerLinks.create({

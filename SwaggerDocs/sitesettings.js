@@ -1,20 +1,41 @@
 /**
  * @swagger
- * /settings:
+ * /homePageSettings:
  *   get:
- *     summary: Get all settings
- *     description: Retrieve all site settings.
- *     security:
- *       - bearerAuth: []
+ *     summary: Get Settings by Key Prefix
+ *     description: Retrieve site settings by key prefix.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               keyPrefix:
+ *                 type: string
+ *                 description: The prefix of the settings keys to retrieve.
  *     responses:
  *       200:
- *         description: Successful retrieval
+ *         description: Success - Settings Retrieved
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/SiteSettings'
+ *               type: object
+ *               description: A JSON object containing settings with keys that match the provided prefix.
+ *             example:
+ *               homepage nav: "Homepage navigation settings"
+ *               homepage footer: "Homepage footer settings"
+ *       404:
+ *         description: Not Found - No Settings Matching the Prefix
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *             example:
+ *               error: "تنظیمات با پیش‌وند کلید 'prefix' یافت نشد."
  *       500:
  *         description: Internal Server Error
  *         content:
@@ -24,9 +45,8 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: "Internal server error"
+ *                   example: "خطای سرور داخلی"
  */
-
 /**
  * @swagger
  * /createSetting:
