@@ -18,10 +18,8 @@ exports.GetUserByToken = async (req, res) => {
 
     res.status(200).json(user);
   } catch (error) {
+    res.status(500).json({ error: "خطای سرور: لطفاً بعداً دوباره تلاش کنید" });
     logger.error("error in GetUserByToken: ", error);
-    return res
-      .status(500)
-      .json({ error: "خطای سرور: لطفاً بعداً دوباره تلاش کنید" });
   }
 };
 
@@ -36,8 +34,8 @@ exports.getUserById = async (req, res) => {
       res.status(404).json({ error: "کاربر یافت نشد" });
     }
   } catch (error) {
-    logger.error("error in getUserById: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
+    logger.error("error in getUserById: ", error);
   }
 };
 
@@ -47,8 +45,8 @@ exports.getUsers = async (req, res) => {
     const response = await User.findAll();
     res.status(200).json(response);
   } catch (error) {
-    logger.error("error in getUsers: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
+    logger.error("error in getUsers: ", error);
   }
 };
 
@@ -82,7 +80,7 @@ exports.updateUser = async (req, res) => {
 
     res.status(200).json({ msg: "کاربر به‌روزرسانی شد" });
   } catch (error) {
-    console.error("error in updateUser: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
+    logger.error("error in updateUser: ", error);
   }
 };

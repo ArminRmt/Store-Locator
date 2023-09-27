@@ -46,8 +46,8 @@ exports.getSettingByKey = async (req, res) => {
 
     res.json(setting);
   } catch (error) {
-    logger.error("Error fetching setting:", error);
     res.status(500).json({ error: "خطای داخلی سرور" });
+    logger.error("Error fetching setting:", error);
   }
 };
 
@@ -62,8 +62,8 @@ exports.createSetting = async (req, res) => {
       newSetting,
     });
   } catch (error) {
-    logger.error("Error creating setting:", error);
     res.status(500).json({ error: "خطای داخلی سرور" });
+    logger.error("Error creating setting:", error);
   }
 };
 
@@ -85,8 +85,8 @@ exports.updateSetting = async (req, res) => {
       updatedSetting,
     });
   } catch (error) {
-    logger.error("Error updating setting:", error);
     res.status(500).json({ error: "خطای داخلی سرور" });
+    logger.error("Error updating setting:", error);
   }
 };
 
@@ -102,7 +102,7 @@ exports.deleteSetting = async (req, res) => {
 
     res.status(200).json({ msg: "تنظیم با موفقیت حذف شد." });
   } catch (error) {
-    logger.error("Error deleting setting:", error);
     res.status(500).json({ error: "خطای داخلی سرور" });
+    logger.error("Error deleting setting:", error);
   }
 };

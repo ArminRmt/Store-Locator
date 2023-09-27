@@ -50,8 +50,8 @@ exports.ForgotPassword = async (req, res) => {
     );
     res.status(200).json({ msg: "کد تایید ارسال شد", verificationCode });
   } catch (error) {
-    logger.error("error in ForgotPassword: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
+    logger.error("error in ForgotPassword: ", error);
   }
 };
 
@@ -82,8 +82,8 @@ exports.VerifyCode = async (req, res) => {
     // res.status(200).json({ msg: "Verification code is valid", token });
     res.status(200).json({ msg: "کد تأیید معتبر است", user });
   } catch (error) {
-    logger.error("error in VerifyCode: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
+    logger.error("error in VerifyCode: ", error);
   }
 };
 
@@ -106,8 +106,8 @@ exports.ResetPassword = async (req, res) => {
 
     res.status(200).json({ msg: "تغییر رمز عبور با موفقیت انجام شد" });
   } catch (error) {
-    logger.error("error in ResetPassword: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
+    logger.error("error in ResetPassword: ", error);
   }
 };
 
@@ -130,7 +130,7 @@ exports.GetUserByToken = async (req, res) => {
 
     res.status(200).json(user);
   } catch (error) {
-    logger.error("error in GetUserByToken: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
+    logger.error("error in GetUserByToken: ", error);
   }
 };

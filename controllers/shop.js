@@ -125,8 +125,8 @@ exports.getShops = async (req, res) => {
 
     res.status(200).json(shops);
   } catch (error) {
-    logger.error("error in getShops: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
+    logger.error("errorc in getShops: ", error);
   }
 };
 
@@ -174,8 +174,8 @@ exports.createShop = async (req, res) => {
 
     res.status(201).json(newShop);
   } catch (error) {
-    logger.error("error in createShop: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
+    logger.error("error in createShop: ", error);
   }
 };
 
@@ -221,8 +221,8 @@ exports.updateShop = async (req, res) => {
 
     res.status(200).json({ msg: "فروشگاه به‌روزرسانی شد" });
   } catch (error) {
-    console.error("error in updateShop: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
+    logger.error("error in updateShop: ", error);
   }
 };
 
@@ -248,7 +248,7 @@ exports.deleteShop = async (req, res) => {
 
     res.status(200).json({ msg: "فروشگاه با موفقیت حذف شد" });
   } catch (error) {
-    logger.error("error in deleteShop: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
+    logger.error("error in deleteShop: ", error);
   }
 };

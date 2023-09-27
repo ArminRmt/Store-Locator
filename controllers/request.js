@@ -34,8 +34,8 @@ exports.autoComplete = async (req, res) => {
     const suggestionList = suggestions.map((request) => request.piece_name);
     return res.status(200).json(suggestionList);
   } catch (error) {
-    console.error("Error fetching auto-completion suggestions:", error);
     res.status(500).json({ error: "خطای داخلی سرور" });
+    logger.error("Error fetching auto-completion suggestions:", error);
   }
 };
 
@@ -79,8 +79,8 @@ exports.searchRequests = async (req, res) => {
 
     return res.status(200).json(matchingRecords);
   } catch (error) {
-    console.error("Error searching requests:", error);
     res.status(500).json({ error: "خطای داخلی سرور" });
+    logger.error("Error searching requests:", error);
   }
 };
 
@@ -112,8 +112,8 @@ exports.SellerRequests = async (req, res) => {
 
     return res.status(200).json(responseObj);
   } catch (error) {
+    res.status(500).json({ error: "خطای داخلی سرور" });
     logger.error(`Error fetching seller requests: ${error}`);
-    return res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 
@@ -145,8 +145,8 @@ exports.GetUserRequest = async (req, res) => {
       totalPages,
     });
   } catch (error) {
+    res.status(500).json({ error: "خطای داخلی سرور" });
     logger.error(`Error fetching user requests: ${error}`);
-    return res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 
@@ -173,6 +173,7 @@ exports.createRequest = async (req, res) => {
     const timestamp = new Date().toISOString();
 
     const newRequest = await Request.create({
+      userId: 1,
       users_id: userId,
       piece_name: piece_name,
       content: content,
@@ -218,8 +219,8 @@ exports.createRequest = async (req, res) => {
 
     res.status(200).json(result);
   } catch (error) {
-    logger.error("error in createRequest: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
+    logger.error("error in createRequest: ", error);
   }
 };
 
@@ -277,8 +278,8 @@ exports.UpdateRequest = async (req, res) => {
       timestamp,
     });
   } catch (error) {
-    logger.error("error in UpdateRequest ", error.message);
     res.status(500).json({ error: "خطای سرور داخلی" });
+    logger.error("error in UpdateRequest ", error);
   }
 };
 
@@ -319,7 +320,7 @@ exports.DeleteRequest = async (req, res) => {
 
     res.status(200).json({ msg: "درخواست حذف شد", request_id });
   } catch (error) {
-    logger.error("error in DeleteRequest: ", error.message);
     res.status(500).json({ error: "خطای سرور داخلی" });
+    logger.error("error in DeleteRequest: ", error);
   }
 };
