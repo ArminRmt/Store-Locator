@@ -3,7 +3,13 @@
 const winston = require("winston");
 const { format, transports } = winston;
 
-const logFormats = [format.timestamp(), format.json()];
+const logFormats = [
+  format.timestamp(),
+  format.printf(({ timestamp, level, message }) => {
+    const formattedTimestamp = timestamp.replace("T", " ").replace("Z", "");
+    return `${formattedTimestamp} [${level.toUpperCase()}] -\n${message}\n`;
+  }),
+];
 
 // Create a logger instance
 const logger = winston.createLogger({
@@ -24,11 +30,8 @@ const logger = winston.createLogger({
   ],
 });
 
-// Add an error handler for unhandled promise rejections
 process.on("unhandledRejection", (reason, promise) => {
-  // Log the specific error message from the rejection reason
   logger.error(
-    "Unhandled Rejection:",
     reason instanceof Error ? reason.stack || reason.message || reason : reason
   );
 });

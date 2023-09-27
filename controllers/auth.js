@@ -58,8 +58,8 @@ exports.signin = async (req, res) => {
 
     res.status(200).json({ msg: "ورود موفقیت‌آمیز", token });
   } catch (error) {
-    logger.error("Error in user signin:", error);
     res.status(500).json({ error: "خطای داخلی سرور" });
+    logger.error("Error in user signin:", error);
   }
 };
 
@@ -78,8 +78,8 @@ exports.seller_signup = async (req, res) => {
 
     res.status(201).json({ msg: "ثبت نام موفقیت‌آمیز" });
   } catch (error) {
-    logger.error("Error in seller_signup:", error);
     res.status(500).json({ error: "مشکلی در ثبت نام به وجود آمده است." });
+    logger.error("Error in seller_signup:", error);
   }
 };
 
@@ -115,7 +115,7 @@ exports.signinSeller = async (req, res) => {
 
     res.status(200).json({ msg: "ورود موفقیت‌آمیز", token });
   } catch (error) {
-    logger.error("Error in seller signin:", error);
     res.status(500).send({ error: "خطای سرور داخلی" });
+    logger.error("Error in seller signin:", error);
   }
 };
