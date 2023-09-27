@@ -25,6 +25,21 @@ describe("POST /createRequest", () => {
     socketClient.disconnect();
   });
 
+  it("should identify a buyer", (done) => {
+    const userId = 1; // Replace with a valid user ID for testing
+
+    // Listen for the "identifyBuyer" event on the server side
+    io.on("connection", (socket) => {
+      socket.on("identifyBuyer", (identifiedUserId) => {
+        expect(identifiedUserId).to.equal(userId);
+        done();
+      });
+    });
+
+    // Emit the "identifyBuyer" event from the client
+    socketClient.emit("identifyBuyer", userId);
+  });
+
   it("should create a new request and emit to online sellers", (done) => {
     const requestData = {
       piece_name: "Test Piece",
