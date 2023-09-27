@@ -26,8 +26,8 @@ exports.GetSellerByToken = async (req, res) => {
 
     res.status(200).json({ seller, shop_id });
   } catch (error) {
+    res.status(500).json({ error: "خطای سرور داخلی" });
     logger.error("error in GetSellerByToken: ", error);
-    return res.status(500).json({ error: "خطای سرور داخلی" });
   }
 };
 
@@ -61,7 +61,7 @@ exports.updateSeller = async (req, res) => {
 
     res.status(200).json({ msg: "فروشنده به‌روزرسانی شد" });
   } catch (error) {
-    console.error("error in updateSeller: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
+    logger.error("error in updateSeller: ", error);
   }
 };

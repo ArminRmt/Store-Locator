@@ -37,8 +37,8 @@ exports.getShopFeedbackTexts = async (req, res) => {
 
     res.status(200).json({ feedbackTexts, totalPages });
   } catch (error) {
-    logger.error(`Error fetching feedback texts: ${error}`);
     res.status(500).json({ error: "خطای داخلی سرور" });
+    logger.error(`Error fetching feedback texts: ${error}`);
   }
 };
 
@@ -64,8 +64,8 @@ exports.getUserFeedbackTexts = async (req, res) => {
 
     res.status(200).json({ feedbackTexts, totalPages });
   } catch (error) {
-    logger.error(`Error fetching feedback texts: ${error}`);
     res.status(500).json({ error: "خطای داخلی سرور" });
+    logger.error(`Error fetching feedback texts: ${error}`);
   }
 };
 
@@ -129,8 +129,8 @@ exports.submitShopRating = async (req, res) => {
     if (error.message === "هیچ نقدی برای این فروشگاه یافت نشد") {
       res.status(400).json({ error: error.message });
     } else {
-      logger.error(`Error submitting rating and feedback: ${error.message}`);
       res.status(500).json({ error: "خطای داخلی سرور" });
+      logger.error(`Error submitting rating and feedback: ${error}`);
     }
   }
 };
@@ -166,8 +166,8 @@ exports.updateShopReview = async (req, res) => {
     if (error.message === "هیچ نقدی برای این فروشگاه یافت نشد") {
       res.status(400).json({ error: error.message });
     } else {
-      logger.error(`Error updating review: ${error.message}`);
       res.status(500).json({ error: "خطای داخلی سرور" });
+      logger.error(`Error updating review: ${error}`);
     }
   }
 };
@@ -200,8 +200,8 @@ exports.deleteShopReview = async (req, res) => {
     if (error.message === "هیچ نقدی برای این فروشگاه یافت نشد") {
       res.status(400).json({ error: error.message });
     } else {
-      logger.error(`Error deleting review: ${error.message}`);
       res.status(500).json({ error: "خطای داخلی سرور" });
+      logger.error(`Error deleting review: ${error}`);
     }
   }
 };

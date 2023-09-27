@@ -33,8 +33,8 @@ exports.autoCompleteRespond = async (req, res) => {
     const suggestionList = suggestions.map((respond) => respond.seller_respond);
     return res.status(200).json(suggestionList);
   } catch (error) {
-    console.error("Error fetching auto-completion suggestions:", error);
     res.status(500).json({ error: "خطای داخلی سرور" });
+    logger.error("Error fetching auto-completion suggestions:", error);
   }
 };
 
@@ -80,8 +80,8 @@ exports.searchResponses = async (req, res) => {
 
     return res.status(200).json(matchingRecords);
   } catch (error) {
-    logger.error("Error searching responds:", error);
     res.status(500).json({ error: "خطای داخلی سرور" });
+    logger.error("Error searching responds:", error);
   }
 };
 
@@ -110,8 +110,8 @@ exports.GetSellerResponds = async (req, res) => {
     }
     return res.status(200).json(responseObj);
   } catch (error) {
+    res.status(500).json({ error: "خطای داخلی سرور" });
     logger.error(`Error fetching seller responds: ${error}`);
-    return res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 
@@ -319,8 +319,8 @@ exports.UserRequestResponses = async (req, res) => {
 
     return res.status(200).json(responseObj);
   } catch (error) {
+    res.status(500).json({ error: "خطای داخلی سرور" });
     logger.error(`Error fetching user responses: ${error}`);
-    return res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 
@@ -385,8 +385,8 @@ exports.createResponse = async (req, res) => {
     if (error.message === "فروشگاهی به نام این فروشنده پیدا نشد") {
       res.status(400).json({ error: error.message });
     } else {
-      logger.error(`Error creating response: ${error.message}`);
       res.status(500).json({ error: "خطای داخلی سرور" });
+      logger.error(`Error creating response: ${error}`);
     }
   }
 };
@@ -467,8 +467,8 @@ exports.UpdateResponse = async (req, res) => {
       shopID,
     });
   } catch (error) {
-    logger.error("Error updating response:", error);
     res.status(500).json({ error: "خطای داخلی سرور" });
+    logger.error("Error updating response:", error);
   }
 };
 
@@ -503,8 +503,8 @@ exports.DeleteResponse = async (req, res) => {
 
     res.status(200).json({ msg: "پاسخ حذف شد", response_id });
   } catch (error) {
-    logger.error("Error deleting response:", error);
     res.status(500).json({ error: "خطای داخلی سرور" });
+    logger.error("Error deleting response:", error);
   }
 };
 
@@ -518,7 +518,7 @@ exports.deleteUserResponse = async (req, res) => {
     res.status(200).json(response_id);
     // res.sendStatus(204); // Send a 'No Content' status code
   } catch (error) {
-    logger.error("Error deleting response:", error);
     res.status(500).json({ error: "خطای داخلی سرور" });
+    logger.error("Error deleting response:", error);
   }
 };
