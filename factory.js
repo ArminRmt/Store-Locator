@@ -258,6 +258,32 @@ async function initial() {
       }),
     ];
 
+    const RequestSellerLinksPromises = [
+      await RequestSellerLinks.create({
+        request_id: 1,
+        seller_id: 1,
+        status: 0,
+      }),
+
+      await RequestSellerLinks.create({
+        request_id: 2,
+        seller_id: 1,
+        status: 0,
+      }),
+
+      await RequestSellerLinks.create({
+        request_id: 3,
+        seller_id: 1,
+        status: 0,
+      }),
+
+      await RequestSellerLinks.create({
+        request_id: 4,
+        seller_id: 1,
+        status: 0,
+      }),
+    ];
+
     await Promise.all([
       ...userPromises,
       ...sellerPromises,
@@ -265,13 +291,8 @@ async function initial() {
       ...requestPromises,
       ...respondPromises,
       ...SiteSettingsPromises,
+      ...RequestSellerLinksPromises,
     ]);
-
-    await RequestSellerLinks.create({
-      request_id: 1,
-      seller_id: 1,
-      status: 0,
-    });
 
     // for (let i = 0; i < 10; i++) {
     //   await Respond.create({
