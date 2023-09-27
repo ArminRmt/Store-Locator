@@ -161,8 +161,8 @@ exports.GetRequest = async (req, res) => {
 
     return res.status(200).json(userRequest);
   } catch (error) {
+    res.status(500).json({ error: "خطای داخلی سرور" });
     logger.error("Error fetching user requests:", error);
-    return res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 

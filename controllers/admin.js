@@ -29,8 +29,8 @@ exports.getSettingsByKeyPrefix = async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    console.log("Error fetching settings:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: "خطای داخلی سرور" });
+    logger.error("Error fetching settings:", error);
   }
 };
 

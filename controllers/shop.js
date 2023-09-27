@@ -142,8 +142,8 @@ exports.getSellerShop = async (req, res) => {
 
     res.status(200).json(shops);
   } catch (error) {
-    logger.error("error in getSellerShop: ", error);
     res.status(500).json({ error: "خطای سرور داخلی" });
+    logger.error("error in getSellerShop: ", error);
   }
 };
 
