@@ -70,14 +70,16 @@ exports.searchRequests = async (req, res) => {
       whereClause.timestamp = new Date(desiredTimestamp).toISOString();
     }
 
-    const matchingRecords = await Request.findAll({
+    const { count, rows: matchingRecords } = await Request.findAndCountAll({
       where: whereClause,
       order: [["timestamp", "DESC"]],
       limit: pageSize,
       offset: offset,
     });
 
-    return res.status(200).json(matchingRecords);
+    const totalPages = Math.ceil(count / pageSize);
+
+    return res.status(200).json({ totalPages, data: matchingRecords });
   } catch (error) {
     res.status(500).json({ error: "خطای داخلی سرور" });
     logger.error("Error searching requests:", error);
