@@ -493,55 +493,63 @@
  * @swagger
  * /searchResponses:
  *   get:
- *     summary: Search Seller Responses
+ *     summary: Search Responses
+ *     description: Search for responses based on specified criteria.
  *     security:
  *       - bearerAuth: []
  *     parameters:
- *       - in: query
- *         name: page
- *         required: false
- *         schema:
- *           type: integer
- *           default: 1
- *         description: The page number for pagination.
- *       - in: query
- *         name: q
+ *       - in: header
+ *         name: Authorization
  *         required: true
  *         schema:
  *           type: string
- *         description: The search keyword.
- *       - in: query
- *         name: startDate
+ *           format: Bearer token
+ *       - name: page
+ *         in: query
+ *         description: Page number (default is 1)
  *         required: false
- *         schema:
- *           type: string
- *           format: date
- *         description: The start date for filtering responses.
- *       - in: query
- *         name: endDate
+ *         type: integer
+ *       - name: q
+ *         in: query
+ *         description: Keyword to search for
+ *         required: true
+ *         type: string
+ *       - name: startDate
+ *         in: query
+ *         description: Start date for filtering (optional)
  *         required: false
- *         schema:
- *           type: string
- *           format: date
- *         description: The end date for filtering responses.
- *       - in: query
- *         name: time
+ *         type: string
+ *         format: date
+ *       - name: endDate
+ *         in: query
+ *         description: End date for filtering (optional)
  *         required: false
- *         schema:
- *           type: string
- *           format: date-time
- *         description: The desired timestamp for filtering responses.
+ *         type: string
+ *         format: date
+ *       - name: time
+ *         in: query
+ *         description: Desired timestamp for filtering (optional)
+ *         required: false
+ *         type: string
+ *         format: date-time
  *     responses:
  *       200:
- *         description: Success
+ *         description: Success - Matching Responses Found
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/respond'
+ *               type: object
+ *               properties:
+ *                 totalPages:
+ *                   type: integer
+ *                   description: The total number of pages.
+ *                 data:
+ *                   type: array
+ *                   description: An array of matching response records.
+ *                   items:
+ *                     $ref: '#/components/schemas/respond'
  *       400:
- *         description: Bad Request
+ *         description: Bad Request - Invalid Search Keyword
  *         content:
  *           application/json:
  *             schema:
@@ -550,6 +558,26 @@
  *                 error:
  *                   type: string
  *                   example: "Invalid search keyword"
+ *       401:
+ *         description: Unauthorized - Token is missing or invalid
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "هیچ توکنی ارائه نشده است یا توکن نامعتبر است"
+ *       403:
+ *         description: Forbidden - User lacks required permissions
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "نیاز به نقش مدیر یا فروشنده دارد!"
  *       500:
  *         description: Internal Server Error
  *         content:

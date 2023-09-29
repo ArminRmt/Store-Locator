@@ -48,7 +48,7 @@ exports.searchResponses = async (req, res) => {
   const desiredTimestamp = req.query.time;
 
   if (!keyword || keyword.trim() === "") {
-    return res.status(400).json({ error: "Invalid search keyword" });
+    return res.status(400).json({ error: "کلمه کلیدی جستجو نامعتبر است" });
   }
 
   try {
@@ -71,14 +71,16 @@ exports.searchResponses = async (req, res) => {
       whereClause.timestamp = new Date(desiredTimestamp).toISOString();
     }
 
-    const matchingRecords = await Respond.findAll({
+    const { count, rows: matchingRecords } = await Respond.findAndCountAll({
       where: whereClause,
       order: [["timestamp", "DESC"]],
       limit: pageSize,
       offset: offset,
     });
 
-    return res.status(200).json(matchingRecords);
+    const totalPages = Math.ceil(count / pageSize);
+
+    return res.status(200).json({ totalPages, data: matchingRecords });
   } catch (error) {
     res.status(500).json({ error: "خطای داخلی سرور" });
     logger.error("Error searching responds:", error);

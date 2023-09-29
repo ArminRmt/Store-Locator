@@ -363,55 +363,63 @@
  * @swagger
  * /searchRequests:
  *   get:
- *     summary: Search User Requests
+ *     summary: Search Requests
+ *     description: Search for requests based on specified criteria.
  *     security:
  *       - bearerAuth: []
  *     parameters:
- *       - in: query
- *         name: page
- *         required: false
- *         schema:
- *           type: integer
- *           default: 1
- *         description: The page number for pagination.
- *       - in: query
- *         name: q
+ *       - in: header
+ *         name: Authorization
  *         required: true
  *         schema:
  *           type: string
- *         description: The search keyword.
- *       - in: query
- *         name: startDate
+ *           format: Bearer token
+ *       - name: page
+ *         in: query
+ *         description: Page number (default is 1)
  *         required: false
- *         schema:
- *           type: string
- *           format: date
- *         description: The start date for filtering requests.
- *       - in: query
- *         name: endDate
+ *         type: integer
+ *       - name: q
+ *         in: query
+ *         description: Keyword to search for
+ *         required: true
+ *         type: string
+ *       - name: startDate
+ *         in: query
+ *         description: Start date for filtering (optional)
  *         required: false
- *         schema:
- *           type: string
- *           format: date
- *         description: The end date for filtering requests.
- *       - in: query
- *         name: time
+ *         type: string
+ *         format: date
+ *       - name: endDate
+ *         in: query
+ *         description: End date for filtering (optional)
  *         required: false
- *         schema:
- *           type: string
- *           format: date-time
- *         description: The desired timestamp for filtering requests.
+ *         type: string
+ *         format: date
+ *       - name: time
+ *         in: query
+ *         description: Desired timestamp for filtering (optional)
+ *         required: false
+ *         type: string
+ *         format: date-time
  *     responses:
  *       200:
- *         description: Success
+ *         description: Success - Matching Requests Found
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/request'
+ *               type: object
+ *               properties:
+ *                 totalPages:
+ *                   type: integer
+ *                   description: The total number of pages.
+ *                 data:
+ *                   type: array
+ *                   description: An array of matching request records.
+ *                   items:
+ *                     $ref: '#/components/schemas/request'
  *       400:
- *         description: Bad Request
+ *         description: Bad Request - Invalid Keyword
  *         content:
  *           application/json:
  *             schema:
