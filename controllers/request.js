@@ -41,7 +41,7 @@ exports.autoComplete = async (req, res) => {
 
 exports.searchRequests = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
-  const pageSize = 6;
+  const pageSize = 10;
   const keyword = req.query.q;
   const startDate = req.query.startDate;
   const endDate = req.query.endDate;
