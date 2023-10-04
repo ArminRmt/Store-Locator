@@ -4,6 +4,8 @@
  *   post:
  *     summary: User admin sign up
  *     description: Sign up a user as an admin.
+ *     tags:
+ *       - Auth
  *     requestBody:
  *       required: true
  *       content:
@@ -97,6 +99,8 @@
  *   post:
  *     summary: Sign in user
  *     description: Sign in a user using their phone number and password.
+ *     tags:
+ *       - Auth
  *     requestBody:
  *       required: true
  *       content:
@@ -161,6 +165,8 @@
  *   post:
  *     summary: Sign in seller
  *     description: Sign in a seller using their phone number and password.
+ *     tags:
+ *       - Auth
  *     requestBody:
  *       required: true
  *       content:
@@ -225,6 +231,8 @@
  *   post:
  *     summary: Seller sign-up
  *     description: Register a new seller.
+ *     tags:
+ *       - Auth
  *     requestBody:
  *       required: true
  *       content:
@@ -286,6 +294,8 @@
  *     description: Verify the validity of the token provided in the Authorization header.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Auth
  *     parameters:
  *       - in: header
  *         name: Authorization

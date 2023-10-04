@@ -5,6 +5,8 @@
  *     summary: Get a User Request by ID
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Requests
  *     parameters:
  *       - in: path
  *         name: id
@@ -48,6 +50,8 @@
  *     description: Create a request and send it to the nearest sellers.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Requests
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -169,6 +173,8 @@
  *     description: Update a request by providing the request ID, piece name, and content.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Requests
  *     requestBody:
  *       required: true
  *       content:
@@ -239,6 +245,8 @@
  *     description: Retrieve requests made by the authenticated user.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Requests
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -298,6 +306,8 @@
  *     description: Delete a request by providing the request ID.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Requests
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -367,6 +377,8 @@
  *     description: Search for requests based on specified criteria.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Requests
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -446,6 +458,8 @@
  *     summary: Get Auto-Completion Suggestions
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Requests
  *     parameters:
  *       - in: query
  *         name: q

@@ -6,6 +6,8 @@
  *     description: Create a response from a seller to a user's request.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Responds
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -103,6 +105,8 @@
  *     description: Update a response by providing the response ID.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Responds
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -188,6 +192,8 @@
  *     description: Delete a response by providing the response ID.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Responds
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -257,6 +263,8 @@
  *     description: Retrieve responses from sellers for requests made by the user.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Responds
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -340,6 +348,8 @@
  *     summary: Get User's Responses for a Specific Request
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Responds
  *     parameters:
  *       - in: path
  *         name: id
@@ -407,6 +417,8 @@
  *     description: Retrieve responds related to the authenticated seller.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Responds
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -456,6 +468,8 @@
  *     summary: Delete a User Response
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Responds
  *     requestBody:
  *       required: true
  *       content:
@@ -497,6 +511,8 @@
  *     description: Search for responses based on specified criteria.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Responds
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -596,6 +612,8 @@
  *     summary: Get Auto-Completion Suggestions for Seller Responses
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Responds
  *     parameters:
  *       - in: query
  *         name: q

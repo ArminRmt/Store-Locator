@@ -6,6 +6,8 @@
  *     description: Retrieve a user by its Token
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Users
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -61,6 +63,8 @@
  *     description: Update a user's information. Requires be admin or owner of the user.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Users
  *     parameters:
  *       - in: header
  *         name: Authorization

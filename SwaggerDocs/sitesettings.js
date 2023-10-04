@@ -4,6 +4,8 @@
  *   get:
  *     summary: Get Settings by Key Prefix
  *     description: Retrieve site settings by key prefix.
+ *     tags:
+ *       - Settings
  *     parameters:
  *       - name: keyPrefix
  *         in: keyPrefix
@@ -79,6 +81,8 @@
  *   post:
  *     summary: Create Setting
  *     description: Create a new setting with a key and an optional value or file.
+ *     tags:
+ *       - Settings
  *     parameters:
  *       - name: Bearer token
  *         in: header
@@ -151,6 +155,8 @@
  *     description: Retrieve a specific site setting by key.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Settings
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -191,6 +197,8 @@
  *     description: Update a specific setting in site settings.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - Settings
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -244,10 +252,59 @@
  *                   type: string
  *                   example: "Internal server error"
  */
-
+/**
+ * @swagger
+ * /createOrUpdateSetting:
+ *   post:
+ *     summary: Create or update a site setting
+ *     description: Create or update a site setting based on the provided key and value in the request body. If a file is attached to the request, it updates the setting with an image path. Otherwise, it updates the setting with a value.
+ *     tags:
+ *       - Settings
+ *     parameters:
+ *       - name: key
+ *         in: body
+ *         required: true
+ *         description: The key of the site setting.
+ *         schema:
+ *           type: string
+ *       - name: value
+ *         in: body
+ *         required: true
+ *         description: The value or image path for the site setting.
+ *         schema:
+ *           type: string
+ *       - name: file
+ *         in: formData
+ *         required: false
+ *         description: An optional file to upload as an image for the site setting.
+ *         type: file
+ *     responses:
+ *       '200':
+ *         description: Site setting created or updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   description: A success message.
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: An error message.
+ */
 /**
  * @swagger
  * /deleteSetting/{key}:
+ *     tags:
+ *       - Settings
  *   delete:
  *     summary: Delete setting by key
  *     description: Delete a specific site setting by key.

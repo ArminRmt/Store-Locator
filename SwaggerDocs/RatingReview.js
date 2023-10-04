@@ -6,6 +6,8 @@
  *     description: Submit a rating and feedback for a shop.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - RatingReview
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -65,6 +67,8 @@
  *     summary: Get Shop All Feedback Texts
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - RatingReview
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -157,6 +161,8 @@
  *     description: Update an existing shop review by ID.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - RatingReview
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -217,6 +223,8 @@
  *     description: Delete a shop review by ID.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - RatingReview
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -288,6 +296,8 @@
  *     description: Retrieve feedback texts of reviews submitted by the current user.
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *       - RatingReview
  *     parameters:
  *       - in: query
  *         name: page

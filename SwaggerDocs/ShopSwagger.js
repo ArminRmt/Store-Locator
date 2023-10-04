@@ -4,6 +4,8 @@
  *   get:
  *     summary: Get seller all shops
  *     description: Retrieve a seller all shops
+ *     tags:
+ *       - Shops
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -42,6 +44,8 @@
  *   get:
  *     summary: Get Seller's Shop by ID
  *     description: Retrieve the shop information of a seller by their ID.
+ *     tags:
+ *       - Shops
  *     parameters:
  *       - in: path
  *         name: id
@@ -82,6 +86,8 @@
  * /createShop:
  *   post:
  *     summary: Create shop by ID
+ *     tags:
+ *       - Shops
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -151,6 +157,8 @@
  *   patch:
  *     summary: Update shop by ID
  *     description: Update a shop's information by its ID.
+ *     tags:
+ *       - Shops
  *     parameters:
  *       - in: header
  *         name: Authorization
@@ -217,6 +225,8 @@
  *   delete:
  *     summary: Delete shop by ID
  *     description: Delete a shop by its ID.
+ *     tags:
+ *       - Shops
  *     parameters:
  *       - in: header
  *         name: Authorization
