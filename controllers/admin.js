@@ -2,11 +2,12 @@ const db = require("../config/db-config.js");
 const SiteSettings = db.SiteSettings;
 const { logger } = require("../config/winston.js");
 const { Op } = require("sequelize");
+const multer = require("multer");
 const upload = require("../config/multer.config.js");
 
 exports.getSettingsByKeyPrefix = async (req, res) => {
   try {
-    const { keyPrefix } = req.body;
+    const { keyPrefix } = req.params.keyPrefix;
 
     const settings = await SiteSettings.findAll({
       where: {
@@ -52,72 +53,41 @@ exports.getSettingByKey = async (req, res) => {
   }
 };
 
-exports.createSetting = async (req, res) => {
-  const key = req.body.key;
-  const value = req.body.value;
-
-  try {
-    upload.single("file")(req, res, async function (error) {
-      if (error instanceof multer.MulterError) {
-        // Handle multer errors (e.g., file size exceeded)
-        return res.status(400).json({ error: "خطای Multer: " + error.message });
-      } else if (error) {
-        res.status(500).json({ error: "خطای داخلی سرور" });
-        logger.error("Error creating setting:", error);
-      }
-
-      // If file is uploaded successfully
-      const { file } = req.body.file;
-
-      try {
-        if (file) {
-          const imagePath = `uploads/${file.filename}`;
-
-          await SiteSettings.create({
-            key,
-            imagePath,
-          });
-
-          return res.status(200).json({
-            msg: "ایتم با موفقیت ایجاد شد.",
-          });
-        } else {
-          await SiteSettings.create({ key, value });
-          return res.status(200).json({
-            msg: "ایتم با موفقیت ایجاد شد.",
-          });
-        }
-      } catch (error) {
-        res.status(500).json({ error: "خطای داخلی سرور" });
-        logger.error("Error creating setting:", error);
-      }
-    });
-  } catch (error) {
-    res.status(500).json({ error: "خطای داخلی سرور" });
-    logger.error("Error creating setting:", error);
-  }
-};
-
-exports.updateSetting = async (req, res) => {
+exports.createOrUpdateSetting = async (req, res) => {
+  // const key = req.body.key;
+  // const value = req.body.value;
   const { key, value } = req.body;
 
-  try {
-    const [rowsAffected, [updatedSetting]] = await SiteSettings.update(
-      { value },
-      { returning: true, where: { key } }
-    );
+  console.log("Received key:", key);
+  console.log("Received value:", value);
 
-    if (rowsAffected === 0) {
-      return res.status(404).json({ error: "تنظیم یافت نشد." });
+  try {
+    // Check if there is a file in the request
+    if (req.file) {
+      const imagePath = `uploads/${req.file.filename}`;
+      const existingSetting = await SiteSettings.findOne({ where: { key } });
+
+      if (existingSetting) {
+        await SiteSettings.update({ imagePath }, { where: { key } });
+      } else {
+        await SiteSettings.create({ key, imagePath });
+      }
+    } else {
+      const existingSetting = await SiteSettings.findOne({ where: { key } });
+
+      if (existingSetting) {
+        await SiteSettings.update({ value }, { where: { key } });
+      } else {
+        await SiteSettings.create({ key, value });
+      }
     }
 
-    res.status(200).json({
-      msg: "تنظیمات با موفقیت به‌روزرسانی شد.",
-      updatedSetting,
+    return res.status(200).json({
+      msg: "ایتم با موفقیت ایجاد/به‌روزرسانی شد.",
     });
   } catch (error) {
-    res.status(500).json({ error: "خطای داخلی سرور" });
-    logger.error("Error updating setting:", error);
+    console.error("Error creating/updating setting:", error);
+    return res.status(500).json({ error: "خطای داخلی سرور" });
   }
 };
 

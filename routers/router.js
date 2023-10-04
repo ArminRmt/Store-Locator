@@ -293,7 +293,7 @@ router.delete(
 
 ////////////////////////////////////    siteSettings routes   ////////////////////////////////////
 
-router.get("/homePageSettings", admin.getSettingsByKeyPrefix);
+router.get("/homePageSettings/:keyPrefix", admin.getSettingsByKeyPrefix);
 
 router.get(
   "/getSetting/:key",
@@ -302,15 +302,9 @@ router.get(
 );
 
 router.post(
-  "/createSetting",
+  "/createOrUpdateSetting",
   [authJwt.verifyToken, authJwt.isAdmin],
-  admin.createSetting
-);
-
-router.patch(
-  "/updateSetting",
-  [authJwt.verifyToken, authJwt.isAdmin],
-  admin.updateSetting
+  admin.createOrUpdateSetting
 );
 
 router.delete(

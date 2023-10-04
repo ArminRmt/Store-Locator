@@ -1,19 +1,14 @@
 /**
  * @swagger
- * /homePageSettings:
+ * /homePageSettings/{id}:
  *   get:
  *     summary: Get Settings by Key Prefix
  *     description: Retrieve site settings by key prefix.
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               keyPrefix:
- *                 type: string
- *                 description: The prefix of the settings keys to retrieve.
+ *     parameters:
+ *       - name: keyPrefix
+ *         in: keyPrefix
+ *         required: true
+ *         type: string
  *     responses:
  *       200:
  *         description: Success - Settings Retrieved

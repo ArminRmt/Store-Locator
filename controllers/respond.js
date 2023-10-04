@@ -11,8 +11,10 @@ const {
   addToQueue,
 } = require("../socketManager.js");
 
-const { logger } = require("../config/winston.js");
+const Sequelize = db.Sequelize;
+const { Op } = Sequelize;
 
+const { logger } = require("../config/winston.js");
 const { getSellerShopLocationAndName } = require("./shop.js");
 
 exports.autoCompleteRespond = async (req, res) => {
