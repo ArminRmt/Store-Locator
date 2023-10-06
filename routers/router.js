@@ -12,6 +12,8 @@ const admin = require("../controllers/admin.js");
 
 const authJwt = require("../middleware/authJwt");
 
+const upload = require("../config/multer.config.js");
+
 const {
   validatePassword,
   validatePasswordMatch,
@@ -303,7 +305,7 @@ router.get(
 
 router.post(
   "/createOrUpdateSetting",
-  [authJwt.verifyToken, authJwt.isAdmin],
+  [authJwt.verifyToken, authJwt.isAdmin, upload.single("file")],
   admin.createOrUpdateSetting
 );
 
