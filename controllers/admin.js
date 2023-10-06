@@ -2,12 +2,10 @@ const db = require("../config/db-config.js");
 const SiteSettings = db.SiteSettings;
 const { logger } = require("../config/winston.js");
 const { Op } = require("sequelize");
-const multer = require("multer");
-const upload = require("../config/multer.config.js");
 
 exports.getSettingsByKeyPrefix = async (req, res) => {
   try {
-    const { keyPrefix } = req.params.keyPrefix;
+    const { keyPrefix } = req.params;
 
     const settings = await SiteSettings.findAll({
       where: {
@@ -37,7 +35,7 @@ exports.getSettingsByKeyPrefix = async (req, res) => {
 };
 
 exports.getSettingByKey = async (req, res) => {
-  const key = req.params.key;
+  const key = req.params;
 
   try {
     const setting = await SiteSettings.findOne({ where: { key } });
@@ -54,23 +52,18 @@ exports.getSettingByKey = async (req, res) => {
 };
 
 exports.createOrUpdateSetting = async (req, res) => {
-  // const key = req.body.key;
-  // const value = req.body.value;
-  const { key, value } = req.body;
-
-  console.log("Received key:", key);
-  console.log("Received value:", value);
+  const key = req.body.key;
+  const value = req.body.value;
 
   try {
-    // Check if there is a file in the request
     if (req.file) {
-      const imagePath = `uploads/${req.file.filename}`;
+      const value = `uploads/${req.file.filename}`;
       const existingSetting = await SiteSettings.findOne({ where: { key } });
 
       if (existingSetting) {
-        await SiteSettings.update({ imagePath }, { where: { key } });
+        await SiteSettings.update({ value }, { where: { key } });
       } else {
-        await SiteSettings.create({ key, imagePath });
+        await SiteSettings.create({ key, value });
       }
     } else {
       const existingSetting = await SiteSettings.findOne({ where: { key } });
@@ -92,7 +85,7 @@ exports.createOrUpdateSetting = async (req, res) => {
 };
 
 exports.deleteSetting = async (req, res) => {
-  const key = req.params.key;
+  const key = req.params;
 
   try {
     const rowsDeleted = await SiteSettings.destroy({ where: { key } });
