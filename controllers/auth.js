@@ -53,10 +53,20 @@ exports.signin = async (req, res) => {
     const token = jwt.sign({ id: user.id }, process.env.AUTH_SECRET, {
       algorithm: "HS256",
       allowInsecureKeySizes: true,
-      expiresIn: "24h", // 86400 SECOND
+      expiresIn: "24h", // 86400 seconds
     });
 
-    res.status(200).json({ msg: "ورود موفقیت‌آمیز", token });
+    if (req.originalUrl === "/admin/signin") {
+      if (user.role !== "admin") {
+        return res.status(403).send({ error: "نیاز به نقش مدیر دارد!" });
+      }
+      res.status(200).json({ msg: "Admin login successful", token });
+    } else if (req.originalUrl === "/user/signin") {
+      if (user.role !== "buyer") {
+        return res.status(403).send({ error: "نیاز به نقش خریدار دارد!" });
+      }
+      res.status(200).json({ msg: "User login successful", token });
+    }
   } catch (error) {
     res.status(500).json({ error: "خطای داخلی سرور" });
     logger.error("Error in user signin:", error);

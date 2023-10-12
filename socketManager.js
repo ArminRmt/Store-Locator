@@ -51,7 +51,7 @@ io.on("connection", (socket) => {
         "requestDeleted"
       );
     } catch (error) {
-      console.error(`Error in identifySeller: ${error.message}`);
+      console.error(`Error in identifySeller: ${error}`);
     }
   });
 
@@ -76,7 +76,7 @@ io.on("connection", (socket) => {
         "responseDeleted"
       );
     } catch (error) {
-      console.error(`Error in identifyBuyer: ${error.message}`);
+      console.error(`Error in identifyBuyer: ${error}`);
     }
   });
 
@@ -91,7 +91,7 @@ io.on("connection", (socket) => {
         console.log(`Seller ${disconnectedSeller} disconnected`);
       }
     } catch (error) {
-      console.error(`Error in DisconnectSeller: ${error.message}`);
+      console.error(`Error in DisconnectSeller: ${error}`);
     }
   });
 
@@ -106,7 +106,7 @@ io.on("connection", (socket) => {
         console.log(`Buyer ${disconnectedBuyer} disconnected`);
       }
     } catch (error) {
-      console.error(`Error in DisconnectBuyer: ${error.message}`);
+      console.error(`Error in DisconnectBuyer: ${error}`);
     }
   });
 });
