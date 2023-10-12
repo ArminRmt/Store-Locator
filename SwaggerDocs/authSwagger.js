@@ -95,10 +95,76 @@
 
 /**
  * @swagger
- * /signin:
+ * /user/signin:
  *   post:
  *     summary: Sign in user
  *     description: Sign in a user using their phone number and password.
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               phone:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successful sign in
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 msg:
+ *                   type: string
+ *                   example: "ورود موفقیت‌آمیز"
+ *                 token:
+ *                   type: string
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 accessToken:
+ *                   type: null
+ *                 error:
+ *                   type: string
+ *                   example: "رمز عبور نامعتبر است!"
+ *       404:
+ *         description: Seller not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "کاربر پیدا نشد."
+ *       500:
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "خطای سرور داخلی"
+ */
+
+/**
+ * @swagger
+ * /admin/signin:
+ *   post:
+ *     summary: Sign in admin
+ *     description: Sign in a admin using their phone number and password.
  *     tags:
  *       - Auth
  *     requestBody:

@@ -54,7 +54,9 @@ router.post(
   ],
   auth.seller_signup
 );
-router.post("/signin", auth.signin);
+
+router.post("/admin/signin", auth.signin);
+router.post("/user/signin", auth.signin);
 router.post("/signinSeller", auth.signinSeller);
 
 ////////////////////////////////////      user routes     ////////////////////////////////////
