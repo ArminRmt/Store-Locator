@@ -264,7 +264,7 @@ router.patch(
 
 // get all reviews on this shop
 router.get(
-  "/getShopFeedbackTexts",
+  "/getShopFeedbackTexts/:id",
   [authJwt.verifyToken, authJwt.isSellerOrAdmin],
   RatingReview.getShopFeedbackTexts
 );
