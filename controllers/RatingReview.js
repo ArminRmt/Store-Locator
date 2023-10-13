@@ -4,7 +4,8 @@ const Shop = db.Shop;
 const { logger } = require("../config/winston.js");
 
 exports.getShopFeedbackTexts = async (req, res) => {
-  const { shop_id } = req.body;
+  const shop_id = req.params.id;
+
   const logedinSeller = req.userId;
   const page = req.query.page || 1;
   try {

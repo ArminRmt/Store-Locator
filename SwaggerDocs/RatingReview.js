@@ -62,7 +62,7 @@
  *                   type: string
  *                   error: "خطای سرور داخلی"
  *
- * /getShopFeedbackTexts:
+ * /getShopFeedbackTexts/{id}:
  *   get:
  *     summary: Get Shop All Feedback Texts
  *     security:
@@ -82,15 +82,12 @@
  *         schema:
  *           type: integer
  *           default: 1
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               shop_id:
- *                 type: integer
+ *       - in: shop_id
+ *         name: id
+ *         required: ture
+ *         schema:
+ *           type: integer
+ *           default: 1
  *     responses:
  *       200:
  *         description: Success
