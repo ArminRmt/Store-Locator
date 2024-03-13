@@ -12,6 +12,8 @@ const admin = require("../controllers/admin.js");
 
 const authJwt = require("../middleware/authJwt");
 
+const upload = require("../config/multer.config.js");
+
 const {
   validatePassword,
   validatePasswordMatch,
@@ -52,7 +54,9 @@ router.post(
   ],
   auth.seller_signup
 );
-router.post("/signin", auth.signin);
+
+router.post("/admin/signin", auth.signin);
+router.post("/user/signin", auth.signin);
 router.post("/signinSeller", auth.signinSeller);
 
 ////////////////////////////////////      user routes     ////////////////////////////////////
@@ -260,7 +264,7 @@ router.patch(
 
 // get all reviews on this shop
 router.get(
-  "/getShopFeedbackTexts",
+  "/getShopFeedbackTexts/:id",
   [authJwt.verifyToken, authJwt.isSellerOrAdmin],
   RatingReview.getShopFeedbackTexts
 );
@@ -303,7 +307,7 @@ router.get(
 
 router.post(
   "/createOrUpdateSetting",
-  [authJwt.verifyToken, authJwt.isAdmin],
+  [authJwt.verifyToken, authJwt.isAdmin, upload.single("file")],
   admin.createOrUpdateSetting
 );
 

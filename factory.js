@@ -238,22 +238,22 @@ async function initial() {
 
     const SiteSettingsPromises = [
       await SiteSettings.create({
-        key: "homepage nav",
+        key: "homepage_nav",
         value: "Homepage navigation settings",
       }),
 
       await SiteSettings.create({
-        key: "homepage footer",
+        key: "homepage_footer",
         value: "Homepage footer settings",
       }),
 
       await SiteSettings.create({
-        key: "infopage nav",
+        key: "infopage_nav",
         value: "Infopage navigation settings",
       }),
 
       await SiteSettings.create({
-        key: "infopage footer",
+        key: "infopage_footer",
         value: "Infopage footer settings",
       }),
     ];
