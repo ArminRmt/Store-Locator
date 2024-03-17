@@ -62,7 +62,7 @@
  *                   type: string
  *                   error: "خطای سرور داخلی"
  *
- * /getShopFeedbackTexts/{id}:
+ * /getShopFeedbackTexts:
  *   get:
  *     summary: Get Shop All Feedback Texts
  *     security:
@@ -82,12 +82,6 @@
  *         schema:
  *           type: integer
  *           default: 1
- *       - in: shop_id
- *         name: id
- *         required: ture
- *         schema:
- *           type: integer
- *           default: 1
  *     responses:
  *       200:
  *         description: Success
@@ -96,18 +90,21 @@
  *             schema:
  *               type: object
  *               properties:
- *                 feedbackTexts:
+ *                 feedbackAndRating:
  *                   type: array
  *                   items:
  *                     type: object
  *                     properties:
  *                       feedback_text:
  *                         type: string
+ *                       rating:
+ *                         type: integer
  *                 totalPages:
  *                   type: integer
  *                 example:
- *                   feedbackTexts:
+ *                   feedbackAndRating:
  *                     - feedback_text: "متشکرم از خرید خوب شما."
+ *                       rating: 5
  *                   totalPages: 5
  *       401:
  *         description: Unauthorized

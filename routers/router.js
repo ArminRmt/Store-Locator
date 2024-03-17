@@ -75,6 +75,19 @@ router.patch(
   users.updateUser
 );
 
+// router.get("/home", (req, res) => {
+//   res.status(200).json("Liara working . . .");
+// });
+// http://localhost:8081/home
+
+router.get("/home", (req, res) => {
+  // If the token is valid, the middleware will have added userId to the request
+  res.status(200).send({
+    msg: "Liara working . . .",
+  });
+  // next();
+});
+
 // get user details by token
 router.get("/getuserbytoken", authJwt.verifyToken, users.GetUserByToken);
 
@@ -264,7 +277,7 @@ router.patch(
 
 // get all reviews on this shop
 router.get(
-  "/getShopFeedbackTexts/:id",
+  "/getShopFeedbackTexts",
   [authJwt.verifyToken, authJwt.isSellerOrAdmin],
   RatingReview.getShopFeedbackTexts
 );
