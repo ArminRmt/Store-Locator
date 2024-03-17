@@ -26,6 +26,11 @@ app.use(helmet());
 // Routes
 const router = require("./routers/router.js");
 app.use("/", router);
+// test liara
+app.get("/home", (req, res) => {
+  res.status(200).json("Liara working . . .");
+});
+// http://localhost:8081/home
 
 // Swagger UI
 app.use(

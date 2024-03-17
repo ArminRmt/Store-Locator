@@ -1,0 +1,5 @@
+{
+  "platform": "docker",
+  "app": "storelocator",
+  "port": 8081
+}
