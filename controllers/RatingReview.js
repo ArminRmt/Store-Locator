@@ -4,10 +4,9 @@ const Shop = db.Shop;
 const { logger } = require("../config/winston.js");
 
 exports.getShopFeedbackTexts = async (req, res) => {
-  const shop_id = req.params.id;
-
   const logedinSeller = req.userId;
   const page = req.query.page || 1;
+
   try {
     const pageSize = 10;
 
@@ -15,7 +14,7 @@ exports.getShopFeedbackTexts = async (req, res) => {
 
     const shop = await Shop.findOne({
       where: { seller_id: logedinSeller },
-      attributes: ["seller_id"],
+      attributes: ["id", "seller_id"],
     });
 
     if (!shop || shop.seller_id !== logedinSeller) {
@@ -24,19 +23,20 @@ exports.getShopFeedbackTexts = async (req, res) => {
         .json({ error: "شما دسترسی به این فروشگاه را ندارید." });
     }
 
-    const { count, rows: feedbackTexts } = await ShopReviews.findAndCountAll({
-      where: { shop_id },
-      attributes: ["feedback_text"],
-      limit: pageSize,
-      offset: offset,
-    });
+    const { count, rows: feedbackAndRating } =
+      await ShopReviews.findAndCountAll({
+        where: { shop_id: shop.id },
+        attributes: ["feedback_text", "rating"],
+        limit: pageSize,
+        offset: offset,
+      });
 
     if (count === 0) {
       return res.status(404).json({ error: "هیچ متن بازخوردی یافت نشد" });
     }
     const totalPages = Math.ceil(count / pageSize);
 
-    res.status(200).json({ feedbackTexts, totalPages });
+    res.status(200).json({ feedbackAndRating, totalPages });
   } catch (error) {
     res.status(500).json({ error: "خطای داخلی سرور" });
     logger.error(`Error fetching feedback texts: ${error}`);
@@ -112,12 +112,14 @@ const calculateAverageRating = async (shopId) => {
 exports.submitShopRating = async (req, res) => {
   const { shop_id, rating, feedback_text } = req.body;
   const buyer_id = req.userId;
+  const timestamp = new Date().toISOString();
   try {
     const newReview = await ShopReviews.create({
       shop_id,
       buyer_id,
       rating,
       feedback_text,
+      timestamp,
     });
 
     // Calculate average rating and update shop's avg_rating
@@ -131,7 +133,7 @@ exports.submitShopRating = async (req, res) => {
       res.status(400).json({ error: error.message });
     } else {
       res.status(500).json({ error: "خطای داخلی سرور" });
-      logger.error(`Error submitting rating and feedback: ${error}`);
+      console.log(`Error submitting rating and feedback: ${error}`);
     }
   }
 };

@@ -9,6 +9,7 @@ const Request = db.Request;
 const Respond = db.Respond;
 const RequestSellerLinks = db.RequestSellerLinks;
 const SiteSettings = db.SiteSettings;
+const ShopReviews = db.ShopReviews;
 
 async function initial() {
   try {
@@ -253,8 +254,8 @@ async function initial() {
       }),
 
       await SiteSettings.create({
-        key: "infopage_footer",
-        value: "Infopage footer settings",
+        key: "aboutpage_footer",
+        value: "About page footer settings",
       }),
     ];
 
@@ -284,6 +285,20 @@ async function initial() {
       }),
     ];
 
+    const shopReviewsPromises = [
+      ShopReviews.create({
+        shop_id: 1,
+        buyer_id: 1,
+        feedback_text: "خیلی خوب بود",
+        rating: 4,
+      }),
+      ShopReviews.create({
+        shop_id: 1,
+        buyer_id: 2,
+        feedback_text: "متوسط بود",
+        rating: 3,
+      }),
+    ];
     await Promise.all([
       ...userPromises,
       ...sellerPromises,
@@ -292,6 +307,7 @@ async function initial() {
       ...respondPromises,
       ...SiteSettingsPromises,
       ...RequestSellerLinksPromises,
+      ...shopReviewsPromises,
     ]);
 
     // for (let i = 0; i < 10; i++) {
@@ -307,7 +323,7 @@ async function initial() {
 
     console.log("Data initialization completed successfully!");
   } catch (error) {
-    logger.error(`Error initializing data: ${error}`);
+    console.log(`Error initializing data: ${error}`);
   }
 }
 

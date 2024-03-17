@@ -67,66 +67,6 @@
  */
 /**
  * @swagger
- * /GetSellerByToken:
- *   get:
- *     summary: Get seller by token
- *     description: Retrieve seller information based on the provided token.
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: header
- *         name: Authorization
- *         required: true
- *         schema:
- *           type: string
- *           format: Bearer <token>
- *     responses:
- *       200:
- *         description: Successful retrieval
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                  id:
- *                   type: integer
- *                 full_name:
- *                   type: string
- *                 phone:
- *                   type: string
- *                 password:
- *                   type: string
- *                 shop_id:
- *                   type: integer
- *             example:
- *               id: 1
- *               full_name: "armin"
- *               phone: "9876543210"
- *               password: "$argon2id....."
- *               shop_id: 1
- *       401:
- *         description: Unauthorized
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "توکن غیر معتبر است"
- *       500:
- *         description: Internal Server Error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 error:
- *                   type: string
- *                   example: "خطای سرور داخلی"
- */
-/**
- * @swagger
  * /SellerRequests:
  *   get:
  *     summary: Get Seller's Requests
@@ -175,4 +115,65 @@
  *                 error:
  *                   type: string
  *                   example: "خطای داخلی سرور"
+ */
+
+/**
+ * @swagger
+ * /GetSellerByToken:
+ *   get:
+ *     summary: Get seller by token
+ *     description: Retrieve seller information based on the provided token.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: Bearer <token>
+ *     responses:
+ *       '200':
+ *         description: Successful retrieval
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 full_name:
+ *                   type: string
+ *                 phone:
+ *                   type: string
+ *                 password:
+ *                   type: string
+ *                 shop_id:
+ *                   type: integer
+ *             example:
+ *               id: 1
+ *               full_name: "armin"
+ *               phone: "9876543210"
+ *               password: "$argon2id....."
+ *               shop_id: 1
+ *       '401':
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "توکن غیر معتبر است"
+ *       '500':
+ *         description: Internal Server Error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "خطای سرور داخلی"
  */
