@@ -26,6 +26,10 @@ app.use(helmet());
 // Routes
 const router = require("./routers/router.js");
 app.use("/", router);
+// test vercel
+app.get("/home", (req, res) => {
+  res.status(200).json("Welcome, your app is working well");
+});
 
 // Swagger UI
 app.use(
