@@ -26,10 +26,11 @@ app.use(helmet());
 // Routes
 const router = require("./routers/router.js");
 app.use("/", router);
-// test vercel
+// test liara
 app.get("/home", (req, res) => {
-  res.status(200).json("Welcome, your app is working well");
+  res.status(200).json("Liara working . . .");
 });
+// http://localhost:8081/home
 
 // Swagger UI
 app.use(

@@ -3,14 +3,10 @@
   "version": "1.0.0",
   "description": "store locator project",
   "main": "server.js",
-  "engines": {
-    "node": ">=14.0.0"
-  },
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "test": "mocha tests/**/*.js",
-    "vercel-build": "node ./build.js"
+    "test": "mocha tests/**/*.js"
   },
   "keywords": [
     "nodejs",
