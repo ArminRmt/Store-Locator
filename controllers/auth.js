@@ -60,12 +60,12 @@ exports.signin = async (req, res) => {
       if (user.role !== "admin") {
         return res.status(403).send({ error: "نیاز به نقش مدیر دارد!" });
       }
-      res.status(200).json({ msg: "Admin login successful", token });
+      res.status(200).json({ msg: "ورود مدیر با موفقیت انجام شد", token });
     } else if (req.originalUrl === "/user/signin") {
       if (user.role !== "buyer") {
         return res.status(403).send({ error: "نیاز به نقش خریدار دارد!" });
       }
-      res.status(200).json({ msg: "User login successful", token });
+      res.status(200).json({ msg: "ورود کاربر با موفقیت انجام شد", token });
     }
   } catch (error) {
     res.status(500).json({ error: "خطای داخلی سرور" });

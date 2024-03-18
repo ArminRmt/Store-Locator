@@ -158,7 +158,7 @@ exports.GetRequest = async (req, res) => {
     const userRequest = await Request.findByPk(requestId);
 
     if (!userRequest) {
-      return res.status(404).json({ error: "Request not found" });
+      return res.status(404).json({ error: "درخواست یافت نشد" });
     }
 
     return res.status(200).json(userRequest);
