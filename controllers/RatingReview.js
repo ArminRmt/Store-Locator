@@ -133,7 +133,7 @@ exports.submitShopRating = async (req, res) => {
       res.status(400).json({ error: error.message });
     } else {
       res.status(500).json({ error: "خطای داخلی سرور" });
-      console.log(`Error submitting rating and feedback: ${error}`);
+      logger.error(`Error submitting rating and feedback: ${error}`);
     }
   }
 };

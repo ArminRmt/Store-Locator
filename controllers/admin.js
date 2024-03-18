@@ -106,13 +106,17 @@ exports.createOrUpdateSetting = async (req, res) => {
         { value: filename || value },
         { where: { key } }
       );
+
+      return res.status(200).json({
+        msg: "ایتم با موفقیت به‌روزرسانی شد.",
+      });
     } else {
       await SiteSettings.create({ key, value: filename || value });
-    }
 
-    return res.status(200).json({
-      msg: "ایتم با موفقیت ایجاد/به‌روزرسانی شد.",
-    });
+      return res.status(200).json({
+        msg: "ایتم با موفقیت ایجاد شد.",
+      });
+    }
   } catch (error) {
     res.status(500).json({ error: "خطای داخلی سرور" });
     logger.error("Error creating/updating setting:", error);
