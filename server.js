@@ -43,7 +43,7 @@ db.sequelize
     initial();
   })
   .catch((error) => {
-    logger.error("Database synchronization failed:", error);
+    console.log("Database synchronization failed:", error);
   });
 
 // Server listening
