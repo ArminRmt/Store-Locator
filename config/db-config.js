@@ -11,6 +11,7 @@ const sequelize = new Sequelize({
   username: process.env.DATABASE_USERNAME,
   password: process.env.DATABASE_PASSWORD,
   host: databaseHost,
+  port: 32261,
   dialect: process.env.DATABASE_DIALECT,
   pool: {
     max: parseInt(process.env.DATABASE_POOL_MAX),
