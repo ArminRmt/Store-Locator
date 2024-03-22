@@ -1,136 +1,123 @@
-const smsProvider = require("twilio"); // or any other SMS provider
-const db = require("../config/db-config.js");
-const User = db.User;
-const argon2 = require("argon2");
-const jwt = require("jsonwebtoken");
-const { logger } = require("../config/winston.js");
+// const MelipayamakApi = require("melipayamak-api");
+const redisClient = require("../config/redis.config.js");
 
-// Generate a random 6-digit verification code
-function generateVerificationCode() {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-}
+// Initialize Melipayamak API with your username and password
+// const username = "your_username";
+// const password = "your_password";
+// const api = new MelipayamakApi(username, password);
+// const smsSoap = api.sms("soap");
 
-// Function to send SMS
-async function sendVerificationCode(phone, verificationCode) {
-  try {
-    // Use SMS provider to send the verification code to the user's phone number
-    const msg = await smsProvider.sendSMS({
-      to: phone,
-      body: `Your verification code is: ${verificationCode}`,
-    });
-    return msg;
-  } catch (error) {
-    throw new Error("Failed to send verification code");
-  }
-}
-
-// Route to send the verification code to the user's phone
-exports.ForgotPassword = async (req, res) => {
-  const phone = req.body.phone;
-
-  const user = await User.findOne({ phone });
-  if (!user) {
-    return res.status(404).send({ error: "کاربر یافت نشد" });
-  }
-
-  const verificationCode = generateVerificationCode();
-  const hashedCode = await argon2.hash(verificationCode);
-  const verificationCodeExpiresAt = Date.now() + 10 * 60 * 1000; // expires in 10 minutes
-
-  try {
-    await sendVerificationCode(phone, verificationCode);
-
-    // Save the hashed verification code and its expiry time in the database
-    await user.updateOne(
-      { phone },
-      {
-        verificationCode: hashedCode,
-        verificationCodeExpiresAt,
+// Store verification code and message ID in Redis
+async function storeVerificationCode(phone, code) {
+  return new Promise((resolve, reject) => {
+    redisClient.set(phone, code, "EX", 3600, (err, reply) => {
+      if (err) {
+        console.log("Error storing verification code:", err);
+        reject(err);
+      } else {
+        resolve(reply);
       }
-    );
-    res.status(200).json({ msg: "کد تایید ارسال شد", verificationCode });
-  } catch (error) {
-    res.status(500).json({ error: "خطای سرور داخلی" });
-    logger.error("error in ForgotPassword: ", error);
-  }
-};
-
-// Route to handle the verification code submitted by the user
-exports.VerifyCode = async (req, res) => {
-  try {
-    const verificationCode = req.body.verificationCode;
-    const user = await User.findOne({
-      verificationCode: {
-        $eq: await argon2.hash(verificationCode),
-      },
     });
+  });
+}
 
-    if (
-      !user ||
-      !(await argon2.verify(user.verificationCode, verificationCode)) ||
-      Date.now() > user.verificationCodeExpiresAt
-    ) {
-      res.status(400).json({ error: "کد تأیید نامعتبر یا منقضی شده است" });
+// Function to send SMS verification code
+async function sendVerificationCode(phone) {
+  try {
+    const verificationCode = generateVerificationCode();
+    const text = `Your verification code is: ${verificationCode}`;
+
+    // Store the verification code and message ID in Redis
+    await storeVerificationCode(phone, text);
+
+    return verificationCode;
+  } catch (error) {
+    console.log("Error sending verification code:", error);
+    throw error;
+  }
+}
+
+// Controller method for sending verification code
+async function sendVerificationCodeController(req, res) {
+  try {
+    const { phone } = req.body;
+    const code = await sendVerificationCode(phone);
+    res.status(200).json({ code });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to send verification code" });
+    console.log("Error sending verification code:", error);
+  }
+}
+
+// Delete verification code from Redis
+async function deleteVerificationCode(phone) {
+  return new Promise((resolve, reject) => {
+    redisClient.del(phone, (err, reply) => {
+      if (err) {
+        console.log("Error Delete verification code:", err);
+        reject(err);
+      } else {
+        resolve(reply);
+      }
+    });
+  });
+}
+
+// Retrieve verification code from Redis
+async function retrieveVerificationCode(phone) {
+  return new Promise((resolve, reject) => {
+    redisClient.get(phone, (err, reply) => {
+      if (err) {
+        console.log("Error retrieving verification code:", err);
+        reject(err);
+      } else {
+        resolve(reply);
+      }
+    });
+  });
+}
+
+// verify the received verification code
+async function verifyCode(phone, receivedCode) {
+  try {
+    const storedCode = await retrieveVerificationCode(phone);
+
+    console.log("Received code :", receivedCode);
+    console.log("Stored code :", storedCode);
+
+    // numeric part of the stored code
+    const numericStoredCode = storedCode.replace(/\D/g, "");
+
+    if (receivedCode === numericStoredCode) {
+      await deleteVerificationCode(phone);
+      return true;
+    } else {
+      return false;
     }
-
-    // const token = jwt.sign({ id: user.id }, process.env.AUTH_SECRET, {
-    //   algorithm: "HS256",
-    //   allowInsecureKeySizes: true,
-    //   expiresIn: "1h",
-    // });
-
-    // res.status(200).json({ msg: "Verification code is valid", token });
-    res.status(200).json({ msg: "کد تأیید معتبر است", user });
   } catch (error) {
-    res.status(500).json({ error: "خطای سرور داخلی" });
-    logger.error("error in VerifyCode: ", error);
+    console.log("Error verifying code:", error);
+    throw error;
   }
-};
+}
 
-// Route to update the password after successful verification
-exports.ResetPassword = async (req, res) => {
-  const password = req.body.password;
-  const user = req.body.user;
-
+// Controller method for verifying the received code
+async function verifyCodeController(req, res) {
   try {
-    // const user = await GetUserByToken();
-
-    user.password = await argon2.hash(password);
-
-    // Reset the verification code after successful password update
-    user.verificationCode = "";
-    user.verificationCodeExpiresAt = null;
-
-    // Save the updated user object
-    await user.save();
-
-    res.status(200).json({ msg: "تغییر رمز عبور با موفقیت انجام شد" });
+    const { phone, code } = req.body;
+    const isVerified = await verifyCode(phone, code);
+    res.status(200).json({ verified: isVerified });
   } catch (error) {
-    res.status(500).json({ error: "خطای سرور داخلی" });
-    logger.error("error in ResetPassword: ", error);
+    res.status(500).json({ error: "Failed to verify code" });
+    console.log("Error verifying code:", error);
   }
-};
+}
 
-exports.GetUserByToken = async (req, res) => {
-  let authHeader = req.headers["authorization"];
+// Helper function to generate a random 6-digit verification code
+function generateVerificationCode() {
+  return Math.floor(100000 + Math.random() * 900000);
+}
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(403).send({
-      error: "پیام: هیچ توکنی ارائه نشده است!",
-    });
-  }
-
-  let token = authHeader.replace("Bearer ", "");
-
-  try {
-    const decoded = await jwt.verify(token, process.env.AUTH_SECRET);
-    const userId = decoded.id;
-
-    const user = await User.findOne({ where: { id: userId } });
-
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(500).json({ error: "خطای سرور داخلی" });
-    logger.error("error in GetUserByToken: ", error);
-  }
+module.exports = {
+  sendVerificationCodeController,
+  verifyCodeController,
 };

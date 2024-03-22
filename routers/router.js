@@ -9,6 +9,7 @@ const request = require("../controllers/request.js");
 const respond = require("../controllers/respond.js");
 const RatingReview = require("../controllers/RatingReview.js");
 const admin = require("../controllers/admin.js");
+const messageVerify = require("../controllers/sms.js");
 
 const authJwt = require("../middleware/authJwt");
 
@@ -329,6 +330,18 @@ router.delete(
   [authJwt.verifyToken, authJwt.isAdmin],
   admin.deleteSetting
 );
+
+////////////////////////////////////    message routes   ////////////////////////////////////
+
+// Route for sending verification code
+router.post(
+  "/send-verification-code",
+  // validatePhoneNumber,
+  messageVerify.sendVerificationCodeController
+);
+
+// Route for verifying code
+router.post("/verify-code", messageVerify.verifyCodeController);
 
 ////////////////////////////////////    other routes   ////////////////////////////////////
 
