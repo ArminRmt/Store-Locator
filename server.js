@@ -10,7 +10,7 @@ const { swaggerUi, swaggerSpecs } = require("./config/swaggerConfig.js");
 const { app, server } = require("./socketManager");
 const { logger } = require("./config/winston.js");
 
-// CORS configurationl
+// CORS configuration
 
 // Middleware
 app.use(
