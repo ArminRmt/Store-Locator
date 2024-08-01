@@ -16,10 +16,13 @@ const { logger } = require("./config/winston.js");
 app.use(
   cors({
     origin: new RegExp(
-      `^(http:\/\/|https:\/\/|http:\/\/localhost:3000|https:\/\/localhost:3000|http:\/\/${process.env.LOCAL_ALLOWED_ORIGIN}|https:\/\/${process.env.PRODUCTION_ALLOWED_ORIGIN})`
+      `^(http:\/\/|https:\/\/|http:\/\/localhost:3000|https:\/\/localhost:3000|http:\/\/${process.env.LOCAL_ALLOWED_ORIGIN}|https:\/\/${process.env.PRODUCTION_ALLOWED_ORIGIN}|http:\/\/${process.env.ANDROID_ALLOWED_ORIGIN}|http:\/\/${process.env.ANDROID_ALLOWED_ORIGIN})`
     ),
   })
 );
+
+
+
 app.use(bodyParser.json());
 app.use(helmet());
 

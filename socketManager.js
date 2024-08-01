@@ -9,6 +9,7 @@ const io = socketIO(server, {
     origin: [
       process.env.LOCAL_ALLOWED_ORIGIN,
       process.env.PRODUCTION_ALLOWED_ORIGIN,
+      process.env.ANDROID_ALLOWED_ORIGIN
     ],
     // origin:
     //   process.env.DEBUG === "true"
@@ -17,6 +18,7 @@ const io = socketIO(server, {
     methods: ["GET", "POST", "PATH", "DELETE"],
   },
 });
+
 
 const sellerSockets = {};
 const userSockets = {};
