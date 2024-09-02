@@ -255,22 +255,23 @@ exports.UpdateRequest = async (req, res) => {
     }
 
     // Get all seller_ids associated with the request from request_seller_links
-    const links = await RequestSellerLinks.findAll({
-      where: { request_id: request_id },
-    });
+    // const links = await RequestSellerLinks.findAll({
+    //   where: { request_id: request_id },
+    // });
 
-    updatedRequest = { request_id, piece_name, content, timestamp };
 
-    const sellerOperations = links.map(async (link) => {
-      const sellerSocketId = sellerSockets[link.seller_id];
-      if (sellerSocketId) {
-        io.to(sellerSocketId).emit("requestUpdated", updatedRequest);
-      } else {
-        addToQueue(UpdatedRequestQueue, link.seller_id, updatedRequest);
-      }
-    });
+    // updatedRequest = { request_id, piece_name, content, timestamp };
 
-    await Promise.all(sellerOperations);
+    // const sellerOperations = links.map(async (link) => {
+    //   const sellerSocketId = sellerSockets[link.seller_id];
+    //   if (sellerSocketId) {
+    //     io.to(sellerSocketId).emit("requestUpdated", updatedRequest);
+    //   } else {
+    //     addToQueue(UpdatedRequestQueue, link.seller_id, updatedRequest);
+    //   }
+    // });
+
+    // await Promise.all(sellerOperations);
 
     res.status(200).json({
       msg: "درخواست به‌روزرسانی شد",
